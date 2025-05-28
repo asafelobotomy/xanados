@@ -1,0 +1,11 @@
+---
+name: "XanadOS Installer"
+version: "1.0"
+productName: "XanadOS"
+shortProductName: "XanadOS"
+welcomeStyle: "widget"
+sidebarBackground: "#111111"
+sidebarText: "#FF00FF"
+sidebarTitle: "Install XanadOS"
+imagePath: "logo.png"
+stylesheet: "style.qss"
