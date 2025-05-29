@@ -84,3 +84,15 @@ sof-firmware
 intel-ucode
 amd-ucode
 chrony
+rsync
+fd
+tmux
+ttf-liberation
+wireless_tools
+openvpn
+wireguard-tools
+gst-plugins-base
+gst-plugins-good
+gst-plugins-bad
+gst-plugins-ugly
+ffmpeg
