@@ -14,7 +14,7 @@ fi
 if [ -n "$CALAMARES_LOCALE" ]; then
   echo "LANG=$CALAMARES_LOCALE" > "$SYSROOT/etc/locale.conf"
 else
-  echo "LANG=en_US.UTF-8" > "$SYSROOT/etc/locale.conf"
+  echo "LANG=en_IE.UTF-8" > "$SYSROOT/etc/locale.conf"
 fi
 
 if [ -n "$CALAMARES_TIMEZONE" ] && [ -f "/usr/share/zoneinfo/$CALAMARES_TIMEZONE" ]; then

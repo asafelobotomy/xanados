@@ -204,7 +204,23 @@ class WelcomeApp(QtWidgets.QWidget):
 
     def run_maintenance(self):
         self.log_output.append("[INFO] Running post-install maintenance tasks...")
-        # Placeholder for actual maintenance logic
+        commands = [
+            "sudo pacman -Syu --noconfirm",
+            "sudo paccache -r",
+            "systemctl status NetworkManager",
+            "systemctl status chronyd",
+            "journalctl -b -1 --no-pager | tail -n 50",
+            "lsblk -f"
+        ]
+        for cmd in commands:
+            self.log_output.append(f"
+▶ {cmd}")
+            try:
+                result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
+                output = result.stdout.strip() or "[no output]"
+                self.log_output.append(output)
+            except Exception as e:
+                self.log_output.append(f"[ERROR] Failed to run {cmd}: {e}")
 
     def cancel_installation(self):
         if self.thread and self.thread.isRunning():
