@@ -1,0 +1,11 @@
+[Unit]
+Description=Reflector Mirror Update Service
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/reflector --verbose --latest 20 --sort rate --save /etc/pacman.d/mirrorlist
+
+[Install]
+WantedBy=multi-user.target

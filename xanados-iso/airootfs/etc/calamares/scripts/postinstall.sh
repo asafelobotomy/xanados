@@ -1,31 +1,57 @@
 #!/bin/bash
+set -e
 
-echo "[XanadOS] Running Post-Install Script..."
+LOGFILE="/var/log/postinstall.log"
+exec > >(tee -a "$LOGFILE") 2>&1
 
-# Mount point of installed system
-TARGET="/mnt"
+echo "[XanadOS] Starting post-install tasks..."
 
-# Check for Dev Mode
-if [ -f "$TARGET/etc/xanados/dev_mode" ]; then
-    echo "Enabling Dev Mode packages..."
-    arch-chroot $TARGET pacman -Sy --noconfirm base-devel cmake openssh
+# Detect dev mode
+if [ -f /etc/xanados/dev_mode ]; then
+  echo "[XanadOS] Development mode detected."
+  # Add any dev mode specific logic here
 fi
 
-# Set Secure Boot status
-if [ -f "$TARGET/etc/xanados/secureboot_enabled" ]; then
-    echo "Secure Boot flag applied"
-    touch $TARGET/etc/xanados/secureboot_enabled
+# Copy themes if source exists
+THEME_SRC="/usr/share/xanados/themes"
+THEME_DEST="/usr/share/themes"
+if [ -d "$THEME_SRC" ]; then
+  echo "[XanadOS] Copying themes from $THEME_SRC to $THEME_DEST"
+  cp -r "$THEME_SRC" "$THEME_DEST"
+else
+  echo "[WARNING] Theme source directory $THEME_SRC not found."
 fi
 
-# Copy wallpapers/themes if available
-if [ -d "/etc/xanados/themes" ]; then
-    mkdir -p $TARGET/usr/share/xanados-themes
-    cp -r /etc/xanados/themes/* $TARGET/usr/share/xanados-themes/
+# Secure Boot setup placeholder
+if [ -f /etc/xanados/secureboot_enabled ]; then
+  echo "[XanadOS] Secure Boot enabled, configuring keys..."
+  # TODO: Add key enrollment commands here
+else
+  echo "[XanadOS] Secure Boot not enabled."
 fi
 
-# Enable Welcome App on first boot
-mkdir -p $TARGET/etc/skel/.config/autostart
-cp /etc/xanados/welcome.desktop $TARGET/etc/skel/.config/autostart/
+# Setup Welcome App autostart if file exists
+WELCOME_DESKTOP="/etc/xanados/welcome.desktop"
+AUTOSTART_DIR="/etc/skel/.config/autostart"
+if [ -f "$WELCOME_DESKTOP" ]; then
+  echo "[XanadOS] Setting up Welcome App autostart."
+  mkdir -p "$AUTOSTART_DIR"
+  cp "$WELCOME_DESKTOP" "$AUTOSTART_DIR/"
+else
+  echo "[WARNING] Welcome desktop file $WELCOME_DESKTOP not found."
+fi
 
-echo "[XanadOS] Post-install complete."
-exit 0
+# Systemd services management
+echo "[XanadOS] Configuring systemd services..."
+
+systemctl disable livecd-alsa-unmuter.service || true
+systemctl disable autologin@tty1.service || true
+
+systemctl enable NetworkManager.service
+systemctl enable sshd.service
+systemctl enable chronyd.service
+
+systemctl disable systemd-timesyncd.service || true
+systemctl disable systemd-resolved.service || true
+
+echo "[XanadOS] Post-install tasks completed successfully."

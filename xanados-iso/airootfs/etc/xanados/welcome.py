@@ -3,20 +3,29 @@
 import os
 import sys
 import subprocess
+from datetime import datetime
 from PyQt5 import QtWidgets, QtGui, QtCore
 
 class InstallerThread(QtCore.QThread):
     progress = QtCore.pyqtSignal(str)
+    finished = QtCore.pyqtSignal(bool)
 
     def __init__(self, scripts):
         super().__init__()
         self.scripts = scripts
+        self._is_running = True
 
     def run(self):
+        success = True
         for script in self.scripts:
+            if not self._is_running:
+                self.progress.emit("[INFO] Installation cancelled by user.")
+                success = False
+                break
             if not os.path.isfile(script):
                 self.progress.emit(f"[ERROR] Script not found: {script}")
-                continue
+                success = False
+                break
             self.progress.emit(f"▶ Executing: {script}")
             try:
                 process = subprocess.Popen(
@@ -26,13 +35,26 @@ class InstallerThread(QtCore.QThread):
                     universal_newlines=True
                 )
                 for line in process.stdout:
-                    self.progress.emit(line.strip())
+                    if not self._is_running:
+                        process.terminate()
+                        self.progress.emit("[INFO] Installation cancelled by user.")
+                        success = False
+                        break
+                    timestamp = datetime.now().strftime("%H:%M:%S")
+                    self.progress.emit(f"[{timestamp}] {line.strip()}")
                 process.wait()
                 if process.returncode != 0:
                     self.progress.emit(f"[ERROR] Script failed: {script}")
+                    success = False
+                    break
             except Exception as e:
                 self.progress.emit(f"[EXCEPTION] {e}")
-        self.progress.emit("✔ All selected tasks complete. Check /tmp/welcome.log if needed.")
+                success = False
+                break
+        self.finished.emit(success)
+
+    def stop(self):
+        self._is_running = False
 
 class WelcomeApp(QtWidgets.QWidget):
     def mousePressEvent(self, event):
@@ -48,7 +70,9 @@ class WelcomeApp(QtWidgets.QWidget):
 
     def __init__(self):
         super().__init__()
+        self.installed = os.path.exists('/etc/xanados/installed')
         self.init_ui()
+        self.thread = None
 
     def init_ui(self):
         self.setWindowFlag(QtCore.Qt.FramelessWindowHint)
@@ -59,7 +83,7 @@ class WelcomeApp(QtWidgets.QWidget):
         shadow.setYOffset(0)
         shadow.setColor(QtGui.QColor(0, 255, 255, 120))
         self.setGraphicsEffect(shadow)
-        self.setGeometry(100, 100, 600, 400)
+        self.setGeometry(100, 100, 600, 450)
         self.setStyleSheet("""
             QWidget {
                 background-color: #0D0D0D;
@@ -115,11 +139,17 @@ class WelcomeApp(QtWidgets.QWidget):
         layout.addWidget(self.checkbox_minimal)
         layout.addWidget(self.checkbox_recommended)
 
+        buttons_layout = QtWidgets.QHBoxLayout()
         self.install_button = QtWidgets.QPushButton("Start Installation")
         self.install_button.setEnabled(False)
-        self.install_button.clicked.connect(self.start_installation)
+        buttons_layout.addWidget(self.install_button)
 
-        layout.addWidget(self.install_button)
+        self.cancel_button = QtWidgets.QPushButton("Cancel Installation")
+        self.cancel_button.setEnabled(False)
+        buttons_layout.addWidget(self.cancel_button)
+
+        layout.addLayout(buttons_layout)
+
         self.progress_bar = QtWidgets.QProgressBar()
         self.progress_bar.setRange(0, 0)
         self.progress_bar.setVisible(False)
@@ -137,6 +167,18 @@ class WelcomeApp(QtWidgets.QWidget):
         if os.path.exists("/etc/xanados/secureboot_enabled"):
             self.log_output.append("[!] Secure Boot is enabled.")
 
+        if self.installed:
+            self.log_output.append("[INFO] Detected installed system. Installation options disabled.")
+            self.checkbox_gaming.setEnabled(False)
+            self.checkbox_minimal.setEnabled(False)
+            self.checkbox_recommended.setEnabled(False)
+            self.install_button.setText("Run Maintenance")
+            self.install_button.clicked.connect(self.run_maintenance)
+        else:
+            self.install_button.clicked.connect(self.start_installation)
+
+        self.cancel_button.clicked.connect(self.cancel_installation)
+
     def update_button_state(self):
         any_checked = any(box.isChecked() for box in [
             self.checkbox_gaming, self.checkbox_minimal, self.checkbox_recommended
@@ -151,12 +193,35 @@ class WelcomeApp(QtWidgets.QWidget):
 
         self.thread = InstallerThread(scripts)
         self.thread.progress.connect(lambda msg: (self.log_output.append(msg), self.log_output.ensureCursorVisible()))
+        self.thread.finished.connect(self.install_finished)
         self.progress_bar.setVisible(True)
         self.install_button.setEnabled(False)
+        self.cancel_button.setEnabled(True)
         self.checkbox_gaming.setEnabled(False)
         self.checkbox_minimal.setEnabled(False)
         self.checkbox_recommended.setEnabled(False)
         self.thread.start()
+
+    def run_maintenance(self):
+        self.log_output.append("[INFO] Running post-install maintenance tasks...")
+        # Placeholder for actual maintenance logic
+
+    def cancel_installation(self):
+        if self.thread and self.thread.isRunning():
+            self.thread.stop()
+            self.cancel_button.setEnabled(False)
+
+    def install_finished(self, success):
+        self.progress_bar.setVisible(False)
+        self.cancel_button.setEnabled(False)
+        if success:
+            QtWidgets.QMessageBox.information(self, "Installation Complete", "Installation completed successfully!")
+        else:
+            QtWidgets.QMessageBox.warning(self, "Installation Error", "Installation was interrupted or failed. Check logs for details.")
+        self.install_button.setEnabled(True)
+        self.checkbox_gaming.setEnabled(True)
+        self.checkbox_minimal.setEnabled(True)
+        self.checkbox_recommended.setEnabled(True)
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
