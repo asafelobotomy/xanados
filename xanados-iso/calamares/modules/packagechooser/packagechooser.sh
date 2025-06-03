@@ -1,8 +1,21 @@
 #!/bin/bash
+set -e
 
 echo "[INFO] Running XanadOS package chooser..."
 
-# Example logic (to be replaced by actual GUI selections)
-if grep -q "STEAM=yes" /etc/xanados/package-options.conf; then
-    pacman -Sy --noconfirm steam
+CONFIG="/etc/xanados/package-options.conf"
+if [ -f "$CONFIG" ]; then
+# shellcheck source=/etc/xanados/package-options.conf
+    source "$CONFIG"
 fi
+
+case "$KERNEL" in
+    xanmod)
+        pacman -Syu --needed --noconfirm linux-xanmod
+        pacman -Rns --noconfirm linux-zen || true
+        ;;
+    *)
+        pacman -Syu --needed --noconfirm linux-zen
+        pacman -Rns --noconfirm linux-xanmod || true
+        ;;
+esac
