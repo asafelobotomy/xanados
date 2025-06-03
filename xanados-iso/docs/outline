@@ -29,7 +29,7 @@ Live ISO	Bootable USB environment
 Init System	systemd
 Secure Boot	Optional toggle in Calamares
 Encryption	Optional full disk encryption
-Kernel Options	linux-zen (default), xanmod (optional)
+Kernel Options	linux-zen (default), linux-xanmod (optional)
 
 🎮 Gaming Stack
 Feature	Detail
