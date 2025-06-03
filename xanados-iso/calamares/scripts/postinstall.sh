@@ -25,7 +25,13 @@ fi
 # Secure Boot setup placeholder
 if [ -f /etc/xanados/secureboot_enabled ]; then
   echo "[XanadOS] Secure Boot enabled, configuring keys..."
-  # TODO: Add key enrollment commands here
+  if command -v sbctl >/dev/null 2>&1; then
+    sbctl create-keys
+    sbctl enroll-keys --yes-this-is-dangerous
+  else
+    echo "[ERROR] sbctl not installed, cannot enroll Secure Boot keys."
+    exit 1
+  fi
 else
   echo "[XanadOS] Secure Boot not enabled."
 fi
