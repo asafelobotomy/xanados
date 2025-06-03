@@ -213,8 +213,7 @@ class WelcomeApp(QtWidgets.QWidget):
             "lsblk -f"
         ]
         for cmd in commands:
-            self.log_output.append(f"
-▶ {cmd}")
+            self.log_output.append(f"▶ {cmd}")
             try:
                 result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
                 output = result.stdout.strip() or "[no output]"
