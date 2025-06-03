@@ -48,3 +48,27 @@ This repository contains the archiso profile used to build the XanadOS installat
 3. Run the Calamares installer from the live session to install the system to disk.
 
 For more details see [`xanados-iso/docs/README_XANADOS.md`](xanados-iso/docs/README_XANADOS.md).
+
+## Running the Next.js frontend
+
+The repository also contains a web-based frontend located in `frontend/`. All
+commands below are executed from the repository root and use the `--prefix`
+flag to target the frontend directory.
+
+1. Install dependencies:
+   ```bash
+   npm install --prefix frontend
+   ```
+2. Start the development server:
+   ```bash
+   npm run dev --prefix frontend
+   ```
+3. Lint the codebase:
+   ```bash
+   npm run lint --prefix frontend
+   ```
+4. Generate production builds:
+   ```bash
+   npm run build --prefix frontend
+   ```
+
