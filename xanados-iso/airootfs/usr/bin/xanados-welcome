@@ -1,0 +1,2 @@
+#!/bin/sh
+exec python3 /etc/xanados/welcome.py "$@"

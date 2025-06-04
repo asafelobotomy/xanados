@@ -156,3 +156,6 @@ parted
 squashfs-tools
 systemd-resolvconf
 tcpdump
+calamares
+sbctl
+paru

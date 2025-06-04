@@ -1,0 +1,6 @@
+[Desktop Entry]
+Type=Application
+Name=XanadOS Welcome
+Exec=/usr/bin/xanados-welcome
+X-GNOME-Autostart-enabled=true
+NoDisplay=false
