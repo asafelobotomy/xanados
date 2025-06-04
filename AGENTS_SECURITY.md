@@ -2,7 +2,7 @@
 
 > **Security & Backup Agents**  
 > _This file documents the tools used by `system_maint.sh` for vulnerability
-scanning, rootkit detection, firewall auditing, and backup operations._
+> scanning, rootkit detection, firewall auditing, and backup operations._
 
 ---
 
