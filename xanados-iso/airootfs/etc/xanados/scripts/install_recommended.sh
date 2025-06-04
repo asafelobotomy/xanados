@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 LOGFILE="/tmp/welcome_install.log"
 exec > >(tee -a "$LOGFILE") 2>&1
 
