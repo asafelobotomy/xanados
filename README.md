@@ -77,4 +77,3 @@ flag to target the frontend directory.
    ```bash
    npm run build --prefix frontend
    ```
-
