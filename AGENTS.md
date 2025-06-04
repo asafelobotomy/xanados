@@ -21,6 +21,16 @@ Codex should **not** modify `/public/` or `.git`-ignored secrets.
 
 ---
 
+## 🚫 Forbidden Actions
+
+- Never modify files outside the listed directories above.
+- Never commit or expose secrets, tokens, or private keys.
+- Never execute scripts or commands without explicit user review.
+- Never push directly to the `main` branch.
+- Never disable or weaken security settings without explicit instruction.
+
+---
+
 ## 🧠 Codex Role in the ArchLinux ISO Workflow
 
 Codex may assist with:
@@ -34,6 +44,28 @@ Codex may assist with:
 
 ---
 
+## 📝 Example Workflow: Adding a New Package
+
+1. Create `/packages/<pkgname>/PKGBUILD` following Arch standards.
+2. Add the package to `/iso/profile/packages.x86_64`.
+3. Update `/docs/packages.md` with a description and usage.
+4. Run `namcap` and `makepkg --verifysource` to lint and verify.
+5. Add or update relevant tests in `/scripts/tests/`.
+
+---
+
+## 🧹 Linting and Formatting Requirements
+
+| File Type      | Linter/Formatter      | Command Example                |
+|----------------|----------------------|-------------------------------|
+| Shell scripts  | shellcheck, shfmt     | `shellcheck script.sh`        |
+| PKGBUILD       | namcap                | `namcap PKGBUILD`             |
+| Markdown       | prettier              | `prettier --check file.md`    |
+
+All code must pass the relevant linters before submission.
+
+---
+
 ## 🔐 Security and Compliance (Arch Linux Focus)
 
 Codex must:
@@ -44,6 +76,14 @@ Codex must:
 - Set restrictive file permissions (`umask 027`, `chmod 600+`)
 - Harden system settings: `sshd_config`, `journald.conf`, `grub.cfg`
 - Always verify GPG signatures or SHA256 sums on downloaded files
+
+### 🔒 Security Checklist
+
+- [ ] No hardcoded credentials or secrets
+- [ ] File permissions set securely (`chmod 600+`)
+- [ ] GPG/signature verification for all downloads
+- [ ] No world-writable files or directories
+- [ ] No unnecessary open ports or services
 
 ---
 
@@ -83,6 +123,14 @@ Build process:
 
 ---
 
+## 📝 Logging
+
+- All build scripts must log to `/logs/`
+- Logs must include timestamp, command, and result
+- Rotate logs if they exceed 10MB or 30 days
+
+---
+
 ## 🧪 System and Script Testing
 
 Codex must ensure:
@@ -100,3 +148,27 @@ qemu-system-x86_64 -cdrom out/archlinux-custom.iso -m 2048 -nographic
 
 # Validate services
 systemctl list-units --type=service --state=failed
+```
+
+---
+
+## 📚 References
+
+- [Arch Wiki: Creating packages](https://wiki.archlinux.org/title/Creating_packages)
+- [Arch Wiki: archiso](https://wiki.archlinux.org/title/Archiso)
+- [CIS Benchmarks](https://www.cisecurity.org/cis-benchmarks/)
+
+---
+
+## 💡 Prompting Tips for Codex/Co-Pilot
+
+- Always request a summary of changes before applying.
+- Ask for test coverage or example test cases with new scripts.
+- Request explanations for any security-sensitive changes.
+- When in doubt, refer to the Arch Wiki or this document.
+
+---
+
+## 🗒️ Changelog
+
+- 2025-06-03: Initial version with expanded security, linting, and workflow guidance.
