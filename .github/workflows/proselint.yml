@@ -15,4 +15,4 @@ jobs:
       - name: Install proselint
         run: pip install proselint
       - name: Run proselint
-        run: proselint AGENTS_*.md
+        run: proselint AGENTS*.md
