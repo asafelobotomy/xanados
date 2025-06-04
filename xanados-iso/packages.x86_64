@@ -60,7 +60,6 @@ gamemode
 retroarch
 vlc
 gwenview
-spotify-launcher
 p7zip
 file-roller
 base-devel
@@ -69,7 +68,6 @@ wget
 openssh
 dosfstools
 ntfs-3g
-exfat-utils
 fuse3
 gvfs
 gvfs-smb
@@ -88,7 +86,6 @@ rsync
 fd
 tmux
 ttf-liberation
-wireless_tools
 openvpn
 wireguard-tools
 gst-plugins-base
