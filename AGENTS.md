@@ -1,8 +1,12 @@
 # AGENTS.md – Guide for ChatGPT Codex in Arch Linux ISO Projects
 
-_Last updated: 2025-06-03_
+Last updated: 2025-06-03
 
-This document defines development, security, packaging, and build rules for **ChatGPT Codex** when contributing to this Arch Linux-based distribution. Codex may assist in scripting, packaging, testing, ISO creation, and documentation — but must follow all guidance in this file for correctness, reproducibility, and security.
+This document defines development, security, packaging, and build rules for
+**ChatGPT Codex** when contributing to this Arch Linux-based distribution.
+Codex may assist in scripting, packaging, testing, ISO creation, and
+documentation — but must follow all guidance in this file for correctness,
+reproducibility, and security.
 
 ---
 
@@ -57,11 +61,11 @@ Codex may assist with:
 
 ## 🧹 Linting and Formatting Requirements
 
-| File Type      | Linter/Formatter      | Command Example                |
-|----------------|----------------------|-------------------------------|
-| Shell scripts  | shellcheck, shfmt     | `shellcheck script.sh`        |
-| PKGBUILD       | namcap                | `namcap PKGBUILD`             |
-| Markdown       | prettier              | `prettier --check file.md`    |
+| File Type     | Linter/Formatter  | Command Example            |
+| ------------- | ----------------- | -------------------------- |
+| Shell scripts | shellcheck, shfmt | `shellcheck script.sh`     |
+| PKGBUILD      | namcap            | `namcap PKGBUILD`          |
+| Markdown      | prettier          | `prettier --check file.md` |
 
 All code must pass the relevant linters before submission.
 
@@ -92,8 +96,8 @@ Codex must:
 
 Codex-generated PKGBUILD files must:
 
-- Follow Arch packaging standards:  
-  [Arch Wiki: Creating packages](https://wiki.archlinux.org/title/Creating_packages)
+- Follow Arch packaging standards:
+  [Arch Wiki: Creating packages][archpkg]
 - Include all mandatory fields: `pkgname`, `pkgver`, `pkgrel`, `license`, etc.
 - Use `sha256sums` or `validpgpkeys` for source verification
 - Be linted using `namcap` or similar tools
@@ -155,9 +159,11 @@ systemctl list-units --type=service --state=failed
 
 ## 📚 References
 
-- [Arch Wiki: Creating packages](https://wiki.archlinux.org/title/Creating_packages)
+- [Arch Wiki: Creating packages][archpkg]
 - [Arch Wiki: archiso](https://wiki.archlinux.org/title/Archiso)
 - [CIS Benchmarks](https://www.cisecurity.org/cis-benchmarks/)
+
+[archpkg]: https://wiki.archlinux.org/title/Creating_packages
 
 ---
 
@@ -172,4 +178,5 @@ systemctl list-units --type=service --state=failed
 
 ## 🗒️ Changelog
 
-- 2025-06-03: Initial version with expanded security, linting, and workflow guidance.
+- 2025-06-03: Initial version with expanded security, linting, and workflow
+  guidance.
