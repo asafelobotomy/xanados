@@ -73,6 +73,7 @@ flag to target the frontend directory.
    ```bash
    npm run lint --prefix frontend
    ```
+   ESLint rules are defined in `frontend/.eslintrc.json`.
 4. Generate production builds:
    ```bash
    npm run build --prefix frontend
