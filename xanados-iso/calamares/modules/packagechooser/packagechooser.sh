@@ -6,6 +6,7 @@ echo "[INFO] Running XanadOS package chooser..."
 CONFIG="/etc/xanados/package-options.conf"
 if [ -f "$CONFIG" ]; then
 	# shellcheck source=/etc/xanados/package-options.conf
+	# shellcheck disable=SC1091
 	source "$CONFIG"
 fi
 
