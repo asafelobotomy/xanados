@@ -1,6 +1,9 @@
 # XanadOS ISO v2
 
-XanadOS is a custom Arch-based Linux distribution tailored for gaming, privacy, and aesthetic coherence. Built with a modular installer, XanadOS lets users choose their desired experience — Gaming, Minimal, or Fully Featured — during first boot.
+XanadOS is a custom Arch-based Linux distribution tailored for gaming,
+privacy, and aesthetic coherence. Built with a modular installer, XanadOS
+lets users choose their desired experience — Gaming, Minimal, or Fully
+Featured — during first boot.
 
 ## Features
 
