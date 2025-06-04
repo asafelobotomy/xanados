@@ -1,6 +1,5 @@
 base
 linux-zen
-linux-xanmod
 linux-firmware
 mkinitcpio
 btrfs-progs
