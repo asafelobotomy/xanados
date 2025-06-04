@@ -12,7 +12,7 @@ XanadOS is a cyberpunk-inspired Linux distribution based on Arch Linux. It aims 
 
 ## Repository layout
 
-This repository contains the archiso profile used to build the XanadOS installation media.
+This repository contains the archiso profile as well as supporting directories used to build XanadOS.
 
 - `xanados-iso/` – archiso profile and build scripts
 - `xanados-iso/calamares/` – Calamares installer configuration
@@ -20,6 +20,12 @@ This repository contains the archiso profile used to build the XanadOS installat
 - `xanados-iso/packages.x86_64` – package list for the ISO
 - `xanados-iso/bootstrap_packages.x86_64` – minimal bootstrap package list
 - `xanados-iso/docs/` – additional documentation
+- `packages/` – custom PKGBUILDs
+- `scripts/` – automation scripts
+- `configs/` – configuration snippets
+- `docs/` – project documentation
+- `logs/` – build and test logs
+- `frontend/` – Next.js based web frontend
 
 ## Building the ISO
 
@@ -44,7 +50,7 @@ This repository contains the archiso profile used to build the XanadOS installat
 ## Installing XanadOS
 
 1. Boot your machine from the USB stick.
-2. On first login the **Welcome App** appears. Pick Gaming, Minimal or Recommended to install the desired packages. Logs are saved to `/tmp/welcome.log`.
+2. On first login the **Welcome App** appears. Pick Gaming, Minimal or Recommended to install the desired packages. Logs are saved to `/tmp/welcome.log` and the autostart entry is provided by `/etc/xanados/welcome.desktop`.
 3. Run the Calamares installer from the live session to install the system to disk.
 
 For more details see [`xanados-iso/docs/README_XANADOS.md`](xanados-iso/docs/README_XANADOS.md).
