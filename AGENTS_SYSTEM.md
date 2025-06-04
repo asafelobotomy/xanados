@@ -2,8 +2,8 @@
 
 > **System Maintenance Agents**  
 > _This file documents the system-level agents used by the `system_maint.sh`
-script to manage core functionality such as packages, storage, system
-monitoring, and cleanup._
+> script to manage core functionality such as packages, storage, system
+> monitoring, and cleanup._
 
 ---
 

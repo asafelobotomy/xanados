@@ -2,7 +2,7 @@
 
 > **Shell Script Linting & Continuous Integration**  
 > _This file documents the use of ShellCheck for linting and GitHub Actions for
-automated validation of `system_maint.sh`._
+> automated validation of `system_maint.sh`._
 
 ---
 
