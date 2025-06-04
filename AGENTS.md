@@ -16,6 +16,7 @@ Codex will interact with the following areas of the project:
 - `/configs/`: Custom system settings, pacman hooks, systemd units
 - `/docs/`: Markdown documentation
 - `/logs/`: Build, test, and ISO generation logs
+- `/frontend/`: Next.js based web frontend
 
 Codex should **not** modify `/public/` or `.git`-ignored secrets.
 
