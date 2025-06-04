@@ -75,26 +75,29 @@ For more details see
 
 ## Running the Next.js frontend
 
-The repository also contains a web-based frontend located in `frontend/`. All
-commands below are executed from the repository root and use the `--prefix`
-flag to target the frontend directory.
+The repository also contains a web-based frontend located in `frontend/`. Enter
+that directory before running any of the commands below:
+
+```bash
+cd frontend
+```
 
 1. Install dependencies:
 
    ```bash
-   npm install --prefix frontend
+   npm install
    ```
 
 2. Start the development server:
 
    ```bash
-   npm run dev --prefix frontend
+   npm run dev
    ```
 
 3. Lint the codebase:
 
    ```bash
-   npm run lint --prefix frontend
+   npm run lint
    ```
 
    ESLint rules are defined in `frontend/.eslintrc.json`.
@@ -102,5 +105,5 @@ flag to target the frontend directory.
 4. Generate production builds:
 
    ```bash
-   npm run build --prefix frontend
+   npm run build
    ```
