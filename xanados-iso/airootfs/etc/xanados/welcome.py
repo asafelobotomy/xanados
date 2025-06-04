@@ -186,6 +186,13 @@ class WelcomeApp(QtWidgets.QWidget):
         self.install_button.setEnabled(any_checked)
 
     def start_installation(self):
+        if os.geteuid() != 0:
+            QtWidgets.QMessageBox.warning(
+                self,
+                "Insufficient Privileges",
+                "Please run this installer with root permissions."
+            )
+            return
         scripts = []
         if self.checkbox_gaming.isChecked(): scripts.append('/etc/xanados/scripts/install_gaming.sh')
         if self.checkbox_minimal.isChecked(): scripts.append('/etc/xanados/scripts/install_minimal.sh')
@@ -203,6 +210,9 @@ class WelcomeApp(QtWidgets.QWidget):
         self.thread.start()
 
     def run_maintenance(self):
+        if os.geteuid() != 0:
+            self.log_output.append("[ERROR] Maintenance requires root privileges.")
+            return
         self.log_output.append("[INFO] Running post-install maintenance tasks...")
         commands = [
             "sudo pacman -Syu --noconfirm",

@@ -9,7 +9,7 @@ SYSROOT="$1"
 # Example for NetworkManager configs
 if [ -d "$SYSROOT/etc/NetworkManager/system-connections" ]; then
 	echo "[XanadOS] NetworkManager configs found, setting permissions..."
-	chmod 600 "$SYSROOT/etc/NetworkManager/system-connections/"*
+	chmod 600 "$SYSROOT"/etc/NetworkManager/system-connections/*
 fi
 
 # Ensure NetworkManager service enabled on installed system
