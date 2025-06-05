@@ -1,4 +1,5 @@
-# XanadOS Finalization Checklist – Pre-Deployment
+
+✅ XanadOS Finalization Checklist – Pre-Deployment
 
 🔧 1. Theming & Visuals
 🎨 SDDM Login Screen
