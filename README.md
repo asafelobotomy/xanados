@@ -10,7 +10,7 @@
 - [Quick Start](#quick-start)
 - [Screenshots](#screenshots)
 - ...
-  
+
 ## Quick Start
 
 Clone the repository and build the ISO:
@@ -51,33 +51,33 @@ directories used to build XanadOS.
 
 1. Install the `archiso` package using Paru:
 
-    ```bash
-    paru -S archiso
-    ```
+   ```bash
+   paru -S archiso
+   ```
 
 2. Clone this repository and enter the profile directory:
 
-    ```bash
-    git clone https://github.com/asafelobotomy/xanados.git
-    cd xanados/xanados-iso
-    ```
+   ```bash
+   git clone https://github.com/asafelobotomy/xanados.git
+   cd xanados/xanados-iso
+   ```
 
 3. Run `mkarchiso` or the helper script to create the image.
    Output will be placed in the `out/` directory:
 
-    ```bash
-    # direct command
-    sudo mkarchiso -v -o out .
+   ```bash
+   # direct command
+   sudo mkarchiso -v -o out .
 
-    # or use the provided helper
-    bash ../scripts/build_iso.sh
-    ```
+   # or use the provided helper
+   bash ../scripts/build_iso.sh
+   ```
 
 4. Flash the resulting ISO to a USB drive:
 
-    ```bash
-    sudo dd if=out/xanados-*.iso of=/dev/sdX bs=4M status=progress && sync
-    ```
+   ```bash
+   sudo dd if=out/xanados-*.iso of=/dev/sdX bs=4M status=progress && sync
+   ```
 
 ### Building in Docker
 
@@ -115,29 +115,29 @@ cd frontend
 
 1. Install dependencies:
 
-    ```bash
-    npm install
-    ```
+   ```bash
+   npm install
+   ```
 
 2. Start the development server:
 
-    ```bash
-    npm run dev
-    ```
+   ```bash
+   npm run dev
+   ```
 
 3. Lint the codebase:
 
-    ```bash
-    npm run lint
-    ```
+   ```bash
+   npm run lint
+   ```
 
-    ESLint rules are defined in `frontend/.eslintrc.js`.
+   ESLint rules are defined in `frontend/.eslintrc.js`.
 
 4. Generate production builds:
 
-    ```bash
-    npm run build
-    ```
+   ```bash
+   npm run build
+   ```
 
 ## Contributing
 

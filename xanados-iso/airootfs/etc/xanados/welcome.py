@@ -6,6 +6,7 @@ import subprocess
 from datetime import datetime
 from PyQt5 import QtWidgets, QtGui, QtCore
 
+
 class InstallerThread(QtCore.QThread):
     progress = QtCore.pyqtSignal(str)
     finished = QtCore.pyqtSignal(bool)
@@ -29,10 +30,10 @@ class InstallerThread(QtCore.QThread):
             self.progress.emit(f"▶ Executing: {script}")
             try:
                 process = subprocess.Popen(
-                    ['bash', script],
+                    ["bash", script],
                     stdout=subprocess.PIPE,
                     stderr=subprocess.STDOUT,
-                    universal_newlines=True
+                    universal_newlines=True,
                 )
                 for line in process.stdout:
                     if not self._is_running:
@@ -56,6 +57,7 @@ class InstallerThread(QtCore.QThread):
     def stop(self):
         self._is_running = False
 
+
 class WelcomeApp(QtWidgets.QWidget):
     def mousePressEvent(self, event):
         if event.button() == QtCore.Qt.LeftButton:
@@ -70,7 +72,7 @@ class WelcomeApp(QtWidgets.QWidget):
 
     def __init__(self):
         super().__init__()
-        self.installed = os.path.exists('/etc/xanados/installed')
+        self.installed = os.path.exists("/etc/xanados/installed")
         self.init_ui()
         self.thread = None
 
@@ -84,7 +86,8 @@ class WelcomeApp(QtWidgets.QWidget):
         shadow.setColor(QtGui.QColor(0, 255, 255, 120))
         self.setGraphicsEffect(shadow)
         self.setGeometry(100, 100, 600, 450)
-        self.setStyleSheet("""
+        self.setStyleSheet(
+            """
             QWidget {
                 background-color: #0D0D0D;
                 color: #FF00FF;
@@ -111,27 +114,34 @@ class WelcomeApp(QtWidgets.QWidget):
                 padding: 6px;
                 color: #00FFFF;
             }
-        """)
+        """
+        )
 
         layout = QtWidgets.QVBoxLayout()
 
         top_bar = QtWidgets.QHBoxLayout()
         top_bar.setContentsMargins(0, 0, 0, 0)
         self.title_label = QtWidgets.QLabel("  Welcome to XanadOS")
-        self.title_label.setStyleSheet('font-weight: bold; color: #00FFFF;')
+        self.title_label.setStyleSheet("font-weight: bold; color: #00FFFF;")
         self.close_button = QtWidgets.QPushButton("✕")
         self.close_button.setFixedSize(30, 30)
         self.close_button.clicked.connect(self.close)
-        self.close_button.setStyleSheet('QPushButton { background-color: transparent; color: #FF00FF; border: none; font-size: 14pt; } QPushButton:hover { color: red; }')
+        self.close_button.setStyleSheet(
+            "QPushButton { background-color: transparent; color: #FF00FF; border: none; font-size: 14pt; } QPushButton:hover { color: red; }"
+        )
         top_bar.addWidget(self.title_label)
         top_bar.addStretch()
         top_bar.addWidget(self.close_button)
         layout.addLayout(top_bar)
 
         self.checkbox_gaming = QtWidgets.QCheckBox("Gaming Mode")
-        self.checkbox_gaming.setToolTip("Install Steam, Lutris, Heroic, vkBasalt, MangoHud, etc.")
+        self.checkbox_gaming.setToolTip(
+            "Install Steam, Lutris, Heroic, vkBasalt, MangoHud, etc."
+        )
         self.checkbox_minimal = QtWidgets.QCheckBox("Minimal Mode")
-        self.checkbox_minimal.setToolTip("Install only the essential packages for a clean setup.")
+        self.checkbox_minimal.setToolTip(
+            "Install only the essential packages for a clean setup."
+        )
         self.checkbox_recommended = QtWidgets.QCheckBox("Install All Recommended")
         self.checkbox_recommended.setToolTip("Install XanadOS full package stack.")
 
@@ -161,14 +171,20 @@ class WelcomeApp(QtWidgets.QWidget):
 
         self.setLayout(layout)
 
-        for box in [self.checkbox_gaming, self.checkbox_minimal, self.checkbox_recommended]:
+        for box in [
+            self.checkbox_gaming,
+            self.checkbox_minimal,
+            self.checkbox_recommended,
+        ]:
             box.stateChanged.connect(self.update_button_state)
 
         if os.path.exists("/etc/xanados/secureboot_enabled"):
             self.log_output.append("[!] Secure Boot is enabled.")
 
         if self.installed:
-            self.log_output.append("[INFO] Detected installed system. Installation options disabled.")
+            self.log_output.append(
+                "[INFO] Detected installed system. Installation options disabled."
+            )
             self.checkbox_gaming.setEnabled(False)
             self.checkbox_minimal.setEnabled(False)
             self.checkbox_recommended.setEnabled(False)
@@ -180,9 +196,14 @@ class WelcomeApp(QtWidgets.QWidget):
         self.cancel_button.clicked.connect(self.cancel_installation)
 
     def update_button_state(self):
-        any_checked = any(box.isChecked() for box in [
-            self.checkbox_gaming, self.checkbox_minimal, self.checkbox_recommended
-        ])
+        any_checked = any(
+            box.isChecked()
+            for box in [
+                self.checkbox_gaming,
+                self.checkbox_minimal,
+                self.checkbox_recommended,
+            ]
+        )
         self.install_button.setEnabled(any_checked)
 
     def start_installation(self):
@@ -190,16 +211,24 @@ class WelcomeApp(QtWidgets.QWidget):
             QtWidgets.QMessageBox.warning(
                 self,
                 "Insufficient Privileges",
-                "Please run this installer with root permissions."
+                "Please run this installer with root permissions.",
             )
             return
         scripts = []
-        if self.checkbox_gaming.isChecked(): scripts.append('/etc/xanados/scripts/install_gaming.sh')
-        if self.checkbox_minimal.isChecked(): scripts.append('/etc/xanados/scripts/install_minimal.sh')
-        if self.checkbox_recommended.isChecked(): scripts.append('/etc/xanados/scripts/install_recommended.sh')
+        if self.checkbox_gaming.isChecked():
+            scripts.append("/etc/xanados/scripts/install_gaming.sh")
+        if self.checkbox_minimal.isChecked():
+            scripts.append("/etc/xanados/scripts/install_minimal.sh")
+        if self.checkbox_recommended.isChecked():
+            scripts.append("/etc/xanados/scripts/install_recommended.sh")
 
         self.thread = InstallerThread(scripts)
-        self.thread.progress.connect(lambda msg: (self.log_output.append(msg), self.log_output.ensureCursorVisible()))
+        self.thread.progress.connect(
+            lambda msg: (
+                self.log_output.append(msg),
+                self.log_output.ensureCursorVisible(),
+            )
+        )
         self.thread.finished.connect(self.install_finished)
         self.progress_bar.setVisible(True)
         self.install_button.setEnabled(False)
@@ -220,7 +249,7 @@ class WelcomeApp(QtWidgets.QWidget):
             "systemctl status NetworkManager",
             "systemctl status chronyd",
             "journalctl -b -1 --no-pager | tail -n 50",
-            "lsblk -f"
+            "lsblk -f",
         ]
         for cmd in commands:
             self.log_output.append(f"▶ {cmd}")
@@ -240,13 +269,20 @@ class WelcomeApp(QtWidgets.QWidget):
         self.progress_bar.setVisible(False)
         self.cancel_button.setEnabled(False)
         if success:
-            QtWidgets.QMessageBox.information(self, "Installation Complete", "Installation completed successfully!")
+            QtWidgets.QMessageBox.information(
+                self, "Installation Complete", "Installation completed successfully!"
+            )
         else:
-            QtWidgets.QMessageBox.warning(self, "Installation Error", "Installation was interrupted or failed. Check logs for details.")
+            QtWidgets.QMessageBox.warning(
+                self,
+                "Installation Error",
+                "Installation was interrupted or failed. Check logs for details.",
+            )
         self.install_button.setEnabled(True)
         self.checkbox_gaming.setEnabled(True)
         self.checkbox_minimal.setEnabled(True)
         self.checkbox_recommended.setEnabled(True)
+
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)

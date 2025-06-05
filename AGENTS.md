@@ -78,14 +78,14 @@ You may assist with:
 
 ## 🧹 Linting & Formatting
 
-| File Type     | Tool         | Example Command                    |
-|---------------|--------------|------------------------------------|
-| Shell scripts | shellcheck   | `shellcheck script.sh`             |
-| Shell scripts | shfmt        | `shfmt -d -i 2 script.sh`          |
-| PKGBUILD      | namcap       | `namcap PKGBUILD`                  |
-| Markdown      | prettier     | `prettier --check file.md`         |
-| Python        | black        | `black file.py`                    |
-| JavaScript    | eslint       | `eslint file.js`                   |
+| File Type     | Tool       | Example Command            |
+| ------------- | ---------- | -------------------------- |
+| Shell scripts | shellcheck | `shellcheck script.sh`     |
+| Shell scripts | shfmt      | `shfmt -d -i 2 script.sh`  |
+| PKGBUILD      | namcap     | `namcap PKGBUILD`          |
+| Markdown      | prettier   | `prettier --check file.md` |
+| Python        | black      | `black file.py`            |
+| JavaScript    | eslint     | `eslint file.js`           |
 
 Ensure all code passes relevant linters before submission.
 
