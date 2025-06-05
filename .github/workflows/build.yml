@@ -16,5 +16,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Install archiso
         run: pacman -Syu --noconfirm archiso
+      - name: Install sudo
+        run: pacman -Syu --noconfirm sudo
       - name: Build ISO
         run: bash scripts/build_iso.sh
