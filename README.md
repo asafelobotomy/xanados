@@ -1,39 +1,20 @@
+# XanadOS
+
 [![Build Status](https://github.com/asafelobotomy/xanados/actions/workflows/ci.yml/badge.svg)](https://github.com/asafelobotomy/xanados/actions)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
-
-# XanadOS
-
-XanadOS is a cyberpunk-inspired Linux distribution based on Arch Linux.
-It aims to deliver a gaming-focused experience while keeping the system minimal
-and privacy oriented. A custom PyQt5 "Welcome App" lets you choose between
-Gaming, Minimal or full Recommended setups as soon as you boot the live
-environment.
 
 ## Table of Contents
 
 - [Features](#features)
 - [Quick Start](#quick-start)
 - [Screenshots](#screenshots)
-- [Repository layout](#repository-layout)
-- [Building the ISO](#building-the-iso)
-- [Installing XanadOS](#installing-xanados)
-- [Running the Next.js frontend](#running-the-nextjs-frontend)
-- [Contributing](#contributing)
-- [Support & Community](#support--community)
-- [License](#license)
-
-## Features
-
-- Gaming-ready stack with tools like Steam, Lutris, MangoHud and Heroic
-- Optional minimal install for a clean KDE Plasma desktop
-- Full recommended setup with multimedia and productivity applications
-- Secure Boot toggle and detection via Calamares modules
-- Custom Welcome App with progress logging and neon styled interface
+- ...
 
 ## Quick Start
 
 Clone the repository and build the ISO:
+
 ```bash
 git clone https://github.com/asafelobotomy/xanados.git
 cd xanados/xanados-iso
