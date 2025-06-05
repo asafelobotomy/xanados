@@ -15,4 +15,6 @@ jobs:
       - name: Install proselint
         run: pip install proselint
       - name: Run proselint
-        run: proselint AGENTS*.md docs/**/*.md
+        run: |
+          shopt -s globstar
+          proselint AGENTS*.md docs/**/*.md

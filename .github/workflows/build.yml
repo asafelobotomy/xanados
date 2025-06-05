@@ -9,9 +9,12 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    container:
+      image: archlinux:latest
+      options: --privileged
     steps:
       - uses: actions/checkout@v4
       - name: Install archiso
-        run: sudo apt-get update && sudo apt-get install -y archiso
+        run: pacman -Syu --noconfirm archiso
       - name: Build ISO
         run: bash scripts/build_iso.sh
