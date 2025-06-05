@@ -47,11 +47,15 @@ directories used to build XanadOS.
    cd xanados/xanados-iso
    ```
 
-3. Run `mkarchiso` to create the image.
+3. Run `mkarchiso` or the helper script to create the image.
    Output will be placed in the `out/` directory:
 
    ```bash
+   # direct command
    sudo mkarchiso -v -o out .
+
+   # or use the provided helper
+   bash ../scripts/build_iso.sh
    ```
 
 4. Flash the resulting ISO to a USB drive:
