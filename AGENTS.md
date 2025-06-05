@@ -1,27 +1,27 @@
 # AGENTS.md – Guide for AI & Human Contributors
 
-_Last updated: 2025-06-05_
+## Last Updated: 2025-06-05
 
 > **Audience:** All developers, AI agents (Copilot, Codex, ChatGPT), and collaborators.
 
 ---
 
-## 📑 Table of Contents
+## 📖 Table of Contents
 
-1. [Project Scope & Directory Structure](#project-scope--directory-structure)
-2. [Forbidden Actions & Security](#forbidden-actions--security)
-3. [Contributor Responsibilities](#contributor-responsibilities)
-4. [Example Workflow: Adding a Package](#example-workflow-adding-a-package)
-5. [Linting & Formatting](#linting--formatting)
-6. [Security and Compliance](#security-and-compliance)
-7. [PKGBUILD Standards](#pkgbuild-standards)
-8. [ISO Creation Guidelines](#iso-creation-guidelines)
-9. [Logging](#logging)
-10. [System & Script Testing](#system--script-testing)
-11. [References](#references)
-12. [Prompting Tips](#prompting-tips)
-13. [Suggesting Improvements](#suggesting-improvements)
-14. [Changelog](#changelog)
+1. [Project Scope & Directory Structure](#-project-scope--directory-structure)
+2. [Forbidden Actions & Security](#-forbidden-actions--security)
+3. [Contributor Responsibilities](#-contributor-responsibilities)
+4. [Example Workflow: Adding a Package](#-example-workflow-adding-a-package)
+5. [Linting & Formatting](#-linting--formatting)
+6. [Security and Compliance](#-security-and-compliance)
+7. [PKGBUILD Standards](#-pkgbuild-standards)
+8. [ISO Creation Guidelines](#-iso-creation-guidelines)
+9. [Logging](#-logging)
+10. [System & Script Testing](#-system--script-testing)
+11. [References](#-references)
+12. [Prompting Tips](#-prompting-tips)
+13. [Suggesting Improvements](#-suggesting-improvements)
+14. [Changelog](#-changelog)
 
 ---
 
@@ -72,7 +72,7 @@ You may assist with:
 - [ ] Update `/docs/packages.md` with usage/details
 - [ ] Run `namcap` and `makepkg --verifysource`
 - [ ] Add/update tests in `/scripts/tests/`
-- [ ] Open a Pull Request summarizing changes (see [Suggesting Improvements](#suggesting-improvements))
+- [ ] Open a Pull Request summarizing changes (see [Suggesting Improvements](#-suggesting-improvements))
 
 ---
 
@@ -91,7 +91,7 @@ Ensure all code passes relevant linters before submission.
 
 ---
 
-## 🔐 Security and Compliance
+## 🔒 Security and Compliance
 
 - Follow [CIS Benchmarks](https://www.cisecurity.org/cis-benchmarks/) where applicable.
 - Use `sudo` securely; avoid `NOPASSWD`.
@@ -120,7 +120,9 @@ Ensure all code passes relevant linters before submission.
 - Do not vendor precompiled/insecure binaries
 
 **Example PKGBUILD:**
+
 ```bash
+
 pkgname=example
 pkgver=1.0
 pkgrel=1
@@ -138,11 +140,12 @@ package() {
     cd "$srcdir/$pkgname-$pkgver"
     make DESTDIR="$pkgdir/" install
 }
+
 ```
 
 ---
 
-## 📀 ISO Creation Guidelines
+## 🗂 ISO Creation Guidelines
 
 - Must be GRUB/syslinux bootable
 - Include `airootfs`, base and custom packages
@@ -162,10 +165,13 @@ All build scripts must:
 - Rotate logs if >10MB or older than 30 days
 
 **Example logging snippet (bash):**
+
 ```bash
+
 log() {
   echo "$(date '+%Y-%m-%d %H:%M:%S') $*" | tee -a /logs/build.log
 }
+
 ```
 
 ---
@@ -178,8 +184,11 @@ log() {
 - [Optional] Use [`bats-core`](https://github.com/bats-core/bats-core) for shell test coverage
 
 **Example QEMU boot test:**
+
 ```bash
+
 qemu-system-x86_64 -cdrom out/archlinux-custom.iso -m 2048 -nographic
+
 ```
 
 ---
@@ -211,11 +220,12 @@ qemu-system-x86_64 -cdrom out/archlinux-custom.iso -m 2048 -nographic
 
 ## 🤝 Suggesting Improvements
 
-To propose changes, [open a Pull Request](https://github.com/asafelobotomy/xanados/compare) or [GitHub Issue](https://github.com/asafelobotomy/xanados/issues/new) with your suggestions. Include a summary and rationale for your proposed edits.
+To propose changes, [open a Pull Request](https://github.com/asafelobotomy/xanados/compare)
+or [GitHub Issue](https://github.com/asafelobotomy/xanados/issues/new) with your suggestions. Include a summary and rationale.
 
 ---
 
-## 🗒️ Changelog
+## 📝 Changelog
 
 - 2025-06-05: Improved formatting, added ToC, expanded security & workflow sections.
 
