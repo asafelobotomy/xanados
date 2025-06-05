@@ -1,3 +1,7 @@
+[![Build Status](https://github.com/asafelobotomy/xanados/actions/workflows/ci.yml/badge.svg)](https://github.com/asafelobotomy/xanados/actions)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
+
 # XanadOS
 
 XanadOS is a cyberpunk-inspired Linux distribution based on Arch Linux.
@@ -5,6 +9,19 @@ It aims to deliver a gaming-focused experience while keeping the system minimal
 and privacy oriented. A custom PyQt5 "Welcome App" lets you choose between
 Gaming, Minimal or full Recommended setups as soon as you boot the live
 environment.
+
+## Table of Contents
+
+- [Features](#features)
+- [Quick Start](#quick-start)
+- [Screenshots](#screenshots)
+- [Repository layout](#repository-layout)
+- [Building the ISO](#building-the-iso)
+- [Installing XanadOS](#installing-xanados)
+- [Running the Next.js frontend](#running-the-nextjs-frontend)
+- [Contributing](#contributing)
+- [Support & Community](#support--community)
+- [License](#license)
 
 ## Features
 
@@ -14,55 +31,71 @@ environment.
 - Secure Boot toggle and detection via Calamares modules
 - Custom Welcome App with progress logging and neon styled interface
 
+## Quick Start
+
+Clone the repository and build the ISO:
+```bash
+git clone https://github.com/asafelobotomy/xanados.git
+cd xanados/xanados-iso
+paru -S archiso
+sudo mkarchiso -v -o out .
+```
+
+## Screenshots
+
+<!-- Add screenshots or GIFs below. Place images in docs/screenshots/ -->
+<!-- Example: -->
+<!-- ![Welcome App screenshot](docs/screenshots/welcome-app.png) -->
+
 ## Repository layout
 
 This repository contains the archiso profile as well as supporting
 directories used to build XanadOS.
 
-- `xanados-iso/` – archiso profile and build scripts
-- `xanados-iso/calamares/` – Calamares installer configuration
-- `xanados-iso/airootfs/` – root filesystem for the live environment
-- `xanados-iso/packages.x86_64` – package list for the ISO
-- `xanados-iso/bootstrap_packages.x86_64` – minimal bootstrap package list
-- `xanados-iso/docs/` – additional documentation
-- `packages/` – custom PKGBUILDs
-- `scripts/` – automation scripts
-- `configs/` – configuration snippets
-- `docs/` – project documentation
-- `logs/` – build and test logs
-- `frontend/` – Next.js based web frontend
+- [`xanados-iso/`](xanados-iso/) – archiso profile and build scripts
+- [`xanados-iso/calamares/`](xanados-iso/calamares/) – Calamares installer configuration
+- [`xanados-iso/airootfs/`](xanados-iso/airootfs/) – root filesystem for the live environment
+- [`xanados-iso/packages.x86_64`](xanados-iso/packages.x86_64) – package list for the ISO
+- [`xanados-iso/bootstrap_packages.x86_64`](xanados-iso/bootstrap_packages.x86_64) – minimal bootstrap package list
+- [`xanados-iso/docs/`](xanados-iso/docs/) – additional documentation
+- [`packages/`](packages/) – custom PKGBUILDs
+- [`scripts/`](scripts/) – automation scripts
+- [`configs/`](configs/) – configuration snippets
+- [`docs/`](docs/) – project documentation
+- [`logs/`](logs/) – build and test logs
+- [`frontend/`](frontend/) – Next.js based web frontend
 
 ## Building the ISO
 
 1. Install the `archiso` package using Paru:
 
-   ```bash
-   paru -S archiso
-   ```
+    ```bash
+    paru -S archiso
+    ```
 
 2. Clone this repository and enter the profile directory:
 
-   ```bash
-   git clone <repository-url>
-   cd xanados/xanados-iso
-   ```
+    ```bash
+    git clone https://github.com/asafelobotomy/xanados.git
+    cd xanados/xanados-iso
+    ```
 
 3. Run `mkarchiso` or the helper script to create the image.
    Output will be placed in the `out/` directory:
 
-   ```bash
-   # direct command
-   sudo mkarchiso -v -o out .
+    ```bash
+    # direct command
+    sudo mkarchiso -v -o out .
 
-   # or use the provided helper
-   bash ../scripts/build_iso.sh
-   ```
+    # or use the provided helper
+    bash ../scripts/build_iso.sh
+    ```
 
 4. Flash the resulting ISO to a USB drive:
 
-   ```bash
-   sudo dd if=out/xanados-*.iso of=/dev/sdX bs=4M status=progress && sync
-   ```
+    ```bash
+    sudo dd if=out/xanados-*.iso of=/dev/sdX bs=4M status=progress && sync
+    ```
 
 ### Building in Docker
 
@@ -100,26 +133,39 @@ cd frontend
 
 1. Install dependencies:
 
-   ```bash
-   npm install
-   ```
+    ```bash
+    npm install
+    ```
 
 2. Start the development server:
 
-   ```bash
-   npm run dev
-   ```
+    ```bash
+    npm run dev
+    ```
 
 3. Lint the codebase:
 
-   ```bash
-   npm run lint
-   ```
+    ```bash
+    npm run lint
+    ```
 
-   ESLint rules are defined in `frontend/.eslintrc.js`.
+    ESLint rules are defined in `frontend/.eslintrc.js`.
 
 4. Generate production builds:
 
-   ```bash
-   npm run build
-   ```
+    ```bash
+    npm run build
+    ```
+
+## Contributing
+
+Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+
+## Support & Community
+
+- File issues and feature requests on [GitHub Issues](https://github.com/asafelobotomy/xanados/issues)
+- Join our discussion board (if available)
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
