@@ -1,3 +1,198 @@
+# AGENTS.md – Guide for AI & Human Contributors
+
+_Last updated: 2025-06-03_
+
+This document defines standards for development, security, packaging, and build workflows for **GitHub Copilot/Codex** and all contributors working on this Arch Linux-based distribution.
+
+> **Audience:** All developers, AI agents, and collaborators.
+
+---
+
+## 📦 Project Scope & Directory Structure
+
+Codex and contributors should interact only with:
+
+- `/packages/`: Custom [`PKGBUILD`](https://wiki.archlinux.org/title/PKGBUILD) packages
+- `/iso/`: ISO build configs via [archiso](https://wiki.archlinux.org/title/Archiso)
+- `/scripts/`: Bash automation and tooling
+- `/configs/`: System settings, pacman hooks, systemd units
+- `/docs/`: Markdown docs
+- `/logs/`: Build/test/ISO logs
+- `/frontend/`: Next.js frontend
+
+**Do not** modify `/public/` or commit `.git`-ignored secrets.
+
+---
+
+## 🚫 Forbidden Actions and Security
+
+- Do not modify files outside the directories above.
+- Do not commit or expose secrets, tokens, or private keys.
+- Do not execute scripts or commands without explicit review.
+- Do not push directly to the `main` branch.
+- Do not weaken security settings unless explicitly instructed.
+
+---
+
+## 🧠 Contributor Responsibilities
+
+You may assist with:
+
+- Creating/editing PKGBUILD files
+- Writing archiso profiles (e.g., `releng/`, `baseline/`)
+- Automating build pipelines (`make`, `build.sh`)
+- Writing secure, POSIX-compliant shell scripts
+- Managing pacman hooks, mkinitcpio configs, systemd services
+- Testing ISO builds (QEMU, VirtualBox, CI)
+
+---
+
+## 📝 Example Workflow: Adding a Package
+
+- [ ] Create `/packages/<pkgname>/PKGBUILD` per [Arch standards](https://wiki.archlinux.org/title/Creating_packages)
+- [ ] Add package to `/iso/profile/packages.x86_64`
+- [ ] Update `/docs/packages.md` with usage/details
+- [ ] Run `namcap` and `makepkg --verifysource`
+- [ ] Add/Update tests in `/scripts/tests/`
+
+---
+
+## 🧹 Linting & Formatting
+
+| File Type     | Tool         | Example Command                |
+|---------------|--------------|-------------------------------|
+| Shell scripts | shellcheck   | `shellcheck script.sh`        |
+| Shell scripts | shfmt        | `shfmt -d -i 2 script.sh`     |
+| PKGBUILD      | namcap       | `namcap PKGBUILD`             |
+| Markdown      | prettier     | `prettier --check file.md`    |
+
+Ensure all code passes relevant linters before submission.
+
+---
+
+## 🔐 Security and Compliance
+
+- Follow [CIS Benchmarks](https://www.cisecurity.org/cis-benchmarks/) (where applicable)
+- Use `sudo` securely; avoid `NOPASSWD`
+- Avoid hardcoded passwords/keys/tokens
+- Set restrictive file permissions (`umask 027`, `chmod 600+`)
+- Harden system configs (`sshd_config`, `journald.conf`, `grub.cfg`)
+- Always verify GPG/signatures or SHA256 sums on downloads
+
+### Security Checklist
+
+- [ ] No hardcoded credentials/secrets
+- [ ] File permissions set securely (e.g., `chmod 600+`)
+- [ ] GPG/signature verification for all downloads
+- [ ] No world-writable files/dirs
+- [ ] No unnecessary open ports/services
+
+---
+
+## 🛠 PKGBUILD Standards
+
+- Follow [Arch Wiki: Creating packages](https://wiki.archlinux.org/title/Creating_packages)
+- Include all mandatory fields
+- Use `sha256sums`/`validpgpkeys` for sources
+- Pass `namcap`/linting
+- Do not vendor precompiled/insecure binaries
+
+**Example PKGBUILD:**
+```bash
+pkgname=example
+pkgver=1.0
+pkgrel=1
+pkgdesc="An example package"
+arch=('x86_64')
+url="https://example.com"
+license=('GPL3')
+source=("https://example.com/download/$pkgname-$pkgver.tar.gz")
+sha256sums=('SKIP') # Replace with actual sum!
+build() {
+    cd "$srcdir/$pkgname-$pkgver"
+    make
+}
+package() {
+    cd "$srcdir/$pkgname-$pkgver"
+    make DESTDIR="$pkgdir/" install
+}
+```
+
+---
+
+## 📀 ISO Creation Guidelines
+
+- Must be GRUB/syslinux bootable
+- Include `airootfs`, base packages, custom packages
+- Build metadata in `/etc/os-release` and `/etc/issue`
+- Ensure reproducibility (`SOURCE_DATE_EPOCH`, fixed timestamps)
+- Build via `build.sh` or `Makefile`, log to `/logs/iso-build.log`
+- Validate bootability, package list, network, shell
+
+---
+
+## 📝 Logging
+
+All build scripts must:
+
+- Log to `/logs/`
+- Include timestamp, command, and result in logs
+- Rotate logs if >10MB or older than 30 days
+
+**Example logging snippet (bash):**
+```bash
+log() {
+  echo "$(date '+%Y-%m-%d %H:%M:%S') $*" | tee -a /logs/build.log
+}
+```
+
+---
+
+## 🧪 System & Script Testing
+
+- All scripts must pass `shellcheck`
+- All systemd units enabled/disabled as intended
+- System must boot to expected state (QEMU/CI)
+- [Optional] Use [`bats-core`](https://github.com/bats-core/bats-core) for shell test coverage
+
+Example QEMU boot test:
+```bash
+qemu-system-x86_64 -cdrom out/archlinux-custom.iso -m 2048 -nographic
+```
+
+---
+
+## 📚 References
+
+- [Arch Wiki: Creating packages](https://wiki.archlinux.org/title/Creating_packages)
+- [Arch Wiki: archiso](https://wiki.archlinux.org/title/Archiso)
+- [CIS Benchmarks](https://www.cisecurity.org/cis-benchmarks/)
+- [shellcheck](https://www.shellcheck.net/)
+- [shfmt](https://github.com/mvdan/sh)
+- [namcap](https://archlinux.org/packages/community/any/namcap/)
+- [prettier](https://prettier.io/)
+- [bats-core](https://github.com/bats-core/bats-core)
+
+---
+
+## 💡 Prompting Tips
+
+- Request change summaries before applying
+- Ask for test coverage/examples for new scripts
+- Request explanations for security-sensitive changes
+- When in doubt, consult the Arch Wiki and this document
+
+---
+
+## 🤝 Suggesting Improvements
+
+To propose changes to this document, open a pull request or GitHub issue with your suggestions.
+
+---
+
+## 🗒️ Changelog
+
+- 2025-06-03: Initial version with security, linting, and workflow guidance
 # AGENTS.md – Guide for ChatGPT Codex in Arch Linux ISO Projects
 
 Last updated: 2025-06-03
@@ -55,128 +250,3 @@ Codex may assist with:
 2. Add the package to `/iso/profile/packages.x86_64`.
 3. Update `/docs/packages.md` with a description and usage.
 4. Run `namcap` and `makepkg --verifysource` to lint and verify.
-5. Add or update relevant tests in `/scripts/tests/`.
-
----
-
-## 🧹 Linting and Formatting Requirements
-
-| File Type     | Linter/Formatter  | Command Example            |
-| ------------- | ----------------- | -------------------------- |
-| Shell scripts | shellcheck, shfmt | `shellcheck script.sh`     |
-| PKGBUILD      | namcap            | `namcap PKGBUILD`          |
-| Markdown      | prettier          | `prettier --check file.md` |
-
-All code must pass the relevant linters before submission.
-
----
-
-## 🔐 Security and Compliance (Arch Linux Focus)
-
-Codex must:
-
-- Follow the **CIS Benchmarks** (where Arch equivalents exist)
-- Use `sudo` securely — avoid `NOPASSWD` unless explicitly configured
-- Avoid hardcoded passwords, SSH keys, or tokens
-- Set restrictive file permissions (`umask 027`, `chmod 600+`)
-- Harden system settings: `sshd_config`, `journald.conf`, `grub.cfg`
-- Always verify GPG signatures or SHA256 sums on downloaded files
-
-### 🔒 Security Checklist
-
-- [ ] No hardcoded credentials or secrets
-- [ ] File permissions set securely (`chmod 600+`)
-- [ ] GPG/signature verification for all downloads
-- [ ] No world-writable files or directories
-- [ ] No unnecessary open ports or services
-
----
-
-## 🛠 PKGBUILD and Package Management
-
-Codex-generated PKGBUILD files must:
-
-- Follow Arch packaging standards:
-  [Arch Wiki: Creating packages][archpkg]
-- Include all mandatory fields: `pkgname`, `pkgver`, `pkgrel`, `license`, etc.
-- Use `sha256sums` or `validpgpkeys` for source verification
-- Be linted using `namcap` or similar tools
-- Avoid vendoring binaries or insecure precompiled software
-
----
-
-## 📀 ISO Creation Guidelines
-
-Codex may assist with Arch ISO generation via `archiso`.
-
-ISO requirements:
-
-- GRUB or syslinux bootable
-- Includes `airootfs` with minimal base packages and any custom packages
-- Includes build metadata in `/etc/os-release` and `/etc/issue`
-- Built with reproducibility (`SOURCE_DATE_EPOCH`, fixed timestamps)
-
-Build process:
-
-- Codex must write or extend a `build.sh` or `Makefile` for ISO generation
-- ISO builds must log to:  
-  `/logs/iso-build.log`
-- ISO must be validated for:
-  - Bootability in QEMU
-  - Correct package list
-  - Functional network and shell
-
----
-
-## 📝 Logging
-
-- All build scripts must log to `/logs/`
-- Logs must include timestamp, command, and result
-- Rotate logs if they exceed 10MB or 30 days
-
----
-
-## 🧪 System and Script Testing
-
-Codex must ensure:
-
-- All scripts pass `shellcheck`
-- All systemd services are enabled/disabled correctly
-- System boots to expected state (via QEMU automated tests)
-- Optional: Use `bats-core` for shell script test coverage
-
-Virtualized test flows:
-
-```bash
-# QEMU boot test
-qemu-system-x86_64 -cdrom out/archlinux-custom.iso -m 2048 -nographic
-
-# Validate services
-systemctl list-units --type=service --state=failed
-```
-
----
-
-## 📚 References
-
-- [Arch Wiki: Creating packages][archpkg]
-- [Arch Wiki: archiso](https://wiki.archlinux.org/title/Archiso)
-- [CIS Benchmarks](https://www.cisecurity.org/cis-benchmarks/)
-
-[archpkg]: https://wiki.archlinux.org/title/Creating_packages
-
----
-
-## 💡 Prompting Tips for Codex/Co-Pilot
-
-- Always request a summary of changes before applying.
-- Ask for test coverage or example test cases with new scripts.
-- Request explanations for any security-sensitive changes.
-- When in doubt, refer to the Arch Wiki or this document.
-
----
-
-## 🗒️ Changelog
-
-- 2025-06-03: Initial version with expanded security, linting, and workflow
-  guidance.
