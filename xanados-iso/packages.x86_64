@@ -8,6 +8,7 @@ grub
 plymouth
 networkmanager
 sudo
+paru
 nano
 git
 python
@@ -154,4 +155,3 @@ systemd-resolvconf
 tcpdump
 calamares
 sbctl
-paru
