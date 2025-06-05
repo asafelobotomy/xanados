@@ -102,7 +102,7 @@ Ensure all code passes relevant linters before submission.
 pkgname=example
 pkgver=1.0
 pkgrel=1
-pkgdesc="An example package"
+pkgdesc=“An example package”
 arch=('x86_64')
 url="https://example.com"
 license=('GPL3')
