@@ -2,7 +2,8 @@
 
 ## Last Updated: 2025-06-05
 
-> **Audience:** All developers, AI agents (Copilot, Codex, ChatGPT), and collaborators.
+> **Audience:** All developers, AI agents (Copilot, Codex, ChatGPT),
+> and collaborators.
 
 ---
 
@@ -29,8 +30,10 @@
 
 Interact only with:
 
-- `/packages/`: Custom [`PKGBUILD`](https://wiki.archlinux.org/title/PKGBUILD) packages
-- `/iso/`: ISO build configs ([archiso](https://wiki.archlinux.org/title/Archiso))
+- `/packages/`: Custom
+  [`PKGBUILD`](https://wiki.archlinux.org/title/PKGBUILD) packages
+- `/iso/`: ISO build configs
+  ([archiso](https://wiki.archlinux.org/title/Archiso))
 - `/scripts/`: Bash automation/tooling
 - `/configs/`: System settings, pacman hooks, systemd units
 - `/docs/`: Markdown docs
@@ -67,12 +70,14 @@ You may assist with:
 
 ## 📝 Example Workflow: Adding a Package
 
-- [ ] Create `/packages/<pkgname>/PKGBUILD` per [Arch standards](https://wiki.archlinux.org/title/Creating_packages)
+- [ ] Create `/packages/<pkgname>/PKGBUILD` per
+      [Arch standards](https://wiki.archlinux.org/title/Creating_packages)
 - [ ] Add package to `/iso/profile/packages.x86_64`
 - [ ] Update `/docs/packages.md` with usage/details
 - [ ] Run `namcap` and `makepkg --verifysource`
 - [ ] Add/update tests in `/scripts/tests/`
-- [ ] Open a Pull Request summarizing changes (see [Suggesting Improvements](#-suggesting-improvements))
+- [ ] Open a Pull Request summarizing changes (see
+      [Suggesting Improvements](#-suggesting-improvements))
 
 ---
 
@@ -93,13 +98,15 @@ Ensure all code passes relevant linters before submission.
 
 ## 🔒 Security and Compliance
 
-- Follow [CIS Benchmarks](https://www.cisecurity.org/cis-benchmarks/) where applicable.
+- Follow [CIS Benchmarks](https://www.cisecurity.org/cis-benchmarks/)
+  where applicable.
 - Use `sudo` securely; avoid `NOPASSWD`.
 - Avoid hardcoded passwords/keys/tokens.
 - Set restrictive file permissions (`umask 027`, `chmod 600+`).
 - Harden system configs (`sshd_config`, `journald.conf`, `grub.cfg`).
 - Always verify GPG/signatures or SHA256 sums on downloads.
-- Use [git-secrets](https://github.com/awslabs/git-secrets) or similar to guard against committing secrets.
+- Use [git-secrets](https://github.com/awslabs/git-secrets) or similar
+  to guard against committing secrets.
 
 ### Security Checklist
 
@@ -113,8 +120,8 @@ Ensure all code passes relevant linters before submission.
 
 ## 🛠 PKGBUILD Standards
 
-- Follow [Arch Wiki: Creating packages](https://wiki.archlinux.org/title/Creating_packages)
-- Include all mandatory fields
+- Follow the Arch Wiki guidelines on
+  [Creating packages](https://wiki.archlinux.org/title/Creating_packages)
 - Use `sha256sums`/`validpgpkeys` for sources
 - Pass `namcap`/linting
 - Do not vendor precompiled/insecure binaries
@@ -181,7 +188,8 @@ log() {
 - All scripts must pass `shellcheck`
 - All systemd units enabled/disabled as intended
 - System must boot to expected state (QEMU/CI)
-- [Optional] Use [`bats-core`](https://github.com/bats-core/bats-core) for shell test coverage
+- [Optional] Use [`bats-core`](https://github.com/bats-core/bats-core)
+  for shell test coverage
 
 **Example QEMU boot test:**
 
@@ -195,7 +203,8 @@ qemu-system-x86_64 -cdrom out/archlinux-custom.iso -m 2048 -nographic
 
 ## 📚 References
 
-- [Arch Wiki: Creating packages](https://wiki.archlinux.org/title/Creating_packages)
+- [Arch Wiki: Creating packages]
+  (https://wiki.archlinux.org/title/Creating_packages)
 - [Arch Wiki: archiso](https://wiki.archlinux.org/title/Archiso)
 - [CIS Benchmarks](https://www.cisecurity.org/cis-benchmarks/)
 - [shellcheck](https://www.shellcheck.net/)
@@ -220,13 +229,16 @@ qemu-system-x86_64 -cdrom out/archlinux-custom.iso -m 2048 -nographic
 
 ## 🤝 Suggesting Improvements
 
-To propose changes, [open a Pull Request](https://github.com/asafelobotomy/xanados/compare)
-or [GitHub Issue](https://github.com/asafelobotomy/xanados/issues/new) with your suggestions. Include a summary and rationale.
+To propose changes,
+[open a Pull Request](https://github.com/asafelobotomy/xanados/compare)
+or [GitHub Issue](https://github.com/asafelobotomy/xanados/issues/new)
+with your suggestions. Include a summary and rationale.
 
 ---
 
 ## 📝 Changelog
 
-- 2025-06-05: Improved formatting, added ToC, expanded security & workflow sections.
+- 2025-06-05: Improved formatting, added ToC,
+  expanded security & workflow sections.
 
 ---

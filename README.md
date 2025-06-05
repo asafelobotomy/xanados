@@ -10,6 +10,14 @@
 - [Quick Start](#quick-start)
 - [Screenshots](#screenshots)
 
+## Features
+
+- 🎮 Gaming-ready stack with Steam and Lutris
+- 🧼 Minimal install option for a clean KDE Plasma setup
+- 💻 Next.js web frontend for downloads and updates
+- 🛡️ Secure Boot detection with toggle
+- 🧠 Custom PyQt Welcome App for guided installation
+
 ## Quick Start
 
 Clone the repository and build the ISO:
