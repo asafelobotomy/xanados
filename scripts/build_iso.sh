@@ -20,9 +20,12 @@ if [ ! -d "$REPO_DIR" ]; then
 	exit 1
 fi
 
-if compgen -G "$REPO_DIR"/*.pkg.tar.zst >/dev/null; then
-	repo-add "$REPO_DIR/xanados.db.tar.gz" "$REPO_DIR"/*.pkg.tar.zst
+if ! compgen -G "$REPO_DIR"/*.pkg.tar.zst >/dev/null; then
+        echo "Error: No package files (*.pkg.tar.zst) found in '$REPO_DIR'. Please add the required packages." >&2
+        exit 1
 fi
+
+repo-add "$REPO_DIR/xanados.db.tar.gz" "$REPO_DIR"/*.pkg.tar.zst
 
 # Rotate log if larger than 10MB
 if [ -f "$LOG_FILE" ] && [ "$(stat -c%s "$LOG_FILE")" -gt 10485760 ]; then
