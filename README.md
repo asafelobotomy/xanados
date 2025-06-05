@@ -64,6 +64,18 @@ directories used to build XanadOS.
    sudo dd if=out/xanados-*.iso of=/dev/sdX bs=4M status=progress && sync
    ```
 
+### Building in Docker
+
+If `mkarchiso` isn't available locally, run the build inside a Docker
+container using the provided helper script:
+
+```bash
+bash scripts/docker_build_iso.sh
+```
+
+This launches an Arch Linux container, installs the required packages, and
+produces the ISO in `out/`. Logs are saved to `logs/docker-iso-build.log`.
+
 ## Installing XanadOS
 
 1. Boot your machine from the USB stick.
