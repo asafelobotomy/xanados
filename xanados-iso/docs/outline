@@ -22,54 +22,54 @@ Maintain modular logic, so nothing is forced
 
 📦 Features & Capabilities Summary
 🖥️ System Base
-Feature	Detail
-Base	Arch Linux
-Installer	Calamares (GUI)
-Live ISO	Bootable USB environment
-Init System	systemd
-Secure Boot	Optional toggle in Calamares
-Encryption	Optional full disk encryption
-Kernel	linux-zen
+Feature Detail
+Base Arch Linux
+Installer Calamares (GUI)
+Live ISO Bootable USB environment
+Init System systemd
+Secure Boot Optional toggle in Calamares
+Encryption Optional full disk encryption
+Kernel linux-zen
 
 🎮 Gaming Stack
-Feature	Detail
-Game Launchers	Steam, Lutris, Heroic, RetroDeck
-Runtime Tools	MangoHud, vkBasalt, Gamemode, Wine, Proton-GE, DXVK, vkd3d
-Performance	zram, preload, nohang, earlyoom
-CPU Tuning	auto-cpufreq, cpupower-gui
-Cleanup Tools	Custom gameloop shader/cache cleaner
-NTFS Support	ntfs-3g, automounted with full permissions
+Feature Detail
+Game Launchers Steam, Lutris, Heroic, RetroDeck
+Runtime Tools MangoHud, vkBasalt, Gamemode, Wine, Proton-GE, DXVK, vkd3d
+Performance zram, preload, nohang, earlyoom
+CPU Tuning auto-cpufreq, cpupower-gui
+Cleanup Tools Custom gameloop shader/cache cleaner
+NTFS Support ntfs-3g, automounted with full permissions
 
 🔐 Security
-Feature	Detail
-AppArmor	Enabled
-Firejail	Preconfigured for browser isolation
-Flatpak Sandboxing	Fully integrated with Flatseal
-Secure Boot	Optional during install
-Tor Browser	Available via Welcome App
-Firewall	UFW active by default
+Feature Detail
+AppArmor Enabled
+Firejail Preconfigured for browser isolation
+Flatpak Sandboxing Fully integrated with Flatseal
+Secure Boot Optional during install
+Tor Browser Available via Welcome App
+Firewall UFW active by default
 
 💻 User Interface & Experience
-Feature	Detail
-Desktop Environment	KDE Plasma
-Theming	Cyberpunk + Retro CRT + Dark Mode
-Terminal	Alacritty (default)
-System Monitors	btop, Conky
-Bootloader	Custom GRUB theme
-Boot Splash	Plymouth animation (ASCII style)
-Login Screen	SDDM (themed to match)
-File Manager	Dolphin
-Flatpak Integration	Discover preconfigured with Flathub
-GUI Package Options	Octopi (pacman/AUR), Bauh (multi-store)
+Feature Detail
+Desktop Environment KDE Plasma
+Theming Cyberpunk + Retro CRT + Dark Mode
+Terminal Alacritty (default)
+System Monitors btop, Conky
+Bootloader Custom GRUB theme
+Boot Splash Plymouth animation (ASCII style)
+Login Screen SDDM (themed to match)
+File Manager Dolphin
+Flatpak Integration Discover preconfigured with Flathub
+GUI Package Options Octopi (paru/AUR), Bauh (multi-store)
 
 🧰 Welcome App (PyQt5)
-Functionality	Detail
-App Loader	Optional installs by category (Gaming, Tools, Browsers)
-Browser Selector	Brave, LibreWolf, Ungoogled Chromium, GNOME Web, Tor
-Presets	Gaming Mode, Minimal Install, Install All
-Secure Boot State	Checks /etc/xanados/secureboot_enabled
-Appearance Picker	Wallpaper/icon themes
-Runs on First Boot	Can be re-launched from menu
+Functionality Detail
+App Loader Optional installs by category (Gaming, Tools, Browsers)
+Browser Selector Brave, LibreWolf, Ungoogled Chromium, GNOME Web, Tor
+Presets Gaming Mode, Minimal Install, Install All
+Secure Boot State Checks /etc/xanados/secureboot_enabled
+Appearance Picker Wallpaper/icon themes
+Runs on First Boot Can be re-launched from menu
 
 📁 Expected File Structure: xanados-iso
 Here’s the high-level structure from the uploaded ISO tarball:
@@ -78,31 +78,31 @@ bash
 Copy
 Edit
 xanados-iso/
-├── airootfs/                       # Root filesystem for live ISO
-│   ├── etc/
-│   │   ├── systemd/
-│   │   ├── xdg/
-│   │   ├── xanados/               # Flags and config (e.g. secureboot_enabled)
-│   │   ├── mkinitcpio.conf.d/
-│   │   └── pacman.d/
-│   ├── root/.gnupg/
-│   ├── root/.automated_script.sh
-│   ├── usr/share/
-│   └── etc/skel/
-├── calamares/                     # Installer configuration
-│   ├── branding/xanados/
-│   │   ├── style.qss              # Custom style
-│   │   └── services.conf
-│   ├── modules/
-│   │   └── secureboot-toggle/
-│   └── settings.conf
-├── grub/                          # GRUB bootloader config
-│   └── grub.cfg
-├── efiboot/                       # EFI boot entries
-├── syslinux/                      # PXE boot configs
-│   └── archiso_pxe.cfg
-├── packages.x86_64                # Full package list
-├── bootstrap_packages.x86_64      # Minimal bootstrap list
+├── airootfs/ # Root filesystem for live ISO
+│ ├── etc/
+│ │ ├── systemd/
+│ │ ├── xdg/
+│ │ ├── xanados/ # Flags and config (e.g. secureboot_enabled)
+│ │ ├── mkinitcpio.conf.d/
+│ │ └── pacman.d/
+│ ├── root/.gnupg/
+│ ├── root/.automated_script.sh
+│ ├── usr/share/
+│ └── etc/skel/
+├── calamares/ # Installer configuration
+│ ├── branding/xanados/
+│ │ ├── style.qss # Custom style
+│ │ └── services.conf
+│ ├── modules/
+│ │ └── secureboot-toggle/
+│ └── settings.conf
+├── grub/ # GRUB bootloader config
+│ └── grub.cfg
+├── efiboot/ # EFI boot entries
+├── syslinux/ # PXE boot configs
+│ └── archiso_pxe.cfg
+├── packages.x86_64 # Full package list
+├── bootstrap_packages.x86_64 # Minimal bootstrap list
 
 🧠 What This ISO Does
 Boots into a fully themed KDE Plasma Live Environment

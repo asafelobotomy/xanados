@@ -34,10 +34,10 @@ directories used to build XanadOS.
 
 ## Building the ISO
 
-1. Install the `archiso` package:
+1. Install the `archiso` package using Paru:
 
    ```bash
-   sudo pacman -S archiso
+   paru -S archiso
    ```
 
 2. Clone this repository and enter the profile directory:

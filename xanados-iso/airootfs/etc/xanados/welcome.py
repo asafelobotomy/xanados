@@ -215,8 +215,8 @@ class WelcomeApp(QtWidgets.QWidget):
             return
         self.log_output.append("[INFO] Running post-install maintenance tasks...")
         commands = [
-            "sudo pacman -Syu --noconfirm",
-            "sudo paccache -r",
+            "paru -Syu --noconfirm",
+            "paccache -r",
             "systemctl status NetworkManager",
             "systemctl status chronyd",
             "journalctl -b -1 --no-pager | tail -n 50",

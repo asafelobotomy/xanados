@@ -29,4 +29,4 @@ Featured — during first boot.
 
 - `/etc/xanados/` – Scripts and core logic
 - `/etc/skel/.config/autostart/` – First login autostart for Welcome App
-- `/usr/bin/` – Standard binaries (managed via pacman or the paru wrapper)
+- `/usr/bin/` – Standard binaries managed via **paru** (pacman wrapper)
