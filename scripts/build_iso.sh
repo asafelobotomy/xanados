@@ -7,16 +7,21 @@ LOG_FILE="$LOG_DIR/iso-build.log"
 
 # Ensure required tools are installed
 for cmd in mkarchiso grub-install; do
-        if ! command -v "$cmd" >/dev/null 2>&1; then
-                echo "Error: required command '$cmd' not found. Please install the corresponding package." >&2
-                exit 1
-        fi
+	if ! command -v "$cmd" >/dev/null 2>&1; then
+		echo "Error: required command '$cmd' not found. Please install the corresponding package." >&2
+		exit 1
+	fi
 done
 
 # Update local package repository
 REPO_DIR="$(cd "$(dirname "$0")/../packages/repo" && pwd)"
+if [ ! -d "$REPO_DIR" ]; then
+	echo "Error: Repository directory '$REPO_DIR' does not exist. Please create it or check the path." >&2
+	exit 1
+fi
+
 if compgen -G "$REPO_DIR"/*.pkg.tar.zst >/dev/null; then
-        repo-add "$REPO_DIR/xanados.db.tar.gz" "$REPO_DIR"/*.pkg.tar.zst
+	repo-add "$REPO_DIR/xanados.db.tar.gz" "$REPO_DIR"/*.pkg.tar.zst
 fi
 
 # Rotate log if larger than 10MB
