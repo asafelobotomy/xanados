@@ -1,8 +1,13 @@
 import requests
 import warnings
 from urllib.parse import quote_plus
+from urllib3.exceptions import InsecureRequestWarning
 
 warnings.filterwarnings("ignore", category=RuntimeWarning)
+warnings.filterwarnings("ignore", category=InsecureRequestWarning)
+import json
+import sys
+from pathlib import Path
 import json
 import sys
 from pathlib import Path

@@ -9,8 +9,9 @@
 - [Features](#features)
 - [Quick Start](#quick-start)
 - [Screenshots](#screenshots)
-- ...
 
+
+*
 ## Quick Start
 
 Clone the repository and build the ISO:
