@@ -1,0 +1,39 @@
+1. Cyan & Magenta (Synthwave Style)
+
+Cyan Glow: #00FFF7
+
+Electric Magenta: #FF00C8
+
+Deep Indigo Background: #0A0014
+
+Amber Highlight (from output): #FF7E00
+
+2. Violet & Lime Green
+
+Neon Violet: #A100FF
+
+Lime Matrix Green: #00FF41
+
+Black-Purple Background: #0B0010
+
+Glow Highlight: #8C3EFF
+
+3. Red & Teal
+
+Crimson Core: #FF2A2A
+
+Electric Teal: #00D2C7
+
+Dark Circuit Base: #0F0F0F
+
+Binary Teal Glow: #008080
+
+4. Blue & Gold
+
+Cyber Gold: #FFB300
+
+Deep Electric Blue: #003B73
+
+Amber Radiance: #FF8E00
+
+Midnight Circuitry: #061826
