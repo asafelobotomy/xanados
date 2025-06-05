@@ -104,7 +104,7 @@ cd frontend
    npm run lint
    ```
 
-   ESLint rules are defined in `frontend/.eslintrc.json`.
+   ESLint rules are defined in `frontend/.eslintrc.js`.
 
 4. Generate production builds:
 
