@@ -1,0 +1,26 @@
+# .github/workflows/test.yml
+name: Python Tests
+
+on:
+  push:
+    paths: ['**/*.py']
+  pull_request:
+    paths: ['**/*.py']
+
+jobs:
+  pytest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Install dependencies
+        run: |
+          if [ -f requirements.txt ]; then
+            pip install -r requirements.txt
+          fi
+          pip install pytest
+      - name: Run tests
+        run: pytest -q

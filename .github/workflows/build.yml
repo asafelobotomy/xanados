@@ -1,0 +1,17 @@
+# .github/workflows/build.yml
+name: Build
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build project
+        run: |
+          echo "Running build steps"
+          # Add build commands here
