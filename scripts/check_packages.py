@@ -8,9 +8,6 @@ warnings.filterwarnings("ignore", category=InsecureRequestWarning)
 import json
 import sys
 from pathlib import Path
-import json
-import sys
-from pathlib import Path
 
 packages_file = Path("xanados-iso/packages.x86_64")
 if not packages_file.exists():
