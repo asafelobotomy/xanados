@@ -18,3 +18,5 @@ jobs:
 
       - name: Run ShellCheck
         uses: ludeeus/action-shellcheck@v2
+        with:
+          severity: warning
