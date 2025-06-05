@@ -10,7 +10,7 @@
 - [Quick Start](#quick-start)
 - [Screenshots](#screenshots)
 - ...
-
+  
 ## Quick Start
 
 Clone the repository and build the ISO:
@@ -37,7 +37,8 @@ directories used to build XanadOS.
 - [`xanados-iso/calamares/`](xanados-iso/calamares/) – Calamares installer configuration
 - [`xanados-iso/airootfs/`](xanados-iso/airootfs/) – root filesystem for the live environment
 - [`xanados-iso/packages.x86_64`](xanados-iso/packages.x86_64) – package list for the ISO
-- [`xanados-iso/bootstrap_packages.x86_64`](xanados-iso/bootstrap_packages.x86_64) – minimal bootstrap package list
+- [`xanados-iso/bootstrap_packages.x86_64`](xanados-iso/bootstrap_packages.x86_64) – minimal bootstrap
+  package list
 - [`xanados-iso/docs/`](xanados-iso/docs/) – additional documentation
 - [`packages/`](packages/) – custom PKGBUILDs
 - [`scripts/`](scripts/) – automation scripts
@@ -87,8 +88,8 @@ container using the provided helper script:
 bash scripts/docker_build_iso.sh
 ```
 
-This launches an Arch Linux container, installs the required packages, and
-produces the ISO in `out/`. Logs are saved to `logs/docker-iso-build.log`.
+This launches an Arch Linux container, installs the required packages,
+and produces the ISO in `out/`. Logs are saved to `logs/docker-iso-build.log`.
 
 ## Installing XanadOS
 
@@ -105,8 +106,8 @@ For more details see
 
 ## Running the Next.js frontend
 
-The repository also contains a web-based frontend located in `frontend/`. Enter
-that directory before running any of the commands below:
+The repository also contains a web-based frontend located in `frontend/`.
+Enter that directory before running any of the commands below:
 
 ```bash
 cd frontend
@@ -140,13 +141,16 @@ cd frontend
 
 ## Contributing
 
-Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+Contributions are welcome! Please see
+[CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 ## Support & Community
 
-- File issues and feature requests on [GitHub Issues](https://github.com/asafelobotomy/xanados/issues)
+- File issues and feature requests on
+  [GitHub Issues](https://github.com/asafelobotomy/xanados/issues)
 - Join our discussion board (if available)
 
 ## License
 
-This project is licensed under the GNU General Public License v3.0. See the [LICENSE](LICENSE) file for details.
+This project is licensed under the GNU General Public License v3.0.
+See the [LICENSE](LICENSE) file for details.
