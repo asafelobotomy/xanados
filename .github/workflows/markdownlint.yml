@@ -14,4 +14,10 @@ jobs:
       - uses: actions/checkout@v4
       - uses: DavidAnson/markdownlint-cli2-action@v14
         with:
-          globs: '**/*.md'
+          globs: "**/*.md"
+      - name: Install Atom
+        run: sudo apt-get update && sudo apt-get install -y atom
+      - name: Atom Markdown check
+        run: |
+          shopt -s globstar
+          atom --check **/*.md
