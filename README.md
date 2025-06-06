@@ -41,11 +41,10 @@ This repository contains the archiso profile as well as supporting
 directories used to build XanadOS.
 
 - [`xanados-iso/`](xanados-iso/) – archiso profile and build scripts
-- [`xanados-iso/calamares/`](xanados-iso/calamares/) – Calamares installer configuration
-- [`xanados-iso/airootfs/`](xanados-iso/airootfs/) – root filesystem for the live environment
-- [`xanados-iso/packages.x86_64`](xanados-iso/packages.x86_64) – package list for the ISO
-- [`xanados-iso/bootstrap_packages.x86_64`](xanados-iso/bootstrap_packages.x86_64) – minimal bootstrap
-  package list
+- [`xanados-iso/calamares/`](xanados-iso/calamares/) – Calamares configs
+- [`xanados-iso/airootfs/`](xanados-iso/airootfs/) – live environment rootfs
+- [`xanados-iso/packages.x86_64`](xanados-iso/packages.x86_64) – package list
+- [`bootstrap_pkgs`](xanados-iso/bootstrap_packages.x86_64) – minimal pkgs
 - [`xanados-iso/docs/`](xanados-iso/docs/) – additional documentation
 - [`packages/`](packages/) – custom PKGBUILDs
 - [`scripts/`](scripts/) – automation scripts
