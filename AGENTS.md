@@ -126,6 +126,18 @@ Install Python requirements with `pip install -r requirements.txt` before runnin
 
 Ensure all code passes relevant linters before submission.
 
+### Node tooling
+
+The project relies on several Node packages:
+
+- `express` for a lightweight test server
+- `karma` to run JavaScript unit tests (`npx karma start`)
+- `lint-staged` to lint staged files before commit (`npx lint-staged`)
+- `lodash` as a general utility library
+- `markdown-magic` to update documentation macros (`npx markdown-magic`)
+- `ngx-markdown` for Markdown display in the frontend
+- `npm-package-json-lint` to validate `package.json` (`npx npmPkgJsonLint .`)
+
 ---
 
 ## 🔒 Security and Compliance
