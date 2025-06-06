@@ -6,7 +6,8 @@ Use this file to track issues reported in [errors1.md](errors1.md).
 2. Add new items below and keep them unchecked until fixed.
 3. Remove any entry that is marked as completed [x]
 4. When you resolve an item, check it off and
-   add a note under **CHANGELOG** with todays date.
+   add a note under **CHANGELOG** with todays date and
+   a summary of the actions taken
 
 ## Build
 
