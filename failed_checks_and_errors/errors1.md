@@ -1,102 +1,86 @@
-# Failed Workflows Report
+# Failed Checks Report
 
-_Last updated: 2025-06-06 21:04 UTC_
+## Overview
 
-This report summarizes the recent workflow failures in the repository, their causes, and proposed resolutions.
+The following checks failed for Pull Request [#97: Fix doc linting issues](https://github.com/asafelobotomy/xanados/pull/97):
+
+- **Markdown Lint** ([View Run](https://github.com/asafelobotomy/xanados/actions/runs/15500171706))
+- **Build** ([View Run](https://github.com/asafelobotomy/xanados/actions/runs/15500171696))
+
+Below is a detailed report of what went wrong and suggestions for resolution.
 
 ---
 
-## 1. Build Workflow Failures
+## 1. Markdown Lint
 
-**Workflow:** [Build](https://github.com/asafelobotomy/xanados/actions/runs/15494723405)  
-**Branch:** `main`  
-**Commit:** `4873d39ab276679ce0ff0fb4e23e1c4bbae73832`
+**Workflow:** `.github/workflows/markdownlint.yml`  
+**Commit:** `69d0fba6af642ba5545a8cd6d5670a133961753d`
 
-### Main Errors
+### Error Details
 
-- Warnings about "Skipped: Current root is not booted." and "Failed to resolve specifier: uninitialized /etc/ detected, skipping."
-
-### Resolution
-
-- **Install Required Binaries:**  
-  Add the following step before running your package builds in the workflow:
-  ```yaml
-  - name: Install required build tools
-    run: pacman -Sy --noconfirm debugedit fakeroot
+- The linting step itself completed successfully:
   ```
-- The root and tmpfiles warnings are common in CI containers and can typically be ignored unless they cause builds to fail.
-
----
-
-## 2. Markdown Lint Workflow Failures
-
-**Workflow:** [Markdown Lint](https://github.com/asafelobotomy/xanados/actions/runs/15494723418)  
-**Branch:** `main`  
-**Commit:** `4873d39ab276679ce0ff0fb4e23e1c4bbae73832`
-
-### Main Errors
-
-- **MD041/first-line-heading/first-line-h1:**  
-  Some Markdown files do not start with a top-level heading.
-- **MD034/no-bare-urls:**  
-  Bare URLs are used instead of Markdown links.
+  Linting: 19 file(s)
+  Summary: 0 error(s)
+  ```
+- The failure occurred when attempting to install the Atom package:
+  ```
+  sudo apt-get update && sudo apt-get install -y atom
+  ...
+  E: Unable to locate package atom
+  ##[error]Process completed with exit code 100.
+  ```
 
 ### Resolution
 
-- **First Line Heading:**  
-  Ensure all Markdown files begin with a `# Heading`.
-- **Bare URLs:**  
-  Convert bare URLs to `[text](url)` format.
-- **MD013/line-length:**  
-  Many lines in Markdown files exceed the 80-character limit.
+- **Remove or fix the Atom installation step:**  
+  The package `atom` is no longer available in the standard Ubuntu repositories and cannot be installed this way.
+  - If Atom is not required for your workflow, remove this step from `.github/workflows/markdownlint.yml`.
+  - If you need a text editor, consider installing another available editor or use a different method.
+- **Check for unnecessary dependencies:**  
+  The remainder of the workflow does not depend on Atom, so its installation can be safely omitted.
+
+---
+
+## 2. Build
+
+**Workflow:** `.github/workflows/build.yml`  
+**Commit:** `69d0fba6af642ba5545a8cd6d5670a133961753d`
+
+### Error Details
+
+- The build log contains multiple `--- ERROR ---` markers, but the critical failure is at the end:
+  ```
+  ==> ERROR: A failure occurred in check().
+      Aborting...
+  ##[error]Process completed with exit code 4.
+  ```
+- Many individual test cases passed, but one or more failed within the `check()` phase.
 
 ### Resolution
 
-- **Line Length:**  
-  Break long lines at 80 characters (or adjust `.markdownlint.yml` if you want to allow longer lines).
-
-
----
-
-## 3. Additional Build Workflow Failures
-
-**Workflow:** [Build](https://github.com/asafelobotomy/xanados/actions/runs/15494717855)  
-**Branch:** `codex/review-build-for-errors`  
-**Commit:** `87912ae1552e7d28078b719799886589fd91755d`
+- **Review failing tests in the log:**  
+  Examine the full output of the build workflow ([View Run](https://github.com/asafelobotomy/xanados/actions/runs/15500171696)) to identify which test(s) in the `check()` step are failing.
+- **Investigate test failures:**  
+  Look for test cases following the `--- ERROR ---` markers towards the end of the log to pinpoint exact failure points.
+- **Rerun locally:**  
+  Run the test suite locally to reproduce and debug the failing step, inspecting error messages for clues.
 
 ---
 
-## 4. Additional Markdown Lint Failures
+## Summary Table
 
-**Workflow:** [Markdown Lint](https://github.com/asafelobotomy/xanados/actions/runs/15494717933)  
-**Branch:** `codex/review-build-for-errors`  
-**Commit:** `87912ae1552e7d28078b719799886589fd91755d`
-
-- Same style/formatting errors as above.
-
----
-
-## Quick Summary Table
-
-| Workflow      | Main Error(s)                   | Resolution                                               |
-| ------------- | ------------------------------- | -------------------------------------------------------- |
-| Build         | Missing `debugedit`, `fakeroot` | Install with `pacman -Sy --noconfirm debugedit fakeroot` |
-|               | Container/root warnings         | Typically safe to ignore in CI                           |
-| Markdown Lint | Line too long (MD013)           | Break lines at 80 characters or adjust config            |
+| Check Name     | Status  | Main Error Message                          | Suggested Resolution                        |
+|----------------|---------|---------------------------------------------|---------------------------------------------|
+| Markdown Lint  | Failed  | `Unable to locate package atom`             | Remove or update Atom install step          |
+| Build          | Failed  | `A failure occurred in check().`            | Investigate and fix failing test(s)         |
 
 ---
 
-## References
+## Next Steps
 
-- [Build workflow failure log (main)](https://github.com/asafelobotomy/xanados/actions/runs/15494723405)
-- [Markdown lint failure log (main)](https://github.com/asafelobotomy/xanados/actions/runs/15494723418)
-- [Build workflow failure log (PR)](https://github.com/asafelobotomy/xanados/actions/runs/15494717855)
-- [Markdown lint failure log (PR)](https://github.com/asafelobotomy/xanados/actions/runs/15494717933)
+1. Update `.github/workflows/markdownlint.yml` to remove or correct the Atom install step.
+2. Analyze the Build workflow log to identify and fix the failing test(s).
+3. Push changes and re-run the checks.
 
----
-
-**Next Steps:**
-
-1. Update your workflow YAML to ensure all required build tools (`debugedit`, `fakeroot`) are installed before building packages.
-2. Refactor Markdown files to comply with lint rules, or update `.markdownlint.yml` if you want to change the policy.
-3. Re-run workflows to confirm all issues are resolved.
+If further detail is needed on a specific test or error, please provide the relevant section of the log or request an in-depth review.
