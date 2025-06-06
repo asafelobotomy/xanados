@@ -36,6 +36,17 @@ This report summarizes the recent workflow failures in the repository, their cau
 
 ### Main Errors
 
+- **MD041/first-line-heading/first-line-h1:**  
+  Some Markdown files do not start with a top-level heading.
+- **MD034/no-bare-urls:**  
+  Bare URLs are used instead of Markdown links.
+
+### Resolution
+
+- **First Line Heading:**  
+  Ensure all Markdown files begin with a `# Heading`.
+- **Bare URLs:**  
+  Convert bare URLs to `[text](url)` format.
 - **MD013/line-length:**  
   Many lines in Markdown files exceed the 80-character limit.
 
@@ -43,6 +54,7 @@ This report summarizes the recent workflow failures in the repository, their cau
 
 - **Line Length:**  
   Break long lines at 80 characters (or adjust `.markdownlint.yml` if you want to allow longer lines).
+
 
 ---
 
