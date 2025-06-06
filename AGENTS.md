@@ -129,15 +129,14 @@ Ensure all code passes relevant linters before submission.
 
 ### Node tooling
 
-The project relies on several Node packages:
+The project relies on Node packages defined in `frontend/package.json`:
 
-- `express` for a lightweight test server
-- `karma` to run JavaScript unit tests (`npx karma start`)
-- `lint-staged` to lint staged files before commit (`npx lint-staged`)
-- `lodash` as a general utility library
-- `markdown-magic` to update documentation macros (`npx markdown-magic`)
-- `ngx-markdown` for Markdown display in the frontend
-- `npm-package-json-lint` to validate `package.json` (`npx npmPkgJsonLint .`)
+- `next` – React framework used by the frontend
+- `react` and `react-dom` – UI components
+- `eslint` and `eslint-config-next` – JavaScript linting
+- `prettier` – consistent formatting
+
+Install them from the `frontend/` directory with `npm install`.
 
 ---
 

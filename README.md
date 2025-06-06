@@ -149,16 +149,14 @@ cd frontend
 
 ## Development toolchain
 
-Codex and human developers rely on several Node packages. Install
-dependencies with `npm install` and use these commands:
+Install frontend dependencies with `npm install` in the `frontend/`
+directory. The key Node packages are declared in
+`frontend/package.json`:
 
-- `express` provides a lightweight server
-- `karma` runs JavaScript unit tests (`npx karma start`)
-- `lint-staged` checks staged files before commit (`npx lint-staged`)
-- `lodash` offers general utility helpers
-- `markdown-magic` updates documentation macros (`npx markdown-magic`)
-- `ngx-markdown` renders Markdown in the frontend
-- `npm-package-json-lint` validates `package.json` (`npx npmPkgJsonLint .`)
+- `next` provides the React framework
+- `react` and `react-dom` supply UI components
+- `eslint` and `eslint-config-next` handle linting
+- `prettier` formats JavaScript and Markdown
 
 ## Testing
 
