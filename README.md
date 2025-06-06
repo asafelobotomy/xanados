@@ -1,8 +1,8 @@
 # XanadOS
 
-[![Build Status](https://github.com/asafelobotomy/xanados/actions/workflows/build.yml/badge.svg)](https://github.com/asafelobotomy/xanados/actions)
-[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
+[![Build Status][build-img]][build-url]
+[![License: GPL v3][license-img]][license-url]
+[![PRs Welcome][pr-img]][pr-url]
 
 ## Table of Contents
 
@@ -172,3 +172,10 @@ linting requirements and security policies.
 
 This project is licensed under the GNU General Public License v3.0.
 See the [LICENSE](LICENSE) file for details.
+
+[build-img]: https://github.com/asafelobotomy/xanados/actions/workflows/build.yml/badge.svg
+[build-url]: https://github.com/asafelobotomy/xanados/actions
+[license-img]: https://img.shields.io/badge/License-GPLv3-blue.svg
+[license-url]: LICENSE
+[pr-img]: https://img.shields.io/badge/PRs-welcome-brightgreen.svg
+[pr-url]: CONTRIBUTING.md
