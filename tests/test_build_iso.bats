@@ -16,10 +16,3 @@
   [ -x scripts/docker_build_iso.sh ]
 }
 
-@test "update_error_log.sh exists" {
-  [ -f scripts/update_error_log.sh ]
-}
-
-@test "update_error_log.sh is executable" {
-  [ -x scripts/update_error_log.sh ]
-}

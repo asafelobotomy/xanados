@@ -1,18 +1,2 @@
 # Build output
 out/
-
-# Node dependencies
-node_modules/
-
-# Lock files (outside frontend)
-package-lock.json
-pnpm-lock.yaml
-yarn.lock
-npm-shrinkwrap.json
-
-# Allow lock files in frontend directory
-!frontend/package-lock.json
-!frontend/pnpm-lock.yaml
-!frontend/yarn.lock
-!frontend/npm-shrinkwrap.json
-.next/
