@@ -70,7 +70,18 @@ You must always:
 - Check packages to make sure that they are up-to-date and stable
 - Validate all text documents and scripts, checking for typos and
   invalid references/commands
-- Review the last 10 previous commits to ensure understanding
+
+
+---
+
+## 📝 Pre-task checks to perform:
+
+- Review the last 10 previous commits of this build
+  to get a full understanding of the project
+- Check formatting and syntax throughout all documents
+  to provide consistency in future changes and updates
+- Confirm today's date and time as a reference for
+  future queries
 
 ---
 
