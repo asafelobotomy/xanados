@@ -1,198 +1,141 @@
-# Xanados PR #49: Failed Checks & PKGBUILD Suggestions (Detailed)
+# PR #64: Detailed Issue & Build Failure Report
 
-==============================
+## Overview
 
-## I. Failed Checks Breakdown and Solutions
-
-1. Markdown Lint (.github/workflows/markdownlint.yml)
+This report reviews all detected issues, potential build blocks, recommendations, and actionable suggestions for PR #64 ("Fix markdown formatting") in the `asafelobotomy/xanados` repository, based on workflow/job logs and lint/build analysis.
 
 ---
 
-Summary of Errors:
+## 1. Detected Issues
 
-- AGENTS.md:207:4 MD034/no-bare-urls: Bare URL used.
-- packages/calamares/README.md:1:81 MD013/line-length: Line exceeds 80 characters.
-- packages/calamares/README.md:1 MD041/first-line-heading/first-line-h1: First line should be a top-level heading.
-- packages/calamares/README.md:2:81 MD013/line-length: Line exceeds 80 characters.
-- README.md:45:81, 46:81, 47:81 MD013/line-length: Lines exceed 80 characters.
+### 1.1 Markdown Lint Errors
 
-Detailed Solutions:
+The `Markdown Lint` workflow failed with **45 errors** across several Markdown files. Notable issues include:
 
-- MD034/no-bare-urls (AGENTS.md:207:4):
+- **Line Length Violations (MD013)**: Many lines exceed the expected 80-character limit, impacting readability.
+- **Bare URLs (MD034)**: URLs are used without proper markdown link formatting.
+- **Headings Issues (MD023, MD025)**: Headings are not aligned to the left or multiple top-level headings are present.
+- **Ordered List Prefix (MD029)**: List numbering is inconsistent.
+- **Other Style Violations**: Improper heading positions and multiple top-level headings.
 
-  - Problem: You have a plain URL in your Markdown file, such as https://wiki.archlinux.org/title/SomePage, rather than using Markdown link syntax.
-  - Solution: Use proper Markdown link formatting. Replace the bare URL with [Arch Wiki - SomePage](https://wiki.archlinux.org/title/SomePage). If you do not have link text, you can simply wrap the URL in angle brackets like <https://wiki.archlinux.org/title/SomePage>.
-  - Example:
-    - Before: https://wiki.archlinux.org/title/SomePage
-    - After: [Arch Wiki - SomePage](https://wiki.archlinux.org/title/SomePage)
+#### Example Errors
+- `.github/workflows/README.md:3:81 MD013/line-length`  
+  _Line length [Expected: 80; Actual: 340]_
+- `failed_checks_and_errors/errors1.md:23:66 MD034/no-bare-urls`  
+  _Bare URL used [Context: "https://wiki.archlinux.org/tit..."]_
+- `failed_checks_and_errors/errors1.md:44 MD025/single-title/single-h1`  
+  _Multiple top-level headings in the same document_
 
-- MD013/line-length (packages/calamares/README.md and README.md):
+**Full error list includes similar violations across:**
+- `.github/workflows/README.md`
+- `configs/README.md`
+- `docs/README.md`
+- `failed_checks_and_errors/Checklist.md`
+- `failed_checks_and_errors/errors1.md`
+- `frontend/README.md`
+- `logs/README.md`
 
-  - Problem: Lines in your Markdown files exceed the recommended maximum of 80 characters, making files harder to read and breaking Markdown style conventions.
-  - Solution: Break up long lines into multiple shorter ones, ensuring that no line exceeds 80 characters. Wrap sentences at logical points such as after a period or comma, or between phrases.
-  - Example:
-    - Before: This is a very long line that exceeds the normal 80 character limit for Markdown files and should be wrapped appropriately for better readability.
-    - After: This is a very long line that exceeds the normal 80 character limit for Markdown files  
-      and should be wrapped appropriately for better readability.
-
-- MD041/first-line-heading/first-line-h1 (packages/calamares/README.md):
-
-  - Problem: The first line of the README is not a top-level heading.
-  - Solution: Add a top-level heading at the very top of the file, such as # Calamares or # Calamares Installer, before any other content.
-  - Example:
-
-    # Calamares
-
-    Do to the use of the -DFEATURE...
-
-2. Proselint (Docs Linter) (.github/workflows/proselint.yml)
+[Full Markdown Lint Log](https://github.com/asafelobotomy/xanados/actions/runs/15491770240)
 
 ---
 
-Summary of Errors:
+### 1.2 Build Workflow Errors
 
-- AGENTS.md:136:10 typography.symbols.curly_quotes: Use curly quotes (“ ”) instead of straight quotes (").
-- AGENTS.md:141:46 leonard.exclamation.30ppm: Too many exclamation marks.
+The `Build` workflow failed due to system and script issues:
 
-Detailed Solutions:
+- **Systemd/Tmpfiles Errors**:
+  - Errors like `/usr/lib/tmpfiles.d/journal-nocow.conf:26: Failed to resolve specifier: uninitialized /etc/ detected, skipping.`
+  - Indicates the environment is not fully initialized (e.g., not booted), causing some systemd operations to be skipped.
 
-- typography.symbols.curly_quotes (AGENTS.md:136:10):
+- **User/Permissions Error**:
+  - `chown: invalid user: ‘builduser:builduser’`
+  - The workflow attempts to change ownership of files to a user/group that does not exist in the build environment.
 
-  - Problem: The text uses straight quotation marks (") instead of curly quotes (“”).
-  - Solution: Replace all straight quotes with curly quotes. For example, replace "This is quoted" with “This is quoted”.
-  - Example:
-    - Before: "This is a quote."
-    - After: “This is a quote.”
+- **Exit Code 1**:
+  - The job failed and exited with code 1 due to the above error.
 
-- leonard.exclamation.30ppm (AGENTS.md:141:46):
-  - Problem: The text contains too many exclamation marks, making the writing look unprofessional or overly emotional.
-  - Solution: Limit yourself to a single exclamation mark per sentence, and use them sparingly. Replace unnecessary exclamation marks with periods or rewrite sentences to reduce their frequency.
-  - Example:
-    - Before: Wow!!!! This is amazing!!!
-    - After: Wow! This is amazing. or Wow, this is amazing.
-
-3. Build (.github/workflows/build.yml)
+[Full Build Log](https://github.com/asafelobotomy/xanados/actions/runs/15491770225)
 
 ---
 
-Summary of Errors:
+## 2. Potential Build Blocks
 
-- Skipped: Current root is not booted.
-- /usr/lib/tmpfiles.d/journal-nocow.conf:26: Failed to resolve specifier: uninitialized /etc/ detected, skipping.
-- PKGBUILD (calamares) E: Split PKGBUILD needs additional makedepends: ['kconfig', 'kconfig5', 'kcoreaddons', 'kcoreaddons5', 'ki18n', 'ki18n5', 'kiconthemes', 'kiconthemes5', 'kio', 'kio5', 'plasma-framework5', 'polkit-qt5', 'polkit-qt6', 'qt5-base', 'qt5-svg', 'qt5-xmlpatterns']
-- ERROR: You do not have write permission for the directory $BUILDDIR (/\_\_w/xanados/xanados/packages/calamares).
-- Exit code: 11
+### 2.1 Markdown Issues
 
-Detailed Solutions:
+- **Linting errors must be resolved for successful CI/CD.**
+- Markdown files that do not comply with lint rules will continually fail the workflow and block merges if required.
 
-- "Current root is not booted" and "Failed to resolve specifier":
+### 2.2 Script and User Errors
 
-  - Problem: These are generally warnings from systemd or post-install scripts expecting a booted system, common in CI environments.
-  - Solution: These can often be safely ignored if the build otherwise succeeds. If these warnings cause a failure, patch or disable the affected post-transaction hooks for CI, ensuring scripts that require a running system are skipped in CI.
+- **Attempting to chown files to a non-existent user** (`builduser:builduser`) will always fail in clean or containerized environments unless the user is created as part of the setup.
+- **Systemd and tmpfiles errors** may be non-blocking but suggest environment misconfiguration, which could cause future issues or unexpected behaviors.
 
-- PKGBUILD needs additional makedepends:
+### 2.3 Environment/Configuration
 
-  - Problem: The PKGBUILD is missing required packages in its global makedepends array. Dynamic, function-based assignment of makedepends does not work with makepkg.
-  - Solution: Add all build-time dependencies for both calamares (Qt6) and calamares-qt5 (Qt5) to a top-level, static makedepends array.
+- **Docker/System Images**: The environment may be missing required users or system states (e.g., not booted root), which can affect systemd-based hooks and permissions.
+
+---
+
+## 3. Recommendations & Optimizations
+
+### 3.1 Markdown & Documentation
+
+- **Configure Prettier and markdownlint** to use the same rules, especially for line length.
+- **Edit all markdown files** to:
+  - Break long lines at 80 characters where possible.
+  - Replace bare URLs with proper `[text](url)` markdown links.
+  - Ensure only a single top-level (`#`) heading per file.
+  - Fix ordered list numbering to increment correctly.
+- **Automate formatting:** Add a pre-commit hook to run Prettier and markdownlint before committing markdown files.
+
+### 3.2 CI/CD Build & Environment
+
+- **User Creation**: Add a step to the workflow to create the `builduser` user and group before running `chown`.
   - Example:
-    makedepends=(
-    'extra-cmake-modules'
-    'git'
-    'kconfig'
-    'kconfig5'
-    'kcoreaddons'
-    'kcoreaddons5'
-    'ki18n'
-    'ki18n5'
-    'kiconthemes'
-    'kiconthemes5'
-    'kio'
-    'kio5'
-    'plasma-framework5'
-    'polkit-qt5'
-    'polkit-qt6'
-    'qt5-base'
-    'qt5-svg'
-    'qt5-xmlpatterns'
-    'qt5-tools'
-    'qt5-translations'
-    'qt6-base'
-    'qt6-svg'
-    'qt6-tools'
-    'qt6-translations'
-    )
-  - Remove any dynamic logic (functions that append to makedepends) from your PKGBUILD, as they will be ignored by makepkg.
+    ```sh
+    sudo groupadd -f builduser
+    sudo useradd -m -g builduser builduser || true
+    ```
+- **Environment Checks**: Ensure the build container or VM is initialized with necessary systemd/system hooks if needed, or adjust scripts to handle "not booted" environments gracefully.
+- **Error Handling**: Add checks to scripts to verify the existence of users/groups before attempting ownership changes.
 
-- Write permission for $BUILDDIR:
-  - Problem: The build process user does not have permission to write to the build directory.
-  - Solution: Modify your GitHub Actions or CI workflow to ensure the build user owns the build directory and has write permissions.
-  - Example for GitHub Actions:
-    - name: Fix permissions for build directory
-      run: sudo chown -R $(whoami) /\_\_w/xanados/xanados/packages/calamares
-  - Alternatively, always build packages as a regular user, not as root, for security and compatibility with packaging standards.
+### 3.3 Security & Optimization
+
+- **Proactively review and fix all warnings**, not just errors, in lint and build logs.
+- **Minimize privileged operations** (`sudo`, `chown`) unless strictly necessary.
+- **Use CI base images** that closely match production/deployment environments to avoid "works on my machine" issues.
+
+### 3.4 General Suggestions
+
+- **Document all CI requirements** (users, permissions, tools needed) in the repository's CONTRIBUTING.md or README.
+- **Regularly update and test** the CI configuration when adding or removing scripts/tools.
+- **Consider a CI matrix** to test multiple environments if supporting multiple OSes or user setups.
 
 ---
 
-## II. PKGBUILD Analysis & Suggestions
+## 4. Summary Table
 
-Analysis:
-
-- PKGBUILD currently tries to dynamically append to makedepends using bash functions within prepare(). makepkg only reads the top-level makedepends array.
-- Required build-time dependencies for both Qt5 and Qt6 variants are not being installed, causing lint failures and potentially incomplete builds.
-
-Detailed PKGBUILD Suggestions:
-
-1. Replace dynamic makedepends logic with a static array.
-
-   - Remove any bash functions that append to makedepends or attempt to set it dynamically.
-   - Define a single, static makedepends array at the top of your PKGBUILD that includes all build dependencies for both split packages.
-
-2. Comprehensive makedepends example for your calamares PKGBUILD:
-   makedepends=(
-   'extra-cmake-modules'
-   'git'
-   'kconfig'
-   'kconfig5'
-   'kcoreaddons'
-   'kcoreaddons5'
-   'ki18n'
-   'ki18n5'
-   'kiconthemes'
-   'kiconthemes5'
-   'kio'
-   'kio5'
-   'plasma-framework5'
-   'polkit-qt5'
-   'polkit-qt6'
-   'qt5-base'
-   'qt5-svg'
-   'qt5-xmlpatterns'
-   'qt5-tools'
-   'qt5-translations'
-   'qt6-base'
-   'qt6-svg'
-   'qt6-tools'
-   'qt6-translations'
-   )
-
-3. Ensure all other dependencies are correctly listed in the depends arrays for each split package.
-
-   - The depends arrays for package_calamares() and package_calamares-qt5() look appropriate but cross-check them with upstream package requirements if you encounter runtime errors.
-
-4. Permissions:
-
-   - In your CI workflow, make sure the build user (usually runner or github-actions) has ownership and write access to $BUILDDIR before building.
-   - Example shell command:
-     sudo chown -R $(whoami) /\_\_w/xanados/xanados/packages/calamares
-
-5. General Maintenance:
-   - After these changes, review the PKGBUILD for any remaining dynamic or nonstandard logic related to dependencies or build steps.
-   - Test the build locally (if possible) before pushing changes to ensure all dependencies are resolved and that the build succeeds.
+| Area         | Issue                           | Blocking? | Recommendation                           |
+|--------------|---------------------------------|-----------|-------------------------------------------|
+| Markdown     | Line length, bare URLs, headings| Yes       | Fix all lint errors per above             |
+| Build Script | `builduser` not found           | Yes       | Create user in CI before chown            |
+| Systemd      | Environment not booted          | Maybe     | Adjust scripts or ignore non-blocking     |
 
 ---
 
-## III. General Docs and Build Advice
+## 5. Useful Links
 
-- Markdown and prose lint: Review all Markdown files flagged by linters, wrap lines at 80 characters, use proper link syntax, and replace straight quotes with curly quotes using your editor’s find-and-replace.
-- Build permissions: Never build as root. Always ensure your build user has the correct permissions for all build and work directories.
-- Dependency maintenance: Periodically review dependencies for both build and runtime, especially after major upstream updates or when adding new features.
+- [Markdownlint Rules](https://github.com/DavidAnson/markdownlint/blob/main/doc/Rules.md)
+- [Failed Markdown Lint Run](https://github.com/asafelobotomy/xanados/actions/runs/15491770240)
+- [Failed Build Run](https://github.com/asafelobotomy/xanados/actions/runs/15491770225)
+
+---
+
+## 6. Next Steps
+
+- **Address all markdown issues** according to linter output.
+- **Update CI scripts** to ensure all required users/groups exist.
+- **Re-run workflows** after applying fixes.
+- **Monitor** for any new or related errors and document resolutions.
+
+---
