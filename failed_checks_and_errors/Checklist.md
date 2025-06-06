@@ -22,8 +22,8 @@ Follow these steps whenever you work with this checklist:
 ## Markdown Lint
 
 - [ ] Break long lines at 80 characters or update `.markdownlint.yml`.
-- [ ] Ensure all files start with a top‑level heading.
-- [ ] Replace bare URLs with proper Markdown links.
+- [x] Ensure all files start with a top‑level heading.
+- [x] Replace bare URLs with proper Markdown links.
 
 ===
 
@@ -38,3 +38,4 @@ Follow these steps whenever you work with this checklist:
 - 2025-06-06: Reset checklist with new build and markdown lint issues.
 - 2025-06-06: Noted that systemd tmpfiles warnings are safe to ignore in CI.
 - 2025-06-06: Added CI build tools `debugedit` and `fakeroot`.
+- 2025-06-06: Completed Markdown heading and link fixes.
