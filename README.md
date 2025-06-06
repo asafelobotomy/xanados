@@ -181,6 +181,27 @@ Markdown files are also checked with Atom. Install the editor and run:
 atom --check **/*.md
 ```
 
+## Automation
+
+Codex or other AI assistants should run several checks automatically
+before opening a pull request:
+
+```bash
+npm list --depth=0
+bats tests
+prettier --check .
+atom --check **/*.md
+shellcheck scripts/*.sh
+```
+
+Install Python requirements once with:
+
+```bash
+pip install -r requirements.txt
+```
+
+before running `scripts/check_packages.py`.
+
 ## Contributing
 
 Contributions are welcome! Please read
