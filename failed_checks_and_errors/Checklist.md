@@ -1,10 +1,12 @@
 # Error Resolution Checklist
 
-Review [errors1.md](errors1.md) for new errors
-Update [Checklist.md](Checklist.md) with all new errors and failed checks
-Document a summary of errors and failed checks resolved in [Checklist.md](Checklist.md) below CHANGELOG with time and date
-Remove resolved errors and failed checks no longer present in [errors1.md](errors1.md) from [Checklist.md](Checklist.md)
-Mark each item as you resolve the issues listed in [errors1.md](errors1.md).
+Use this file to track issues reported in [errors1.md](errors1.md).
+
+1. Review `errors1.md` regularly for new problems.
+2. Add new items below and keep them unchecked until fixed.
+3. Remove any entry that disappears from `errors1.md`.
+4. When you resolve an item, check it off and
+   add a note under **CHANGELOG** with the date.
 
 ## Markdown Lint
 
@@ -26,4 +28,7 @@ Mark each item as you resolve the issues listed in [errors1.md](errors1.md).
 - [x] Fix write permission for $BUILDDIR in CI
 
 ===
-# CHANGELOG
+
+## Changelog
+
+- 2025-06-07: Clarified checklist instructions and formatted with Prettier.
