@@ -12,7 +12,7 @@ Featured — during first boot.
 - 🧠 Full recommended setup including multimedia and productivity apps
 - 🛡️ Secure Boot toggle and detection
 - 💻 Custom Welcome App built in PyQt5 with:
-  - Frameless neon-themed window
+  - Frameless window design
   - Fade-in animation and button hover effects
   - Real-time installation logging
   - Progress bar and threading support
