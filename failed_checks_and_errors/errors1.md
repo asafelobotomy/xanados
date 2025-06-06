@@ -1,6 +1,6 @@
 # Failed Workflows Report
 
-_Last updated: 2025-06-06 19:20 UTC_
+_Last updated: 2025-06-06 21:04 UTC_
 
 This report summarizes the recent workflow failures in the repository, their causes, and proposed resolutions.
 
@@ -14,8 +14,6 @@ This report summarizes the recent workflow failures in the repository, their cau
 
 ### Main Errors
 
-- `ERROR: Cannot find the debugedit binary required for including source files in debug packages.`
-- `ERROR: Cannot find the fakeroot binary.`
 - Warnings about "Skipped: Current root is not booted." and "Failed to resolve specifier: uninitialized /etc/ detected, skipping."
 
 ### Resolution
@@ -49,6 +47,14 @@ This report summarizes the recent workflow failures in the repository, their cau
   Ensure all Markdown files begin with a `# Heading`.
 - **Bare URLs:**  
   Convert bare URLs to `[text](url)` format.
+- **MD013/line-length:**  
+  Many lines in Markdown files exceed the 80-character limit.
+
+### Resolution
+
+- **Line Length:**  
+  Break long lines at 80 characters (or adjust `.markdownlint.yml` if you want to allow longer lines).
+
 
 ---
 
@@ -57,8 +63,6 @@ This report summarizes the recent workflow failures in the repository, their cau
 **Workflow:** [Build](https://github.com/asafelobotomy/xanados/actions/runs/15494717855)  
 **Branch:** `codex/review-build-for-errors`  
 **Commit:** `87912ae1552e7d28078b719799886589fd91755d`
-
-- Same errors as above with missing `debugedit` and `fakeroot`.
 
 ---
 
@@ -79,8 +83,6 @@ This report summarizes the recent workflow failures in the repository, their cau
 | Build         | Missing `debugedit`, `fakeroot` | Install with `pacman -Sy --noconfirm debugedit fakeroot` |
 |               | Container/root warnings         | Typically safe to ignore in CI                           |
 | Markdown Lint | Line too long (MD013)           | Break lines at 80 characters or adjust config            |
-|               | No top-level heading (MD041)    | Add `# Heading` to start of each file                    |
-|               | Bare URLs (MD034)               | Use `[text](url)` links                                  |
 
 ---
 
