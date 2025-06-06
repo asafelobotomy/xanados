@@ -23,7 +23,7 @@ Use this file to track issues reported in [errors1.md](errors1.md).
 
 ## Build
 
-- [ ] CI warnings about unbooted root and journal specifier
+- [x] CI warnings about unbooted root and journal specifier
 - [x] Add static makedepends to calamares PKGBUILD
 - [x] Fix write permission for $BUILDDIR in CI
 
@@ -32,3 +32,4 @@ Use this file to track issues reported in [errors1.md](errors1.md).
 ## Changelog
 
 - 2025-06-07: Clarified checklist instructions and formatted with Prettier.
+- 2025-06-06: Created machine-id during package build to silence systemd tmpfiles warnings.
