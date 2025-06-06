@@ -7,6 +7,24 @@ REPO_DIR="$PKG_ROOT/repo"
 
 mkdir -p "$REPO_DIR"
 
+install_deps() {
+  local dir="$1"
+  pushd "$dir" >/dev/null
+  # shellcheck disable=SC1091
+  source ./PKGBUILD
+  local all_deps=("${depends[@]}")
+  all_deps+=("${makedepends[@]}")
+  if [ ${#all_deps[@]} -gt 0 ]; then
+    local missing
+    missing=$(pacman -T "${all_deps[@]}" || true)
+    if [ -n "$missing" ]; then
+      echo "Installing missing dependencies: $missing"
+      sudo pacman -Sy --needed --noconfirm $missing
+    fi
+  fi
+  popd >/dev/null
+}
+
 build_pkg() {
   local dir="$1"
   if [ ! -f "$dir/PKGBUILD" ]; then
@@ -17,7 +35,8 @@ build_pkg() {
   namcap PKGBUILD || true
   makepkg --verifysource --noconfirm
   updpkgsums
-  makepkg -sf --noconfirm
+  install_deps "$dir"
+  makepkg -f --noconfirm
   local pkgfile
   pkgfile=$(find . -maxdepth 1 -name '*.pkg.tar.zst' -print -quit)
   if [ -n "${pkgfile:-}" ]; then
