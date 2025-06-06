@@ -39,6 +39,7 @@ Interact only with:
 - `/docs/`: Markdown docs
 - `/logs/`: Build/test/ISO logs
 - `/frontend/`: Next.js frontend
+- `/failed_checks_and_errors/`: list of failed script checks and errors
 
 **Do not** modify `/public/` or commit `.git`-ignored secrets.
 
@@ -46,10 +47,9 @@ Interact only with:
 
 ## 🚫 Forbidden Actions & Security
 
-- Do not modify files outside the above directories.
+- Do not modify files outside the above directories without explicit review.
 - Do not commit/expose secrets, tokens, or private keys.
 - Do not execute scripts/commands without explicit review.
-- Do not push directly to `main`.
 - Do not weaken security settings unless explicitly instructed.
 - Never disable security controls (pre-commit, git-secrets, etc).
 
@@ -57,14 +57,20 @@ Interact only with:
 
 ## 🧠 Contributor Responsibilities
 
-You may assist with:
+You must always:
 
-- Creating/editing PKGBUILD files
-- Writing archiso profiles (e.g., `releng/`, `baseline/`)
-- Automating build pipelines (`make`, `build.sh`)
-- Writing secure, POSIX-compliant shell scripts
-- Managing pacman hooks, mkinitcpio configs, systemd services
-- Testing ISO builds (QEMU, VirtualBox, CI)
+- Assist with creating/editing PKGBUILD files
+- Assist with writing archiso profiles (e.g., `releng/`, `baseline/`)
+- Automate build pipelines (`make`, `build.sh`)
+- Write secure, POSIX-compliant shell scripts
+- Manage pacman hooks, mkinitcpio configs, systemd services
+- Test ISO builds (QEMU, VirtualBox, CI) where possible
+- Troubleshoot bugs, fix errors and remove conflicts
+  whenever they are found
+- Check packages to make sure that they are up-to-date and stable
+- Validate all text documents and scripts, checking for typos and
+  invalid references/commands
+- Review the last 10 previous commits to ensure understanding
 
 ---
 
@@ -100,7 +106,7 @@ Ensure all code passes relevant linters before submission.
 
 - Follow [CIS Benchmarks](https://www.cisecurity.org/cis-benchmarks/)
   where applicable.
-- Use `sudo` securely; avoid `NOPASSWD`.
+- Use `sudo` securely; avoid `NOPASSWD` when possible
 - Avoid hardcoded passwords/keys/tokens.
 - Set restrictive file permissions (`umask 027`, `chmod 600+`).
 - Harden system configs (`sshd_config`, `journald.conf`, `grub.cfg`).
@@ -120,25 +126,24 @@ Ensure all code passes relevant linters before submission.
 
 ## 🛠 PKGBUILD Standards
 
-- Follow the Arch Wiki guidelines on
-  [Creating packages](https://wiki.archlinux.org/title/Creating_packages)
+- Follow the Arch Wiki guidelines on [Creating packages](https://wiki.archlinux.org/title/Creating_packages)
 - Use `sha256sums`/`validpgpkeys` for sources
 - Pass `namcap`/linting
 - Do not vendor precompiled/insecure binaries
 
 **Example PKGBUILD:**
-
+<!-- proselint-disable -->
 ```bash
 
 pkgname=example
 pkgver=1.0
 pkgrel=1
-pkgdesc="An example package"
+pkgdesc=“An example package”
 arch=('x86_64')
 url="https://example.com"
 license=('GPL3')
 source=("https://example.com/download/$pkgname-$pkgver.tar.gz")
-sha256sums=('SKIP') # Replace with actual sum!
+sha256sums=('SKIP') # Replace with actual sum.
 build() {
     cd "$srcdir/$pkgname-$pkgver"
     make
@@ -149,6 +154,7 @@ package() {
 }
 
 ```
+<!-- proselint-enable -->
 
 ---
 
@@ -203,8 +209,7 @@ qemu-system-x86_64 -cdrom out/archlinux-custom.iso -m 2048 -nographic
 
 ## 📚 References
 
-- [Arch Wiki: Creating packages]
-  (https://wiki.archlinux.org/title/Creating_packages)
+- [Arch Wiki: Creating packages](https://wiki.archlinux.org/title/Creating_packages)
 - [Arch Wiki: archiso](https://wiki.archlinux.org/title/Archiso)
 - [CIS Benchmarks](https://www.cisecurity.org/cis-benchmarks/)
 - [shellcheck](https://www.shellcheck.net/)

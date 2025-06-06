@@ -1,6 +1,7 @@
 # XanadOS – High-Level Master Overview
+
 🔹 Purpose, Focus & Vision
-XanadOS is a cyberpunk-inspired, Arch-based Linux distribution focused on:
+XanadOS is an Arch-based Linux distribution focused on:
 
 🎮 High-performance gaming
 
@@ -52,12 +53,12 @@ Firewall UFW active by default
 💻 User Interface & Experience
 Feature Detail
 Desktop Environment KDE Plasma
-Theming Cyberpunk + Retro CRT + Dark Mode
+Theming Configurable with optional dark mode
 Terminal Alacritty (default)
 System Monitors btop, Conky
-Bootloader Custom GRUB theme
+Bootloader Configurable GRUB theme
 Boot Splash Plymouth animation (ASCII style)
-Login Screen SDDM (themed to match)
+Login Screen SDDM with optional theming
 File Manager Dolphin
 Flatpak Integration Discover preconfigured with Flathub
 GUI Package Options Octopi (paru/AUR), Bauh (multi-store)
@@ -91,7 +92,7 @@ xanados-iso/
 │ └── etc/skel/
 ├── calamares/ # Installer configuration
 │ ├── branding/xanados/
-│ │ ├── style.qss # Custom style
+│ │ ├── style.qss # Optional stylesheet
 │ │ └── services.conf
 │ ├── modules/
 │ │ └── secureboot-toggle/
@@ -105,7 +106,7 @@ xanados-iso/
 ├── bootstrap_packages.x86_64 # Minimal bootstrap list
 
 🧠 What This ISO Does
-Boots into a fully themed KDE Plasma Live Environment
+Boots into a KDE Plasma Live Environment with default settings
 
 Runs a pre-configured Welcome App for optional setup
 

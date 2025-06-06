@@ -9,8 +9,8 @@ The resulting `*.pkg.tar.zst` files are copied into
 build.
 
 Use standard Arch tooling when authoring `PKGBUILD`s. `scripts/build_packages.sh`
-will install any missing build dependencies with `sudo pacman` so the script can
-run unprivileged for most operations:
+installs any missing build dependencies (including `namcap`) using `sudo pacman`
+so the script itself can run unprivileged for most operations:
 
 ```bash
 namcap PKGBUILD

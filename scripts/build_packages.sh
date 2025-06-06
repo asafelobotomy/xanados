@@ -7,6 +7,31 @@ REPO_DIR="$PKG_ROOT/repo"
 
 mkdir -p "$REPO_DIR"
 
+# Run command as root, using sudo if needed
+as_root() {
+  if ((EUID == 0)); then
+    "$@"
+  else
+    sudo "$@"
+  fi
+}
+
+# Run command as the dedicated build user when executed as root
+as_builduser() {
+  if ((EUID == 0)); then
+    sudo -Hu builduser "$@"
+  else
+    "$@"
+  fi
+}
+
+if ((EUID == 0)); then
+  # Create build user if missing
+  if ! id builduser >/dev/null 2>&1; then
+    as_root useradd -m builduser
+  fi
+fi
+
 install_deps() {
   local dir="$1"
   pushd "$dir" >/dev/null
@@ -19,7 +44,8 @@ install_deps() {
     missing=$(pacman -T "${all_deps[@]}" || true)
     if [ -n "$missing" ]; then
       echo "Installing missing dependencies: $missing"
-      sudo pacman -Sy --needed --noconfirm $missing
+      as_root pacman -Sy --needed --noconfirm "$missing"
+
     fi
   fi
   popd >/dev/null
@@ -32,11 +58,15 @@ build_pkg() {
   fi
   echo "## Building $(basename "$dir")"
   pushd "$dir" >/dev/null
-  namcap PKGBUILD || true
-  makepkg --verifysource --noconfirm
-  updpkgsums
+  if ! command -v namcap >/dev/null 2>&1; then
+    echo "Installing namcap" >&2
+    as_root pacman -Sy --needed --noconfirm namcap
+  fi
+  as_builduser namcap PKGBUILD || true
+  as_builduser makepkg --verifysource --noconfirm
+  as_builduser updpkgsums
   install_deps "$dir"
-  makepkg -f --noconfirm
+  as_builduser makepkg -f --noconfirm
   local pkgfile
   pkgfile=$(find . -maxdepth 1 -name '*.pkg.tar.zst' -print -quit)
   if [ -n "${pkgfile:-}" ]; then
