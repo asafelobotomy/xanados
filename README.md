@@ -150,6 +150,10 @@ cd frontend
 ## Testing
 
 Basic Bats tests verify that build scripts exist and are executable.
+Make sure the `bats` (or `bats-core`) package is installed before
+running the suite. If the package is missing, running
+`scripts/build_packages.sh` will build the local `bats` package
+automatically.
 Run all tests with:
 
 ```bash
