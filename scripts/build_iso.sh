@@ -21,7 +21,12 @@ if [ ! -d "$REPO_DIR" ]; then
 fi
 
 if ! compgen -G "$REPO_DIR"/*.pkg.tar.zst >/dev/null; then
-  echo "Error: No package files (*.pkg.tar.zst) found in '$REPO_DIR'. Please add the required packages." >&2
+  echo "No packages found in '$REPO_DIR'. Building from PKGBUILDs..." >&2
+  bash "$(dirname "$0")/build_packages.sh"
+fi
+
+if ! compgen -G "$REPO_DIR"/*.pkg.tar.zst >/dev/null; then
+  echo "Error: No package files (*.pkg.tar.zst) found in '$REPO_DIR' after building." >&2
   exit 1
 fi
 
