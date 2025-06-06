@@ -158,8 +158,9 @@ bats tests
 
 ## Contributing
 
-Contributions are welcome! Please see
-[CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+Contributions are welcome! Please read
+[CONTRIBUTING.md](CONTRIBUTING.md) for a summary of workflows,
+linting requirements and security policies.
 
 ## Support & Community
 
