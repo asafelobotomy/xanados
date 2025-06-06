@@ -4,6 +4,37 @@ set -e
 LOGFILE="/tmp/welcome_install.log"
 exec > >(tee -a "$LOGFILE") 2>&1
 
+check_paru() {
+    if ! command -v paru >/dev/null 2>&1; then
+        echo "[ERROR] paru is not installed. Please install paru first." >&2
+        exit 1
+    fi
+}
+
+run_cmd() {
+    if $DRY_RUN; then
+        echo "DRY RUN: $*"
+    else
+        "$@"
+    fi
+}
+
+DRY_RUN=false
+POSITIONAL=()
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        --dry-run)
+            DRY_RUN=true
+            shift
+            ;;
+        *)
+            POSITIONAL+=("$1")
+            shift
+            ;;
+    esac
+done
+set -- "${POSITIONAL[@]}"
+
 echo "[XanadOS] Starting Gaming Stack installation at $(date)"
 
 usage() {
@@ -36,6 +67,8 @@ while getopts ":f:h" opt; do
 done
 shift $((OPTIND -1))
 
+check_paru
+
 if [[ $# -gt 0 ]]; then
     PACKAGES+=("$@")
 fi
@@ -44,7 +77,7 @@ if [[ ${#PACKAGES[@]} -eq 0 ]]; then
     PACKAGES=(steam lutris heroic-games-launcher gamemode mangohud vkbasalt protontricks)
 fi
 
-if ! paru -Syu --needed --noconfirm "${PACKAGES[@]}"; then
+if ! run_cmd paru -Syu --needed --noconfirm "${PACKAGES[@]}"; then
     echo "[ERROR] Gaming Stack installation failed."
     exit 1
 fi
