@@ -55,9 +55,6 @@ ufw-extras
 firejail
 timeshift
 snapper
-lutris
-gamemode
-retroarch
 vlc
 gwenview
 7zip
@@ -154,3 +151,20 @@ systemd-resolvconf
 tcpdump
 sbctl
 bats
+
+# Security packages
+fail2ban
+nmap
+wireshark-qt
+clamav
+rkhunter
+
+# Performance packages
+tlp
+thermald
+cpupower
+irqbalance
+preload
+earlyoom
+
+paru

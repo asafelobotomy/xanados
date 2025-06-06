@@ -18,7 +18,12 @@ class InstallerThread(QtCore.QThread):
 
     def run(self):
         success = True
-        for script in self.scripts:
+        for entry in self.scripts:
+            if isinstance(entry, (list, tuple)):
+                script, *args = entry
+            else:
+                script, args = entry, []
+
             if not self._is_running:
                 self.progress.emit("[INFO] Installation cancelled by user.")
                 success = False
@@ -27,10 +32,11 @@ class InstallerThread(QtCore.QThread):
                 self.progress.emit(f"[ERROR] Script not found: {script}")
                 success = False
                 break
-            self.progress.emit(f"▶ Executing: {script}")
+            display = " ".join([script] + args)
+            self.progress.emit(f"▶ Executing: {display}")
             try:
                 process = subprocess.Popen(
-                    ["bash", script],
+                    ["bash", script] + args,
                     stdout=subprocess.PIPE,
                     stderr=subprocess.STDOUT,
                     universal_newlines=True,
@@ -107,7 +113,7 @@ class WelcomeApp(QtWidgets.QWidget):
 
         self.checkbox_gaming = QtWidgets.QCheckBox("Gaming Mode")
         self.checkbox_gaming.setToolTip(
-            "Install Steam, Lutris, Heroic, vkBasalt, MangoHud, etc."
+            "Install selected gaming packages."
         )
         self.checkbox_minimal = QtWidgets.QCheckBox("Minimal Mode")
         self.checkbox_minimal.setToolTip(
@@ -117,6 +123,28 @@ class WelcomeApp(QtWidgets.QWidget):
         self.checkbox_recommended.setToolTip("Install XanadOS full package stack.")
 
         layout.addWidget(self.checkbox_gaming)
+
+        self.gaming_group = QtWidgets.QGroupBox("Gaming Packages")
+        self.gaming_group.setVisible(False)
+        group_layout = QtWidgets.QVBoxLayout()
+        self.gaming_checks = {}
+        packages = [
+            ("steam", "Steam"),
+            ("lutris", "Lutris"),
+            ("heroic-games-launcher", "Heroic Games Launcher"),
+            ("gamemode", "GameMode"),
+            ("mangohud", "MangoHud"),
+            ("vkbasalt", "vkBasalt"),
+            ("protontricks", "Protontricks"),
+        ]
+        for pkg, label in packages:
+            cb = QtWidgets.QCheckBox(label)
+            cb.setChecked(True)
+            self.gaming_checks[pkg] = cb
+            group_layout.addWidget(cb)
+        self.gaming_group.setLayout(group_layout)
+        layout.addWidget(self.gaming_group)
+
         layout.addWidget(self.checkbox_minimal)
         layout.addWidget(self.checkbox_recommended)
 
@@ -148,6 +176,10 @@ class WelcomeApp(QtWidgets.QWidget):
             self.checkbox_recommended,
         ]:
             box.stateChanged.connect(self.update_button_state)
+
+        self.checkbox_gaming.stateChanged.connect(
+            lambda: self.gaming_group.setVisible(self.checkbox_gaming.isChecked())
+        )
 
         if os.path.exists("/etc/xanados/secureboot_enabled"):
             self.log_output.append("[!] Secure Boot is enabled.")
@@ -187,7 +219,11 @@ class WelcomeApp(QtWidgets.QWidget):
             return
         scripts = []
         if self.checkbox_gaming.isChecked():
-            scripts.append("/etc/xanados/scripts/install_gaming.sh")
+            selected = [pkg for pkg, cb in self.gaming_checks.items() if cb.isChecked()]
+            if selected:
+                scripts.append(["/etc/xanados/scripts/install_gaming.sh", *selected])
+            else:
+                scripts.append("/etc/xanados/scripts/install_gaming.sh")
         if self.checkbox_minimal.isChecked():
             scripts.append("/etc/xanados/scripts/install_minimal.sh")
         if self.checkbox_recommended.isChecked():
