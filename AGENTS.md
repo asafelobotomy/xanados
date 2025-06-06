@@ -60,6 +60,7 @@ Interact only with:
 
 You must always:
 
+- Use time.is to check the correct date/time when needed
 - Assist with creating/editing PKGBUILD files
 - Assist with writing archiso profiles (e.g., `releng/`, `baseline/`)
 - Automate build pipelines (`make`, `build.sh`)
