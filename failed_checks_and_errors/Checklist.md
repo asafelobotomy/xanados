@@ -21,7 +21,7 @@ Follow these steps whenever you work with this checklist:
 
 ## Markdown Lint
 
-- [ ] Break long lines at 80 characters or update `.markdownlint.yml`.
+- [x] Allow lines up to 150 characters via `.markdownlint.yml`.
 - [ ] Ensure all files start with a top‑level heading.
 - [ ] Replace bare URLs with proper Markdown links.
 

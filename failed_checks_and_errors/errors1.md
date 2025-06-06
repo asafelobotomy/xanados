@@ -38,8 +38,6 @@ This report summarizes the recent workflow failures in the repository, their cau
 
 ### Main Errors
 
-- **MD013/line-length:**  
-  Many lines in Markdown files exceed the 80-character limit.
 - **MD041/first-line-heading/first-line-h1:**  
   Some Markdown files do not start with a top-level heading.
 - **MD034/no-bare-urls:**  
@@ -47,8 +45,6 @@ This report summarizes the recent workflow failures in the repository, their cau
 
 ### Resolution
 
-- **Line Length:**  
-  Break long lines at 80 characters (or adjust `.markdownlint.yml` if you want to allow longer lines).
 - **First Line Heading:**  
   Ensure all Markdown files begin with a `# Heading`.
 - **Bare URLs:**  
