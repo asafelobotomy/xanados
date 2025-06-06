@@ -8,7 +8,9 @@ The resulting `*.pkg.tar.zst` files are copied into
 `packages/repo` and added to the local repository used by the ISO
 build.
 
-Use standard Arch tooling when authoring `PKGBUILD`s:
+Use standard Arch tooling when authoring `PKGBUILD`s. `scripts/build_packages.sh`
+installs any missing build dependencies (including `namcap`) using `sudo pacman`
+so the script itself can run unprivileged for most operations:
 
 ```bash
 namcap PKGBUILD
