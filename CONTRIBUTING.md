@@ -45,7 +45,7 @@ Avoid modifying files outside these areas unless specifically reviewed.
 2. Add the package to `xanados-iso/packages.x86_64`.
 3. Document the package in `docs/packages.md`.
 4. Run `namcap` and `makepkg --verifysource`.
-5. Update tests under `tests/` or `scripts/`.
+5. Update tests under `tests/`
 6. Open a pull request summarizing your changes.
 
 ## Linting and Testing
