@@ -23,6 +23,8 @@ jobs:
         run: pacman -Syu --noconfirm sudo
       - name: Install grub
         run: pacman -Syu --noconfirm grub
+      - name: Install bats
+        run: pacman -Syu --noconfirm bats
       - name: Create build user
         run: |
           sudo groupadd -f builduser

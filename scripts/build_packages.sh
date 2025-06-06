@@ -76,6 +76,10 @@ build_pkg() {
   pkgfile=$(find . -maxdepth 1 -name '*.pkg.tar.zst' -print -quit)
   if [ -n "${pkgfile:-}" ]; then
     mv "$pkgfile" "$REPO_DIR/"
+    if [[ $(basename "$dir") == "bats" ]]; then
+      echo "Installing $(basename "$pkgfile")"
+      as_root pacman -U --noconfirm "$REPO_DIR/$(basename "$pkgfile")"
+    fi
   fi
   popd >/dev/null
 }
