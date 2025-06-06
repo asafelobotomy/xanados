@@ -45,6 +45,7 @@ install_deps() {
     if [ -n "$missing" ]; then
       echo "Installing missing dependencies: $missing"
       as_root pacman -Sy --needed --noconfirm "$missing"
+
     fi
   fi
   popd >/dev/null
