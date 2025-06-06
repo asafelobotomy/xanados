@@ -125,6 +125,10 @@ Install Python requirements with `pip install -r requirements.txt` before runnin
 | Python        | black      | `black file.py`            |
 | JavaScript    | eslint     | `eslint file.js`           |
 
+Namcap checks PKGBUILD files and built packages for common issues.
+`scripts/build_packages.sh` installs it automatically via `sudo pacman` if missing.
+See [docs/packages.md](docs/packages.md) for detailed PKGBUILD testing steps.
+
 Ensure all code passes relevant linters before submission.
 
 Installation instructions for Atom, Prettier, ESLint and other tools
