@@ -12,17 +12,18 @@
 1. [Project Scope & Directory Structure](#-project-scope--directory-structure)
 2. [Forbidden Actions & Security](#-forbidden-actions--security)
 3. [Contributor Responsibilities](#-contributor-responsibilities)
-4. [Example Workflow: Adding a Package](#-example-workflow-adding-a-package)
-5. [Linting & Formatting](#-linting--formatting)
-6. [Security and Compliance](#-security-and-compliance)
-7. [PKGBUILD Standards](#-pkgbuild-standards)
-8. [ISO Creation Guidelines](#-iso-creation-guidelines)
-9. [Logging](#-logging)
-10. [System & Script Testing](#-system--script-testing)
-11. [References](#-references)
-12. [Prompting Tips](#-prompting-tips)
-13. [Suggesting Improvements](#-suggesting-improvements)
-14. [Changelog](#-changelog)
+4. [Pre-task checks to perform:](#-Pre-task-checks-to-perform)
+5. [Example Workflow: Adding a Package](#-example-workflow-adding-a-package)
+6. [Linting & Formatting](#-linting--formatting)
+7. [Security and Compliance](#-security-and-compliance)
+8. [PKGBUILD Standards](#-pkgbuild-standards)
+9. [ISO Creation Guidelines](#-iso-creation-guidelines)
+10. [Logging](#-logging)
+11. [System & Script Testing](#-system--script-testing)
+12. [References](#-references)
+13. [Prompting Tips](#-prompting-tips)
+14. [Suggesting Improvements](#-suggesting-improvements)
+15. [Changelog](#-changelog)
 
 ---
 
@@ -74,7 +75,7 @@ You must always:
 
 ---
 
-## 📝 Pre-task checks to perform:
+## 📝 Pre-task checks to perform
 
 - Review the last 10 previous commits of this build
   to get a full understanding of the project
