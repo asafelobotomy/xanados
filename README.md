@@ -62,7 +62,9 @@ directories used to build XanadOS.
    ```
 
 3. Run `mkarchiso` or the helper script to create the image.
-   Output will be placed in the `out/` directory:
+   The helper script automatically builds any packages found under
+   `packages/` and populates `packages/repo` if it is empty. Output will be
+   placed in the `out/` directory:
 
    ```bash
    # direct command
