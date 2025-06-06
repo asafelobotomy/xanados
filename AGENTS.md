@@ -106,7 +106,7 @@ Install Python requirements with `pip install -r requirements.txt` before runnin
 - [ ] Add package to `xanados-iso/packages.x86_64`
 - [ ] Update `/docs/packages.md` with usage/details
 - [ ] Run `namcap` and `makepkg --verifysource`
-- [ ] Add/update tests in `/scripts/tests/`
+- [ ] Add/update tests in `/tests/`
 - [ ] Open a Pull Request summarizing changes (see
       [Suggesting Improvements](#-suggesting-improvements))
 
