@@ -42,7 +42,7 @@ Avoid modifying files outside these areas unless specifically reviewed.
 ## Example Workflow
 
 1. Create `packages/<name>/PKGBUILD` following Arch standards.
-2. Add the package to `xanados-iso/profile/packages.x86_64`.
+2. Add the package to `xanados-iso/packages.x86_64`.
 3. Document the package in `docs/packages.md`.
 4. Run `namcap` and `makepkg --verifysource`.
 5. Update tests under `tests/` or `scripts/`.
