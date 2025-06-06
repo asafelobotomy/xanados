@@ -2,7 +2,8 @@
 set -e
 
 LOGFILE="/var/log/postinstall.log"
-exec > >(tee -a "$LOGFILE") 2>&1
+ERRORLOG="/var/log/postinstall-error.log"
+exec > >(tee -a "$LOGFILE") 2> >(tee -a "$LOGFILE" "$ERRORLOG" >&2)
 
 echo "[XanadOS] Starting post-install tasks..."
 
@@ -14,16 +15,18 @@ fi
 
 # Secure Boot setup placeholder
 if [ -f /etc/xanados/secureboot_enabled ]; then
-	echo "[XanadOS] Secure Boot enabled, configuring keys..."
-	if command -v sbctl >/dev/null 2>&1; then
-		sbctl create-keys
-		sbctl enroll-keys --yes-this-is-dangerous
-	else
-		echo "[ERROR] sbctl not installed, cannot enroll Secure Boot keys."
-		exit 1
-	fi
+        echo "[XanadOS] Secure Boot enabled, configuring keys..."
+        if command -v sbctl >/dev/null 2>&1; then
+                if sbctl create-keys && sbctl enroll-keys --yes-this-is-dangerous; then
+                        echo "[XanadOS] Secure Boot keys enrolled." 
+                else
+                        echo "[ERROR] sbctl failed to enroll keys, continuing installation."
+                fi
+        else
+                echo "[WARNING] sbctl not installed, skipping Secure Boot configuration."
+        fi
 else
-	echo "[XanadOS] Secure Boot not enabled."
+        echo "[XanadOS] Secure Boot not enabled."
 fi
 
 # Setup Welcome App autostart if file exists
