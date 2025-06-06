@@ -8,7 +8,6 @@ grub
 plymouth
 networkmanager
 sudo
-paru
 nano
 git
 python
@@ -153,5 +152,4 @@ parted
 squashfs-tools
 systemd-resolvconf
 tcpdump
-calamares
 sbctl
