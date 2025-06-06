@@ -14,7 +14,7 @@ Follow these steps whenever you work with this checklist:
 
 ## Build
 
-- [ ] Install `debugedit` and `fakeroot` packages in the CI workflow.
+- [x] Install `debugedit` and `fakeroot` packages in the CI workflow.
 - [x] Investigate warnings about an unbooted root and journal specifier.
       These messages appear in CI when `/etc` is not fully initialized and
       can be ignored unless they cause the build to fail.
@@ -37,4 +37,5 @@ Follow these steps whenever you work with this checklist:
   systemd warning review.
 - 2025-06-06: Reset checklist with new build and markdown lint issues.
 - 2025-06-06: Noted that systemd tmpfiles warnings are safe to ignore in CI.
+- 2025-06-06: Added CI build tools `debugedit` and `fakeroot`.
 - 2025-06-06: Completed Markdown heading and link fixes.
