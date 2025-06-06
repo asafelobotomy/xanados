@@ -1,8 +1,7 @@
 # Development Setup
 
 This guide explains how to install the tools used for linting and testing
-XanadOS. Install these utilities before running the checks listed in
-[AGENTS.md](../AGENTS.md).
+XanadOS. Install these utilities before running the checks
 
 ## Node and npm
 
