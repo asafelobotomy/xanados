@@ -153,3 +153,4 @@ squashfs-tools
 systemd-resolvconf
 tcpdump
 sbctl
+bats
