@@ -86,48 +86,19 @@ class WelcomeApp(QtWidgets.QWidget):
         shadow.setColor(QtGui.QColor(0, 255, 255, 120))
         self.setGraphicsEffect(shadow)
         self.setGeometry(100, 100, 600, 450)
-        self.setStyleSheet(
-            """
-            QWidget {
-                background-color: #0D0D0D;
-                color: #FF00FF;
-                font-family: 'JetBrains Mono';
-                font-size: 12pt;
-            }
-            QCheckBox {
-                margin: 10px;
-            }
-            QPushButton {
-                background-color: #111111;
-                color: #00FFFF;
-                border: 2px solid #FF00FF;
-                border-radius: 6px;
-                padding: 8px;
-            }
-            QPushButton:disabled {
-                color: gray;
-                border-color: gray;
-            }
-            QTextEdit {
-                background-color: #1A1A1A;
-                border: 1px solid #FF00FF;
-                padding: 6px;
-                color: #00FFFF;
-            }
-        """
-        )
+        self.setStyleSheet("")
 
         layout = QtWidgets.QVBoxLayout()
 
         top_bar = QtWidgets.QHBoxLayout()
         top_bar.setContentsMargins(0, 0, 0, 0)
         self.title_label = QtWidgets.QLabel("  Welcome to XanadOS")
-        self.title_label.setStyleSheet("font-weight: bold; color: #00FFFF;")
+        self.title_label.setStyleSheet("font-weight: bold;")
         self.close_button = QtWidgets.QPushButton("✕")
         self.close_button.setFixedSize(30, 30)
         self.close_button.clicked.connect(self.close)
         self.close_button.setStyleSheet(
-            "QPushButton { background-color: transparent; color: #FF00FF; border: none; font-size: 14pt; } QPushButton:hover { color: red; }"
+            "QPushButton { background-color: transparent; border: none; font-size: 14pt; }"
         )
         top_bar.addWidget(self.title_label)
         top_bar.addStretch()

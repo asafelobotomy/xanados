@@ -12,16 +12,6 @@ if [ -f /etc/xanados/dev_mode ]; then
 	# Add any dev mode specific logic here
 fi
 
-# Copy themes if source exists
-THEME_SRC="/usr/share/xanados/themes"
-THEME_DEST="/usr/share/themes"
-if [ -d "$THEME_SRC" ]; then
-	echo "[XanadOS] Copying themes from $THEME_SRC to $THEME_DEST"
-	cp -r "$THEME_SRC" "$THEME_DEST"
-else
-	echo "[WARNING] Theme source directory $THEME_SRC not found."
-fi
-
 # Secure Boot setup placeholder
 if [ -f /etc/xanados/secureboot_enabled ]; then
 	echo "[XanadOS] Secure Boot enabled, configuring keys..."
