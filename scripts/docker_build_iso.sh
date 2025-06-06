@@ -18,6 +18,6 @@ fi
     -v "$REPO_ROOT":/repo \
     --workdir /repo/xanados-iso \
     archlinux:latest \
-    bash -c 'pacman -Syu --noconfirm archiso grub && mkarchiso -v -o /repo/out .'
+    bash -c 'pacman -Syu --noconfirm archiso grub bats && mkarchiso -v -o /repo/out .'
   echo "### $(date -u '+%Y-%m-%d %H:%M:%S UTC') Build finished"
 } | tee "$LOG_FILE"
