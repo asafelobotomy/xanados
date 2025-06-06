@@ -7,6 +7,11 @@ REPO_DIR="$PKG_ROOT/repo"
 
 mkdir -p "$REPO_DIR"
 
+# Silence systemd warnings in CI by ensuring /etc/machine-id exists
+if [ ! -f /etc/machine-id ]; then
+  sudo systemd-machine-id-setup >/dev/null
+fi
+
 # Run command as root, using sudo if needed
 as_root() {
   if ((EUID == 0)); then
