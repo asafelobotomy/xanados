@@ -113,8 +113,23 @@ If no packages are specified, a default gaming package set will be installed:
   Found in `xanados-iso/airootfs/etc/xanados/scripts/` for minimal, recommended, and gaming package installs.
 - **Calamares Integration:**  
   Custom install logic in `xanados-iso/calamares/scripts/` and modules.
-- **Mirror Selection:**  
+- **Mirror Selection:**
   Handled by `choose-mirror` script for flexible mirror configuration at boot.
+
+## Kernel Options
+
+The installer can install different kernels based on the setting in
+`/etc/xanados/package-options.conf` or the option selected in Calamares.
+Set the `KERNEL` variable to one of the following values:
+
+- `linux` – the standard Arch kernel
+- `zen` – `linux-zen` for desktop performance
+- `lts` – `linux-lts` long term support kernel
+- `hardened` – `linux-hardened` with extra security features
+- `xanmod` – `linux-xanmod` tuned for gaming
+
+During installation the **packagechooser** module installs the chosen kernel
+and removes any other kernel packages.
 
 ---
 
