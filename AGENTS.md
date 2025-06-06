@@ -33,7 +33,7 @@ Interact only with:
 
 - `/packages/`: Custom
   [`PKGBUILD`](https://wiki.archlinux.org/title/PKGBUILD) packages
-- `/iso/`: ISO build configs
+- `/xanados-iso/`: ISO build configs
   ([archiso](https://wiki.archlinux.org/title/Archiso))
 - `/scripts/`: Bash automation/tooling
 - `/configs/`: System settings, pacman hooks, systemd units
@@ -103,7 +103,7 @@ Install Python requirements with `pip install -r requirements.txt` before runnin
 
 - [ ] Create `/packages/<pkgname>/PKGBUILD` per
       [Arch standards](https://wiki.archlinux.org/title/Creating_packages)
-- [ ] Add package to `/iso/profile/packages.x86_64`
+- [ ] Add package to `xanados-iso/packages.x86_64`
 - [ ] Update `/docs/packages.md` with usage/details
 - [ ] Run `namcap` and `makepkg --verifysource`
 - [ ] Add/update tests in `/scripts/tests/`
