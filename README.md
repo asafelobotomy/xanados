@@ -127,18 +127,6 @@ If no packages are specified, a default gaming package set will be installed:
 
 ---
 
-## Contributing
-
-Contributions are welcome! To help:
-
-- Fork the repo and create a feature branch.
-- Open pull requests for code, documentation, or packaging improvements.
-- File issues for bug reports and suggestions.
-
-See [CONTRIBUTING.md](CONTRIBUTING.md) for more guidelines (if available).
-
----
-
 ## Community & Support
 
 - [Arch Wiki](https://wiki.archlinux.org/) — For general Arch Linux troubleshooting
