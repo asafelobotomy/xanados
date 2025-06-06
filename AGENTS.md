@@ -127,6 +127,9 @@ Install Python requirements with `pip install -r requirements.txt` before runnin
 
 Ensure all code passes relevant linters before submission.
 
+Installation instructions for Atom, Prettier, ESLint and other tools
+are located in [docs/setup.md](docs/setup.md).
+
 ### Node tooling
 
 The project relies on several Node packages:
