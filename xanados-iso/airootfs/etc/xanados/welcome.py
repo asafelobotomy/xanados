@@ -76,8 +76,9 @@ class WelcomeApp(QtWidgets.QWidget):
             self.dragPos = event.globalPos()
             event.accept()
 
-    def __init__(self):
+    def __init__(self, dry_run=False):
         super().__init__()
+        self.dry_run_default = dry_run
         self.installed = os.path.exists("/etc/xanados/installed")
         self.init_ui()
         self.thread = None
@@ -147,6 +148,13 @@ class WelcomeApp(QtWidgets.QWidget):
 
         layout.addWidget(self.checkbox_minimal)
         layout.addWidget(self.checkbox_recommended)
+
+        self.checkbox_dry_run = QtWidgets.QCheckBox("Dry Run")
+        self.checkbox_dry_run.setToolTip(
+            "Show the commands without executing them."
+        )
+        self.checkbox_dry_run.setChecked(self.dry_run_default)
+        layout.addWidget(self.checkbox_dry_run)
 
         buttons_layout = QtWidgets.QHBoxLayout()
         self.install_button = QtWidgets.QPushButton("Start Installation")
@@ -218,16 +226,17 @@ class WelcomeApp(QtWidgets.QWidget):
             )
             return
         scripts = []
+        dry_flag = ["--dry-run"] if self.checkbox_dry_run.isChecked() else []
         if self.checkbox_gaming.isChecked():
             selected = [pkg for pkg, cb in self.gaming_checks.items() if cb.isChecked()]
             if selected:
-                scripts.append(["/etc/xanados/scripts/install_gaming.sh", *selected])
+                scripts.append(["/etc/xanados/scripts/install_gaming.sh", *selected, *dry_flag])
             else:
-                scripts.append("/etc/xanados/scripts/install_gaming.sh")
+                scripts.append(["/etc/xanados/scripts/install_gaming.sh", *dry_flag])
         if self.checkbox_minimal.isChecked():
-            scripts.append("/etc/xanados/scripts/install_minimal.sh")
+            scripts.append(["/etc/xanados/scripts/install_minimal.sh", *dry_flag])
         if self.checkbox_recommended.isChecked():
-            scripts.append("/etc/xanados/scripts/install_recommended.sh")
+            scripts.append(["/etc/xanados/scripts/install_recommended.sh", *dry_flag])
 
         self.thread = InstallerThread(scripts)
         self.thread.progress.connect(
@@ -243,6 +252,7 @@ class WelcomeApp(QtWidgets.QWidget):
         self.checkbox_gaming.setEnabled(False)
         self.checkbox_minimal.setEnabled(False)
         self.checkbox_recommended.setEnabled(False)
+        self.checkbox_dry_run.setEnabled(False)
         self.thread.start()
 
     def run_maintenance(self):
@@ -289,10 +299,15 @@ class WelcomeApp(QtWidgets.QWidget):
         self.checkbox_gaming.setEnabled(True)
         self.checkbox_minimal.setEnabled(True)
         self.checkbox_recommended.setEnabled(True)
+        self.checkbox_dry_run.setEnabled(True)
 
 
 if __name__ == "__main__":
+    dry_cli = False
+    if "--dry-run" in sys.argv:
+        dry_cli = True
+        sys.argv.remove("--dry-run")
     app = QtWidgets.QApplication(sys.argv)
-    win = WelcomeApp()
+    win = WelcomeApp(dry_run=dry_cli)
     win.show()
     sys.exit(app.exec_())
