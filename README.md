@@ -181,6 +181,13 @@ Markdown files are also checked with Atom. Install the editor and run:
 atom --check **/*.md
 ```
 
+Typical installation commands for common linters:
+
+- `sudo pacman -S shellcheck shfmt atom` – install **shellcheck**, **shfmt**, and **Atom**.
+- `npm install -g prettier eslint` – install **prettier** and **eslint** globally.
+- `pip install black` – install **black** for Python formatting.
+- See [docs/packages.md](docs/packages.md) for details on installing **namcap**.
+
 ## Automation
 
 Codex or other AI assistants should run several checks automatically
