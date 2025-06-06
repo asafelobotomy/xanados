@@ -39,6 +39,7 @@ Interact only with:
 - `/docs/`: Markdown docs
 - `/logs/`: Build/test/ISO logs
 - `/frontend/`: Next.js frontend
+- `/failed_checks_and_errors/`: todo list of failed script checks and errors
 
 **Do not** modify `/public/` or commit `.git`-ignored secrets.
 
@@ -46,10 +47,9 @@ Interact only with:
 
 ## 🚫 Forbidden Actions & Security
 
-- Do not modify files outside the above directories.
+- Do not modify files outside the above directories without explicit review.
 - Do not commit/expose secrets, tokens, or private keys.
 - Do not execute scripts/commands without explicit review.
-- Do not push directly to `main`.
 - Do not weaken security settings unless explicitly instructed.
 - Never disable security controls (pre-commit, git-secrets, etc).
 
@@ -57,14 +57,20 @@ Interact only with:
 
 ## 🧠 Contributor Responsibilities
 
-You may assist with:
+You must always:
 
-- Creating/editing PKGBUILD files
-- Writing archiso profiles (e.g., `releng/`, `baseline/`)
-- Automating build pipelines (`make`, `build.sh`)
-- Writing secure, POSIX-compliant shell scripts
-- Managing pacman hooks, mkinitcpio configs, systemd services
-- Testing ISO builds (QEMU, VirtualBox, CI)
+- Assist with creating/editing PKGBUILD files
+- Assist with writing archiso profiles (e.g., `releng/`, `baseline/`)
+- Automate build pipelines (`make`, `build.sh`)
+- Write secure, POSIX-compliant shell scripts
+- Manage pacman hooks, mkinitcpio configs, systemd services
+- Test ISO builds (QEMU, VirtualBox, CI) where possible
+- Troubleshooting bugs, fix errors and remove conflicts
+  whenever they are found
+- Check packages to make sure that they are up-to-date and stable
+- Validate all text documents and scripts, checking for typos and
+  invalid references/commands
+- Review the last 10 previous commits to ensure understanding 
 
 ---
 
@@ -100,7 +106,7 @@ Ensure all code passes relevant linters before submission.
 
 - Follow [CIS Benchmarks](https://www.cisecurity.org/cis-benchmarks/)
   where applicable.
-- Use `sudo` securely; avoid `NOPASSWD`.
+- Use `sudo` securely; avoid `NOPASSWD` when possible
 - Avoid hardcoded passwords/keys/tokens.
 - Set restrictive file permissions (`umask 027`, `chmod 600+`).
 - Harden system configs (`sshd_config`, `journald.conf`, `grub.cfg`).
