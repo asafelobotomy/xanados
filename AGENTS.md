@@ -65,7 +65,7 @@ You must always:
 - Write secure, POSIX-compliant shell scripts
 - Manage pacman hooks, mkinitcpio configs, systemd services
 - Test ISO builds (QEMU, VirtualBox, CI) where possible
-- Troubleshooting bugs, fix errors and remove conflicts
+- Troubleshoot bugs, fix errors and remove conflicts
   whenever they are found
 - Check packages to make sure that they are up-to-date and stable
 - Validate all text documents and scripts, checking for typos and
