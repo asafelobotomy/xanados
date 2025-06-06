@@ -147,6 +147,19 @@ cd frontend
    npm run build
    ```
 
+## Development toolchain
+
+Codex and human developers rely on several Node packages. Install
+dependencies with `npm install` and use these commands:
+
+- `express` provides a lightweight server
+- `karma` runs JavaScript unit tests (`npx karma start`)
+- `lint-staged` checks staged files before commit (`npx lint-staged`)
+- `lodash` offers general utility helpers
+- `markdown-magic` updates documentation macros (`npx markdown-magic`)
+- `ngx-markdown` renders Markdown in the frontend
+- `npm-package-json-lint` validates `package.json` (`npx npmPkgJsonLint .`)
+
 ## Testing
 
 Basic Bats tests verify that build scripts exist and are executable.
