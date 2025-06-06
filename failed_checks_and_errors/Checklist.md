@@ -2,12 +2,15 @@
 
 Use this file to track issues reported in [errors1.md](errors1.md).
 
-1. Review `errors1.md` regularly for new problems.
-2. Add new items below and keep them unchecked until fixed.
-3. Remove any entry that is marked as completed [x]
-4. When you resolve an item, check it off and
-   add a note under **CHANGELOG** with todays date and
-   a summary of the actions taken
+Follow these steps whenever you work with this checklist:
+
+1. Review `errors1.md` for new or unresolved issues.
+2. Add a corresponding task below for each error you find. Use the same wording
+   so both files match.
+3. Keep each error entry in `errors1.md` until the task here is checked off.
+4. When a task is complete, mark it `[x]` and record the fix under
+   **Changelog** with today's date.
+5. After logging the resolution, remove the matching entry from `errors1.md`.
 
 ## Build
 
