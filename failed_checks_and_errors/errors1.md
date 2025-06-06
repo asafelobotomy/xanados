@@ -19,6 +19,7 @@ The `Markdown Lint` workflow failed with **45 errors** across several Markdown f
 - **Other Style Violations**: Improper heading positions and multiple top-level headings.
 
 #### Example Errors
+
 - `.github/workflows/README.md:3:81 MD013/line-length`  
   _Line length [Expected: 80; Actual: 340]_
 - `failed_checks_and_errors/errors1.md:23:66 MD034/no-bare-urls`  
@@ -27,6 +28,7 @@ The `Markdown Lint` workflow failed with **45 errors** across several Markdown f
   _Multiple top-level headings in the same document_
 
 **Full error list includes similar violations across:**
+
 - `.github/workflows/README.md`
 - `configs/README.md`
 - `docs/README.md`
@@ -44,10 +46,12 @@ The `Markdown Lint` workflow failed with **45 errors** across several Markdown f
 The `Build` workflow failed due to system and script issues:
 
 - **Systemd/Tmpfiles Errors**:
+
   - Errors like `/usr/lib/tmpfiles.d/journal-nocow.conf:26: Failed to resolve specifier: uninitialized /etc/ detected, skipping.`
   - Indicates the environment is not fully initialized (e.g., not booted), causing some systemd operations to be skipped.
 
 - **User/Permissions Error**:
+
   - `chown: invalid user: ‘builduser:builduser’`
   - The workflow attempts to change ownership of files to a user/group that does not exist in the build environment.
 
@@ -115,11 +119,11 @@ The `Build` workflow failed due to system and script issues:
 
 ## 4. Summary Table
 
-| Area         | Issue                           | Blocking? | Recommendation                           |
-|--------------|---------------------------------|-----------|-------------------------------------------|
-| Markdown     | Line length, bare URLs, headings| Yes       | Fix all lint errors per above             |
-| Build Script | `builduser` not found           | Yes       | Create user in CI before chown            |
-| Systemd      | Environment not booted          | Maybe     | Adjust scripts or ignore non-blocking     |
+| Area         | Issue                            | Blocking? | Recommendation                        |
+| ------------ | -------------------------------- | --------- | ------------------------------------- |
+| Markdown     | Line length, bare URLs, headings | Yes       | Fix all lint errors per above         |
+| Build Script | `builduser` not found            | Yes       | Create user in CI before chown        |
+| Systemd      | Environment not booted           | Maybe     | Adjust scripts or ignore non-blocking |
 
 ---
 
