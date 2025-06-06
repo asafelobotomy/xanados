@@ -72,6 +72,19 @@ You must always:
 - Validate all text documents and scripts, checking for typos and
   invalid references/commands
 
+## 🤖 Using Codex
+
+Codex (or other AI assistants) should automatically run the following commands for debugging and formatting before opening a Pull Request:
+
+```bash
+npm list --depth=0
+bats tests
+prettier --check .
+atom --check **/*.md
+shellcheck scripts/*.sh
+```
+
+Install Python requirements with `pip install -r requirements.txt` before running `scripts/check_packages.py`.
 
 ---
 
