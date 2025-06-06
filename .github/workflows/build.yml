@@ -27,7 +27,7 @@ jobs:
         run: |
           sudo groupadd -f builduser
           sudo useradd -m -g builduser builduser || true
-      - name: Fix permissions for calamares
-        run: sudo chown -R builduser:builduser packages/calamares
+      - name: Grant write access to build directory
+        run: sudo chown -R builduser:builduser packages
       - name: Build ISO
         run: bash scripts/build_iso.sh

@@ -12,7 +12,7 @@
 1. [Project Scope & Directory Structure](#-project-scope--directory-structure)
 2. [Forbidden Actions & Security](#-forbidden-actions--security)
 3. [Contributor Responsibilities](#-contributor-responsibilities)
-4. [Pre-task checks to perform:](#-Pre-task-checks-to-perform)
+4. [Pre-task checks to perform](#-pre-task-checks-to-perform)
 5. [Example Workflow: Adding a Package](#-example-workflow-adding-a-package)
 6. [Linting & Formatting](#-linting--formatting)
 7. [Security and Compliance](#-security-and-compliance)

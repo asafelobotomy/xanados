@@ -1,7 +1,9 @@
-🧪 Optional Upgrades & Enhancements for XanadOS
+# Optional Upgrades & Enhancements for XanadOS
+
 🎨 UI / Visual Experience
 Feature Description
-🖼️ Animated Wallpapers (via Komorebi or Plasma plugins) Add high-quality animated backgrounds
+🖼️ Animated Wallpapers (via Komorebi or Plasma plugins)
+Add high-quality animated backgrounds
 🧩 Global Theme Manager Custom app or Plasma theme preset switcher
 🧠 Real-Time Theme Sync Sync GRUB, Plymouth, SDDM, Plasma from one panel
 🧱 UI Scaling Toggle Allow 100%, 125%, 150% scaling presets for HiDPI displays

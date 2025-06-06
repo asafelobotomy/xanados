@@ -27,11 +27,17 @@ Use this file to track issues reported in [errors1.md](errors1.md).
 - [x] Add static makedepends to calamares PKGBUILD
 - [x] Fix write permission for $BUILDDIR in CI
 - [x] Create builduser user/group before chown
+- [x] Grant write access to packages directory in CI workflow
+- [x] Fix markdownlint errors across repository
+- [x] Reviewed systemd warnings; safe to ignore in CI
 
 ===
 
 ## Changelog
 
 - 2025-06-07: Clarified checklist instructions and formatted with Prettier.
-- 2025-06-06: Created machine-id during package build to silence systemd tmpfiles warnings.
+- 2025-06-06: Created machine-id during package build to silence systemd
+  tmpfiles warnings.
 - 2025-06-06: Added builduser creation step in CI.
+- 2025-06-08: Added tasks for package permissions, markdown lint cleanup and
+  systemd warning review.

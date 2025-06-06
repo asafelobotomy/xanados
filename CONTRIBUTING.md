@@ -1,6 +1,8 @@
 # Contributing to XanadOS
 
-Thank you for your interest in contributing! This project follows guidelines summarized from [AGENTS.md](AGENTS.md).
+Thank you for your interest in contributing!
+This project follows guidelines summarized from
+[AGENTS.md](AGENTS.md).
 
 ## Project Scope
 
@@ -61,4 +63,5 @@ Avoid modifying files outside these areas unless specifically reviewed.
 
 ## Suggesting Improvements
 
-Open a pull request or GitHub issue with a clear summary and rationale. Include test results and follow the guidelines above.
+Open a pull request or GitHub issue with a clear summary and rationale.
+Include test results and follow the guidelines above.
