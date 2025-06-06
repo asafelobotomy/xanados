@@ -1,5 +1,4 @@
-==============================
-Xanados PR #49: Failed Checks & PKGBUILD Suggestions (Detailed)
+# Xanados PR #49: Failed Checks & PKGBUILD Suggestions (Detailed)
 ==============================
 
 I. Failed Checks Breakdown and Solutions
@@ -174,7 +173,3 @@ III. General Docs and Build Advice
 - Markdown and prose lint: Review all Markdown files flagged by linters, wrap lines at 80 characters, use proper link syntax, and replace straight quotes with curly quotes using your editor’s find-and-replace.
 - Build permissions: Never build as root. Always ensure your build user has the correct permissions for all build and work directories.
 - Dependency maintenance: Periodically review dependencies for both build and runtime, especially after major upstream updates or when adding new features.
-
-==============================
-End of Detailed Report
-==============================
