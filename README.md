@@ -156,6 +156,14 @@ Run all tests with:
 bats tests
 ```
 
+## Formatting
+
+Markdown files are also checked with Atom. Install the editor and run:
+
+```bash
+atom --check **/*.md
+```
+
 ## Contributing
 
 Contributions are welcome! Please see
