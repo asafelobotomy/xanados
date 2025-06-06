@@ -1,6 +1,6 @@
 # Failed Workflows Report
 
-_Last updated: 2025-06-06 21:04 UTC_
+## Last Updated: 2025-06-06 21:04 UTC
 
 This report summarizes the recent workflow failures in the repository, their causes, and proposed resolutions.
 
@@ -12,19 +12,21 @@ This report summarizes the recent workflow failures in the repository, their cau
 **Branch:** `main`  
 **Commit:** `4873d39ab276679ce0ff0fb4e23e1c4bbae73832`
 
-### Main Errors
+### Build Errors
 
 - Warnings about "Skipped: Current root is not booted." and "Failed to resolve specifier: uninitialized /etc/ detected, skipping."
 
-### Resolution
+### Build Resolution
 
 - **Install Required Binaries:**  
   Add the following step before running your package builds in the workflow:
+
   ```yaml
   - name: Install required build tools
     run: pacman -Sy --noconfirm debugedit fakeroot
   ```
-- The root and tmpfiles warnings are common in CI containers and can typically be ignored unless they cause builds to fail.
+
+  - The root and tmpfiles warnings are common in CI containers and can typically be ignored unless they cause builds to fail.
 
 ---
 
@@ -34,27 +36,23 @@ This report summarizes the recent workflow failures in the repository, their cau
 **Branch:** `main`  
 **Commit:** `4873d39ab276679ce0ff0fb4e23e1c4bbae73832`
 
-### Main Errors
+### Markdown Lint Errors
 
 - **MD041/first-line-heading/first-line-h1:**  
   Some Markdown files do not start with a top-level heading.
 - **MD034/no-bare-urls:**  
   Bare URLs are used instead of Markdown links.
 
-### Resolution
+### Markdown Lint Resolution
 
 - **First Line Heading:**  
   Ensure all Markdown files begin with a `# Heading`.
 - **Bare URLs:**  
   Convert bare URLs to `[text](url)` format.
-- **MD013/line-length:**  
+- **MD013/line-length:**
   Many lines in Markdown files exceed the 80-character limit.
-
-### Resolution
-
-- **Line Length:**  
+- **Line Length:**
   Break long lines at 80 characters (or adjust `.markdownlint.yml` if you want to allow longer lines).
-
 
 ---
 
