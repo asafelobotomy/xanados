@@ -91,8 +91,7 @@ Install Python requirements with `pip install -r requirements.txt` before runnin
 
 ## 📝 Pre-task checks to perform
 
-- Review the last 10 previous commits of this build
-  to get a full understanding of the project
+- Review the last 10 pull requests and commits
 - Check formatting and syntax throughout all documents
   to provide consistency in future changes and updates
 - Confirm today's date and time as a reference for
