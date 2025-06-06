@@ -147,6 +147,15 @@ cd frontend
    npm run build
    ```
 
+## Testing
+
+Basic Bats tests verify that build scripts exist and are executable.
+Run all tests with:
+
+```bash
+bats tests
+```
+
 ## Contributing
 
 Contributions are welcome! Please see

@@ -132,7 +132,9 @@ Ensure all code passes relevant linters before submission.
 - Do not vendor precompiled/insecure binaries
 
 **Example PKGBUILD:**
+
 <!-- proselint-disable -->
+
 ```bash
 
 pkgname=example
@@ -154,6 +156,7 @@ package() {
 }
 
 ```
+
 <!-- proselint-enable -->
 
 ---
