@@ -5,3 +5,9 @@
   if `mkarchiso` isn't available locally.
 - `build_packages.sh` – Build custom packages before assembling the ISO.
 - `check_packages.py` – Simple linter for PKGBUILDs.
+
+Before running `check_packages.py`, install the required Python dependencies:
+
+```bash
+pip install -r requirements.txt
+```
