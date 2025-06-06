@@ -1,5 +1,5 @@
 base
-linux-zen
+linux
 linux-firmware
 mkinitcpio
 btrfs-progs
