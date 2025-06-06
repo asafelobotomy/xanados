@@ -6,7 +6,9 @@ When `scripts/build_iso.sh` runs, it will invoke
 `packages/repo` does not already contain package archives.
 The resulting `*.pkg.tar.zst` files are copied into
 `packages/repo` and added to the local repository used by the ISO
-build.
+build. Custom packages such as [`bats`](../packages/bats/PKGBUILD)
+are provided here so the ISO can be built and tested completely
+offline.
 
 Use standard Arch tooling when authoring `PKGBUILD`s. `scripts/build_packages.sh`
 installs any missing build dependencies (including `namcap`) using `sudo pacman`
