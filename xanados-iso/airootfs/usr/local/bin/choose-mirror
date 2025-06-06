@@ -16,7 +16,25 @@ get_cmdline() {
 
 mirror="$(get_cmdline mirror)"
 [[ "$mirror" == 'auto' ]] && mirror="$(get_cmdline archiso_http_srv)"
-[[ -n "$mirror" ]] || exit 0
+
+log_file="/var/log/choose-mirror.log"
+
+if [[ -z "$mirror" ]]; then
+    if [[ -f /etc/pacman.d/mirrorlist.default ]]; then
+        cp /etc/pacman.d/mirrorlist.default /etc/pacman.d/mirrorlist
+        echo "$(date +'%F %T') - No mirror specified, using default mirrorlist" >> "$log_file"
+        exit 0
+    else
+        read -p "Enter mirror URL: " mirror < /dev/tty
+        if [[ -z "$mirror" ]]; then
+            echo "$(date +'%F %T') - No mirror provided, exiting" >> "$log_file"
+            exit 1
+        fi
+        echo "$(date +'%F %T') - Mirror chosen interactively: $mirror" >> "$log_file"
+    fi
+else
+    echo "$(date +'%F %T') - Mirror from cmdline: $mirror" >> "$log_file"
+fi
 
 mv /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.orig
 cat >/etc/pacman.d/mirrorlist <<EOF
