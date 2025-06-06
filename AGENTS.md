@@ -107,6 +107,7 @@ You must always:
 | Shell scripts | shfmt      | `shfmt -d -i 2 script.sh`  |
 | PKGBUILD      | namcap     | `namcap PKGBUILD`          |
 | Markdown      | prettier   | `prettier --check file.md` |
+| Markdown      | atom       | `atom --check file.md`     |
 | Python        | black      | `black file.py`            |
 | JavaScript    | eslint     | `eslint file.js`           |
 
