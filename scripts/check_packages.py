@@ -1,11 +1,6 @@
 import requests
-import warnings
 from urllib.parse import quote_plus
-from urllib3.exceptions import InsecureRequestWarning
-
-warnings.filterwarnings("ignore", category=RuntimeWarning)
-warnings.filterwarnings("ignore", category=InsecureRequestWarning)
-import json
+from requests.exceptions import RequestException, SSLError
 import sys
 from pathlib import Path
 
@@ -22,19 +17,32 @@ duplicates = []
 missing_packages = []
 results = {}
 
+
+def fetch_json(url: str):
+    try:
+        res = requests.get(url, timeout=10)
+        res.raise_for_status()
+        return res.json()
+    except SSLError:
+        print(f"SSL error while fetching {url}")
+    except RequestException as e:
+        print(f"Error while fetching {url}: {e}")
+    return None
+
+
 for pkg in packages:
     if pkg in seen:
         duplicates.append(pkg)
         continue
     seen.add(pkg)
     arch_url = f"https://archlinux.org/packages/search/json/?name={quote_plus(pkg)}"
-    res = requests.get(arch_url, timeout=10, verify=False)
-    if res.ok and res.json().get("results"):
+    data = fetch_json(arch_url)
+    if data and data.get("results"):
         results[pkg] = "arch"
         continue
     aur_url = f"https://aur.archlinux.org/rpc/?v=5&type=info&arg={quote_plus(pkg)}"
-    res = requests.get(aur_url, timeout=10, verify=False)
-    if res.ok and res.json().get("resultcount", 0) > 0:
+    data = fetch_json(aur_url)
+    if data and data.get("resultcount", 0) > 0:
         results[pkg] = "aur"
     else:
         results[pkg] = "missing"
