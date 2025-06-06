@@ -5,11 +5,20 @@ LOG_DIR="$(cd "$(dirname "$0")/.." && pwd)/logs"
 mkdir -p "$LOG_DIR"
 LOG_FILE="$LOG_DIR/iso-build.log"
 
-# Ensure required tools are installed
+# Ensure required tools are installed; attempt to install if missing
 for cmd in mkarchiso grub-install; do
   if ! command -v "$cmd" >/dev/null 2>&1; then
-    echo "Error: required command '$cmd' not found. Please install the corresponding package." >&2
-    exit 1
+    if command -v pacman >/dev/null 2>&1; then
+      case "$cmd" in
+        mkarchiso) pkg=archiso ;;
+        grub-install) pkg=grub ;;
+      esac
+      sudo pacman -Sy --needed --noconfirm "$pkg" >/dev/null
+    fi
+    if ! command -v "$cmd" >/dev/null 2>&1; then
+      echo "Error: required command '$cmd' not found." >&2
+      exit 1
+    fi
   fi
 done
 
