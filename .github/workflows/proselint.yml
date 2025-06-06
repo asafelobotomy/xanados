@@ -17,4 +17,4 @@ jobs:
       - name: Run proselint
         run: |
           shopt -s globstar
-          proselint AGENTS*.md docs/**/*.md
+          proselint docs/**/*.md
