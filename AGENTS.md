@@ -42,7 +42,7 @@ Interact only with:
 - `/frontend/`: Next.js frontend
 - `/failed_checks_and_errors/`: list of failed script checks and errors
 
-**Do not** modify `/public/` or commit `.git`-ignored secrets.
+**Do not** modify or commit `.git`-ignored secrets.
 
 ---
 
