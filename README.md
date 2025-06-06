@@ -173,10 +173,13 @@ bats tests
 
 ## Formatting
 
-Markdown files are also checked with Atom. Install the editor and run:
+See [docs/setup.md](docs/setup.md) for how to install Atom, Prettier and
+ESLint. Once installed run:
 
 ```bash
 atom --check **/*.md
+prettier --check .
+npm run lint
 ```
 
 Typical installation commands for common linters:
