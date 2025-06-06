@@ -26,6 +26,7 @@ Use this file to track issues reported in [errors1.md](errors1.md).
 - [x] CI warnings about unbooted root and journal specifier
 - [x] Add static makedepends to calamares PKGBUILD
 - [x] Fix write permission for $BUILDDIR in CI
+- [x] Create builduser user/group before chown
 
 ===
 
@@ -33,3 +34,4 @@ Use this file to track issues reported in [errors1.md](errors1.md).
 
 - 2025-06-07: Clarified checklist instructions and formatted with Prettier.
 - 2025-06-06: Created machine-id during package build to silence systemd tmpfiles warnings.
+- 2025-06-06: Added builduser creation step in CI.
