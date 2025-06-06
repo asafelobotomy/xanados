@@ -28,7 +28,32 @@ depends=('ckbcomp'
 	'squashfs-tools'
 	'yaml-cpp')
 
-makedepends=('extra-cmake-modules' 'git')
+makedepends=(
+  'extra-cmake-modules'
+  'git'
+  'kconfig'
+  'kconfig5'
+  'kcoreaddons'
+  'kcoreaddons5'
+  'ki18n'
+  'ki18n5'
+  'kiconthemes'
+  'kiconthemes5'
+  'kio'
+  'kio5'
+  'plasma-framework5'
+  'polkit-qt5'
+  'polkit-qt6'
+  'qt5-base'
+  'qt5-svg'
+  'qt5-xmlpatterns'
+  'qt5-tools'
+  'qt5-translations'
+  'qt6-base'
+  'qt6-svg'
+  'qt6-tools'
+  'qt6-translations'
+)
 
 backup=('usr/share/calamares/modules/bootloader.conf'
 	'usr/share/calamares/modules/displaymanager.conf'
@@ -50,64 +75,13 @@ sha256sums=('523a0e4cfefbe471d9a6a5d874018fe282a4ce3667ff560bd97190339be6b592'
             '0830c8fe57c94a63ef87b6a025eb729b4f098a9e46e729b63415f4d3a2755762')
 
 prepare() {
-	makedepends() {
-	if [[ $pkgname == 'calamares' ]]; then
-		makedepends+=('qt6-tools' 'qt6-translations')
-	elif [[ $pkgname == 'calamares-qt5' ]]; then
-		makedepends+=('qt5-tools' 'qt5-translations')
-	fi
-	handle_qt_version
-	}
-
-	handle_qt_version() {
-	if [[ $pkgname == 'calamares' ]]; then
-		qt=6
-		handle_qt6_base
-	elif [[ $pkgname == 'calamares-qt5' ]]; then
-		qt=5
-	fi
-	cd "${srcdir}/${pkgname}-${pkgver}" || return
-		sed -i 's/"Install configuration files" OFF/"Install configuration files" ON/' "${srcdir}/${pkgname}-${pkgver}/CMakeLists.txt"
-		sed -i "s|\${CALAMARES_VERSION_MAJOR}.\${CALAMARES_VERSION_MINOR}.\${CALAMARES_VERSION_PATCH}|${pkgver}-${pkgrel}|g" CMakeLists.txt
-		sed -i "s|CALAMARES_VERSION_RC 1|CALAMARES_VERSION_RC 0|g" CMakeLists.txt
-		git apply --verbose ../paru-support.patch
-	}
-
-##	Non-standard ##
-	handle_qt6_base() {
-	if ls ./qt6-base/qt6-base-*.pkg.tar.zst 1> /dev/null 2>&1; then
-		echo "qt6-base already exists"
-		update_qt6_base
-	else
-		clone_and_build_qt6_base
-	fi
-	}
-
-	update_qt6_base() {
-		cd qt6-base || exit
-		echo -e "\e[1;32mUpdate qt6-base? (y/n) : \e[0m\c"
-		read -r input
-	if [ "$input" = "y" ]; then
-		git pull
-		git apply --verbose ../flag.patch
-		makepkg -sif
-	else
-		makepkg -si
-	fi
-	}
-
-	clone_and_build_qt6_base() {
-		git clone https://gitlab.archlinux.org/archlinux/packaging/packages/qt6-base.git
-		cd qt6-base || exit
-		git apply --verbose ../flag.patch
-		makepkg -si
-	}
-##	Non-standard ##
-
-	# Call the function to start the process
-	makedepends
-
+  cd "${srcdir}/calamares-${pkgver}" || return
+  sed -i 's/"Install configuration files" OFF/"Install configuration files" ON/' CMakeLists.txt
+  sed -i "s|\${CALAMARES_VERSION_MAJOR}.\${CALAMARES_VERSION_MINOR}.\${CALAMARES_VERSION_PATCH}|${pkgver}-${pkgrel}|g" CMakeLists.txt
+  sed -i "s|CALAMARES_VERSION_RC 1|CALAMARES_VERSION_RC 0|g" CMakeLists.txt
+  git apply --verbose ../paru-support.patch
 }
+
 
 build() {
 	cd "${srcdir}/${pkgname}-${pkgver}" || return
