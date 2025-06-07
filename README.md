@@ -91,6 +91,14 @@ Or provide a file with package names:
 install_gaming.sh -f /path/to/pkglist.txt
 ```
 
+The script automatically skips packages that are already installed and prints
+the final list before running `paru`. To uninstall gaming packages, use the
+`--remove` option (optionally combine with `--dry-run` to preview changes):
+
+```bash
+install_gaming.sh --remove steam lutris
+```
+
 If no packages are specified, a default gaming package set will be installed:
 
 - steam
