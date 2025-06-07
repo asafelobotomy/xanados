@@ -1,8 +1,11 @@
 #!/usr/bin/env bash
+set -euo pipefail
+# shellcheck source=common.sh disable=SC1091
 source "$(dirname "$0")/common.sh"
 init_logging install_gaming
 
 DRY_RUN=false
+export DRY_RUN
 REMOVE=false
 POSITIONAL=()
 while [[ $# -gt 0 ]]; do

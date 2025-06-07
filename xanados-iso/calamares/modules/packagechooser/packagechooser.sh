@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -euo pipefail
 
 echo "[INFO] Running XanadOS package chooser..."
 
