@@ -1,0 +1,15 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install dependencies
+        run: sudo apt-get update && sudo apt-get install -y shellcheck bats
+      - name: Lint shell scripts
+        run: shellcheck xanados-iso/airootfs/etc/xanados/scripts/*.sh xanados-iso/calamares/scripts/*.sh build.sh
+      - name: Run tests
+        run: bats tests

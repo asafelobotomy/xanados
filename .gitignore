@@ -1,0 +1,19 @@
+# Build output
+out/
+work/
+
+# Node dependencies
+node_modules/
+
+# Node lock files
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
+npm-shrinkwrap.json
+
+# Editor directories
+.vscode/
+__pycache__/
+xanados-iso/out/
+*.bak
+package.json
