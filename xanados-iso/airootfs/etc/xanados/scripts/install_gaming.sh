@@ -20,11 +20,16 @@ run_cmd() {
 }
 
 DRY_RUN=false
+REMOVE=false
 POSITIONAL=()
 while [[ $# -gt 0 ]]; do
     case $1 in
         --dry-run)
             DRY_RUN=true
+            shift
+            ;;
+        --remove)
+            REMOVE=true
             shift
             ;;
         *)
@@ -38,7 +43,7 @@ set -- "${POSITIONAL[@]}"
 echo "[XanadOS] Starting Gaming Stack installation at $(date)"
 
 usage() {
-    echo "Usage: $0 [-f package_file] [packages...]" >&2
+    echo "Usage: $0 [--remove] [--dry-run] [-f package_file] [packages...]" >&2
 }
 
 PACKAGES=()
@@ -77,9 +82,41 @@ if [[ ${#PACKAGES[@]} -eq 0 ]]; then
     PACKAGES=(steam lutris heroic-games-launcher gamemode mangohud vkbasalt protontricks)
 fi
 
-if ! run_cmd paru -Syu --needed --noconfirm "${PACKAGES[@]}"; then
-    echo "[ERROR] Gaming Stack installation failed."
-    exit 1
+FINAL_PKGS=()
+if $REMOVE; then
+    for pkg in "${PACKAGES[@]}"; do
+        if pacman -Qq "$pkg" >/dev/null 2>&1; then
+            FINAL_PKGS+=("$pkg")
+        else
+            echo "[INFO] Package not installed: $pkg"
+        fi
+    done
+    if [[ ${#FINAL_PKGS[@]} -eq 0 ]]; then
+        echo "[INFO] No packages to remove."
+        exit 0
+    fi
+    echo "[XanadOS] Packages to remove: ${FINAL_PKGS[*]}"
+    if ! run_cmd paru -Rns --noconfirm "${FINAL_PKGS[@]}"; then
+        echo "[ERROR] Gaming Stack removal failed."
+        exit 1
+    fi
+    echo "[XanadOS] Gaming tools removed successfully at $(date)"
+else
+    for pkg in "${PACKAGES[@]}"; do
+        if pacman -Qq "$pkg" >/dev/null 2>&1; then
+            echo "[INFO] Skipping already installed package: $pkg"
+        else
+            FINAL_PKGS+=("$pkg")
+        fi
+    done
+    if [[ ${#FINAL_PKGS[@]} -eq 0 ]]; then
+        echo "[INFO] All selected packages are already installed."
+        exit 0
+    fi
+    echo "[XanadOS] Packages to install: ${FINAL_PKGS[*]}"
+    if ! run_cmd paru -Syu --needed --noconfirm "${FINAL_PKGS[@]}"; then
+        echo "[ERROR] Gaming Stack installation failed."
+        exit 1
+    fi
+    echo "[XanadOS] Gaming tools installed successfully at $(date)"
 fi
-
-echo "[XanadOS] Gaming tools installed successfully at $(date)"
