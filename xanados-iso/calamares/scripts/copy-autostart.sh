@@ -1,5 +1,5 @@
-#!/bin/bash
-set -e
+#!/usr/bin/env bash
+set -euo pipefail
 
 SYSROOT="$1"
 USERNAME="$CALAMARES_USERNAME"
@@ -10,10 +10,11 @@ AUTOSTART_SRC="$SYSROOT/etc/skel/.config/autostart/welcome.desktop"
 AUTOSTART_DEST="$SYSROOT/home/$USERNAME/.config/autostart"
 
 if [ -f "$AUTOSTART_SRC" ]; then
-	mkdir -p "$AUTOSTART_DEST"
-	cp "$AUTOSTART_SRC" "$AUTOSTART_DEST/"
-	chown -R "$USERNAME:$USERNAME" "$SYSROOT/home/$USERNAME/.config"
-	echo "[XanadOS] Autostart file copied successfully."
+    mkdir -p "$AUTOSTART_DEST"
+    cp "$AUTOSTART_SRC" "$AUTOSTART_DEST/"
+    chown -R "$USERNAME:$USERNAME" "$SYSROOT/home/$USERNAME/.config"
+    echo "[XanadOS] Autostart file copied successfully."
 else
-	echo "[WARNING] Autostart source file not found: $AUTOSTART_SRC"
+    echo "[WARNING] Autostart source file not found: $AUTOSTART_SRC"
 fi
+

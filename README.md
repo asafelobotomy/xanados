@@ -74,6 +74,8 @@ The generated ISO will appear in the `out/` directory by default.
 ```bash
 qemu-system-x86_64 -cdrom out/xanados.iso -m 4096
 ```
+### Node/Next.js Dependencies
+The repository previously included a Next.js frontend. These Node.js packages are not required to build the ISO and can be ignored if you only want the installer scripts.
 
 ---
 
@@ -109,7 +111,7 @@ If no packages are specified, a default gaming package set will be installed:
 - vkbasalt
 - protontricks
 
-> **Tip:** Each installer script writes to its own timestamped log in `/tmp` such as `/tmp/welcome_install_YYYYMMDD_HHMMSS.log`. The Welcome app will show the most recent log automatically.
+> **Tip:** Installer logs are stored in `/var/log/xanados/welcome_install_YYYYMMDD_HHMMSS.log` and the Welcome app shows the latest log automatically.
 
 ---
 
@@ -123,6 +125,8 @@ If no packages are specified, a default gaming package set will be installed:
   Custom install logic in `xanados-iso/calamares/scripts/` and modules.
 - **Mirror Selection:**
   Handled by `choose-mirror` script for flexible mirror configuration at boot.
+### Calamares Customization
+Calamares configs live in `xanados-iso/calamares`. Adjust `settings.conf`, modify files under `modules/`, and update `scripts/` to tailor the installer.
 
 ## Kernel Options
 
@@ -139,7 +143,8 @@ Set the `KERNEL` variable to one of the following values:
 During installation the **packagechooser** module installs the chosen kernel
 and removes any other kernel packages.
 
----
+## Security Considerations
+XanadOS supports Secure Boot via the `secureboot-toggle` Calamares module. Package signing is handled by pacman and trusted keys. Review `calamares/modules/secureboot-toggle` for details.
 
 ## Screenshots
 
@@ -148,6 +153,8 @@ and removes any other kernel packages.
 ![Gaming Stack Selection](screenshots/gaming.png)
 -->
 
+## Testing
+Run `bats tests` to execute the basic shell unit tests. Shell scripts are linted with `shellcheck` and both run automatically in CI.
 ---
 
 ## Community & Support

@@ -1,24 +1,6 @@
-#!/bin/bash
-set -e
-
-LOGFILE="/tmp/welcome_install_$(date +%Y%m%d_%H%M%S).log"
-exec > >(tee -a "$LOGFILE") 2>&1
-echo "[INFO] Log file: $LOGFILE"
-
-check_paru() {
-    if ! command -v paru >/dev/null 2>&1; then
-        echo "[ERROR] paru is not installed. Please install paru first." >&2
-        exit 1
-    fi
-}
-
-run_cmd() {
-    if $DRY_RUN; then
-        echo "DRY RUN: $*"
-    else
-        "$@"
-    fi
-}
+#!/usr/bin/env bash
+source "$(dirname "$0")/common.sh"
+init_logging install_gaming
 
 DRY_RUN=false
 REMOVE=false
@@ -40,8 +22,6 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 set -- "${POSITIONAL[@]}"
-
-echo "[XanadOS] Starting Gaming Stack installation at $(date)"
 
 usage() {
     echo "Usage: $0 [--remove] [--dry-run] [-f package_file] [packages...]" >&2
@@ -121,3 +101,4 @@ else
     fi
     echo "[XanadOS] Gaming tools installed successfully at $(date)"
 fi
+
