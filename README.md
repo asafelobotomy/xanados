@@ -109,7 +109,7 @@ If no packages are specified, a default gaming package set will be installed:
 - vkbasalt
 - protontricks
 
-> **Tip:** All installer scripts (minimal, recommended, gaming) log to `/tmp/welcome_install.log` for troubleshooting.
+> **Tip:** Each installer script writes to its own timestamped log in `/tmp` such as `/tmp/welcome_install_YYYYMMDD_HHMMSS.log`. The Welcome app will show the most recent log automatically.
 
 ---
 

@@ -3,6 +3,15 @@ set -e
 
 LOGFILE="/var/log/postinstall.log"
 ERRORLOG="/var/log/postinstall-error.log"
+rotate_logs() {
+    local f="$1" max=5
+    for ((i=max; i>=1; i--)); do
+        [ -f "${f}.${i}" ] && mv "${f}.${i}" "${f}.$((i+1))"
+    done
+    [ -f "$f" ] && mv "$f" "$f.1"
+}
+rotate_logs "$LOGFILE"
+rotate_logs "$ERRORLOG"
 exec > >(tee -a "$LOGFILE") 2> >(tee -a "$LOGFILE" "$ERRORLOG" >&2)
 
 echo "[XanadOS] Starting post-install tasks..."

@@ -3,6 +3,7 @@
 import os
 import sys
 import subprocess
+import glob
 from datetime import datetime
 from PyQt5 import QtWidgets, QtGui, QtCore
 
@@ -10,6 +11,7 @@ from PyQt5 import QtWidgets, QtGui, QtCore
 class InstallerThread(QtCore.QThread):
     progress = QtCore.pyqtSignal(str)
     finished = QtCore.pyqtSignal(bool)
+    log_path = QtCore.pyqtSignal(str)
 
     def __init__(self, scripts):
         super().__init__()
@@ -47,8 +49,11 @@ class InstallerThread(QtCore.QThread):
                         self.progress.emit("[INFO] Installation cancelled by user.")
                         success = False
                         break
+                    line = line.strip()
                     timestamp = datetime.now().strftime("%H:%M:%S")
-                    self.progress.emit(f"[{timestamp}] {line.strip()}")
+                    self.progress.emit(f"[{timestamp}] {line}")
+                    if "Log file:" in line:
+                        self.log_path.emit(line.split("Log file:", 1)[1].strip())
                 process.wait()
                 if process.returncode != 0:
                     self.progress.emit(f"[ERROR] Script failed: {script}")
@@ -176,6 +181,14 @@ class WelcomeApp(QtWidgets.QWidget):
         self.log_output.setReadOnly(True)
         layout.addWidget(self.log_output)
 
+        self.log_label = QtWidgets.QLabel("")
+        layout.addWidget(self.log_label)
+
+        self.log_file = None
+        self.log_timer = QtCore.QTimer(self)
+        self.log_timer.timeout.connect(self.read_log_updates)
+        self.find_latest_log()
+
         self.setLayout(layout)
 
         for box in [
@@ -245,6 +258,7 @@ class WelcomeApp(QtWidgets.QWidget):
                 self.log_output.ensureCursorVisible(),
             )
         )
+        self.thread.log_path.connect(self.set_log_file)
         self.thread.finished.connect(self.install_finished)
         self.progress_bar.setVisible(True)
         self.install_button.setEnabled(False)
@@ -300,6 +314,38 @@ class WelcomeApp(QtWidgets.QWidget):
         self.checkbox_minimal.setEnabled(True)
         self.checkbox_recommended.setEnabled(True)
         self.checkbox_dry_run.setEnabled(True)
+
+    def find_latest_log(self):
+        logs = glob.glob("/tmp/welcome_install_*.log")
+        if logs:
+            latest = max(logs, key=os.path.getmtime)
+            self.set_log_file(latest)
+        else:
+            self.log_label.setText("Log file: none found")
+
+    def set_log_file(self, path):
+        if getattr(self, "log_file", None):
+            try:
+                self.log_file.close()
+            except Exception:
+                pass
+        self.log_file_path = path
+        try:
+            self.log_file = open(path, "r")
+            self.log_label.setText(f"Log file: {path}")
+        except Exception as e:
+            self.log_output.append(f"[ERROR] Unable to open log {path}: {e}")
+            self.log_label.setText(f"Log file: {path} (error)")
+            self.log_file = None
+            return
+        self.log_timer.start(1000)
+
+    def read_log_updates(self):
+        if not getattr(self, "log_file", None):
+            return
+        for line in self.log_file.readlines():
+            self.log_output.append(line.rstrip())
+            self.log_output.ensureCursorVisible()
 
 
 if __name__ == "__main__":

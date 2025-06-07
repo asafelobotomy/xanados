@@ -1,8 +1,9 @@
 #!/bin/bash
 set -e
 
-LOGFILE="/tmp/welcome_install.log"
+LOGFILE="/tmp/welcome_install_$(date +%Y%m%d_%H%M%S).log"
 exec > >(tee -a "$LOGFILE") 2>&1
+echo "[INFO] Log file: $LOGFILE"
 
 check_paru() {
     if ! command -v paru >/dev/null 2>&1; then
