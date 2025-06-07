@@ -1,4 +1,5 @@
 #!/bin/bash
+set -euo pipefail
 
 echo "[INFO] Applying Secure Boot toggle..."
 

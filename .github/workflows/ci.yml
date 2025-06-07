@@ -7,9 +7,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
       - name: Install dependencies
         run: sudo apt-get update && sudo apt-get install -y shellcheck bats
+      - name: Install Node dependencies
+        run: npm ci
+      - name: Verify required files
+        run: |
+          test -f xanados-iso/airootfs/etc/xanados/scripts/common.sh
+          test -f xanados-iso/calamares/scripts/postinstall.sh
       - name: Lint shell scripts
-        run: shellcheck xanados-iso/airootfs/etc/xanados/scripts/*.sh xanados-iso/calamares/scripts/*.sh build.sh
+        run: shellcheck -x xanados-iso/airootfs/etc/xanados/scripts/*.sh xanados-iso/calamares/scripts/*.sh build.sh
       - name: Run tests
         run: bats tests

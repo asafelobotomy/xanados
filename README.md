@@ -60,12 +60,16 @@ cd xanados/xanados-iso
 > - `archiso` and other build dependencies installed
 
 ```bash
-# Replace with your actual build command or script
-# Example using archiso:
+# Option A: use mkarchiso directly
 sudo mkarchiso -v .
-# or if you use a custom script:
+
+# Option B: use the helper script which sets up work/output dirs
 ./build.sh
 ```
+
+The `build.sh` script wraps `mkarchiso` and automatically creates `work/` and
+`out/` directories. Set `WORK_DIR` or `OUT_DIR` environment variables to
+override their locations if needed.
 
 The generated ISO will appear in the `out/` directory by default.
 
@@ -154,7 +158,9 @@ XanadOS supports Secure Boot via the `secureboot-toggle` Calamares module. Packa
 -->
 
 ## Testing
-Run `bats tests` to execute the basic shell unit tests. Shell scripts are linted with `shellcheck` and both run automatically in CI.
+Run `shellcheck -x xanados-iso/airootfs/etc/xanados/scripts/*.sh \
+  xanados-iso/calamares/scripts/*.sh build.sh` locally before committing.
+Unit tests run with `bats tests`. Both checks also execute automatically in CI.
 ---
 
 ## Community & Support
