@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# shellcheck source=xanados-iso/airootfs/etc/xanados/scripts/common.sh
 source "$(dirname "$0")/common.sh"
 init_logging install_minimal
 
