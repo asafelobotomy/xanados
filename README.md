@@ -91,6 +91,14 @@ Or provide a file with package names:
 install_gaming.sh -f /path/to/pkglist.txt
 ```
 
+The script automatically skips packages that are already installed and prints
+the final list before running `paru`. To uninstall gaming packages, use the
+`--remove` option (optionally combine with `--dry-run` to preview changes):
+
+```bash
+install_gaming.sh --remove steam lutris
+```
+
 If no packages are specified, a default gaming package set will be installed:
 
 - steam
@@ -139,6 +147,17 @@ and removes any other kernel packages.
 ![Welcome App](screenshots/welcome.png)
 ![Gaming Stack Selection](screenshots/gaming.png)
 -->
+
+## Development
+
+Formatting scripts requires the `shfmt` tool. This repository includes
+`bin/shfmt.js`, which downloads a prebuilt binary on first run.
+
+```bash
+node bin/shfmt.js -d path/to/script.sh
+```
+
+This avoids the broken `shfmt` npm package.
 
 ---
 

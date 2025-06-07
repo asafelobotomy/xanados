@@ -1,4 +1,5 @@
 node_modules/
+/.shfmt/
 *.bak
 __pycache__/
 package.json
