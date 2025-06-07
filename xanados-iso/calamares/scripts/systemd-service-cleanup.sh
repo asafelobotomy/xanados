@@ -2,6 +2,14 @@
 set -e
 
 LOGFILE="/var/log/systemd-service-cleanup.log"
+rotate_logs() {
+    local f="$1" max=5
+    for ((i=max; i>=1; i--)); do
+        [ -f "${f}.${i}" ] && mv "${f}.${i}" "${f}.$((i+1))"
+    done
+    [ -f "$f" ] && mv "$f" "$f.1"
+}
+rotate_logs "$LOGFILE"
 exec > >(tee -a "$LOGFILE") 2>&1
 
 echo "[XanadOS] Starting systemd service cleanup at $(date)"
