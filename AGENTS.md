@@ -17,12 +17,16 @@
 
 Codex is the primary orchestrator agent and represents all "Codex-*" agents listed below.
 
-- **Task Assignment:** When a user requests a task (e.g., "perform a security check on all security scripts"), Codex determines the relevant Codex-* agent(s), creates and assigns the task, and simulates each agent's behavior as needed.
+- **Task Assignment:** When a user requests a task (e.g., "perform a security check on all security scripts"), Codex determines the relevant Codex-* agent(s), creates and assigns the task, and simulates their execution.
 - **Agent Profiles:** Each Codex-* agent acts as a specialized profile, focusing on designated tools, directories, and responsibilities to efficiently complete assigned tasks.
 - **Task Execution:** Codex manages the workflow and collects responses/results from the simulated agents to present to the user.
-- **Summary:** Whenever Codex is asked to perform a task, it should (1) determine which Codex-* agent(s) are required, (2) simulate their behavior according to their defined roles, and (3) aggregate their responses.
+- **Summary:** Whenever Codex is asked to perform a task, it should (1) determine which Codex-* agent(s) are required, (2) simulate their behavior according to their defined roles, and (3) aggregate the results.
 
-This approach allows Codex to efficiently organize and delegate work, using agent profiles as focused task handlers.
+**Document Maintenance Policy:**  
+Codex and all Codex-* agents must log their actions and domain changes to `var/logs/codex/` using the standard JSON and human-readable formats.  
+Direct edits to AGENTS.md (including the changelog) are not permitted for automated changes—manual review is required for documentation changes.
+
+This approach allows Codex to efficiently organize and delegate work, using agent profiles as focused task handlers, while maintaining auditability through external logs.
 
 ---
 
@@ -46,7 +50,6 @@ This approach allows Codex to efficiently organize and delegate work, using agen
 - [Suggested Commands](#suggested-commands)
 - [FAQ](#faq)
 - [Guardrails](#guardrails)
-- [Changelog](#changelog)
 
 ---
 
@@ -57,6 +60,7 @@ This approach allows Codex to efficiently organize and delegate work, using agen
 | xanados-iso/profiledef.sh                       | Codex-Core         | Kernel and ISO settings  |
 | xanados-iso/build.sh                            | Codex-Core         | ISO build script         |
 | xanados-iso/airootfs/usr/bin/install_gaming.sh  | Codex-Gaming       | Game layer scripting     |
+| xanados-iso/airootfs/usr/bin/packages/gaming/   | Codex-Gaming       | Package lists for games  |
 | xanados-iso/calamares/                          | Codex-Calamares    | Installer logic          |
 | xanados-iso/airootfs/etc/clamav.conf            | Codex-Security     | Security config          |
 | .github/                                        | Codex-LintOps      | CI config and workflows  |
@@ -71,7 +75,7 @@ This approach allows Codex to efficiently organize and delegate work, using agen
 
 ## Overview
 
-This document describes the automation agents in XanadOS, their roles, responsibilities, and policies. Each agent independently manages a specific domain (e.g., installer logic, security, documentation) to ensure modularity and reliability.
+This document describes the automation agents in XanadOS, their roles, responsibilities, and policies. Each agent independently manages a specific domain (e.g., installer logic, security, documentation), and all agent activity is logged for traceability.
 
 [⬆️ Back to Top](#agents-refined)
 
@@ -520,6 +524,8 @@ Tools and procedures for code and artifact validation.
 **Summary:**  
 Standardized logging for auditability and traceability.
 
+**All agent and automation-driven changes must be logged exclusively in `var/logs/codex/` and not in AGENTS.md.**
+
 ### JSON Log
 
 - **Path:** `/xanados/var/logs/codex/AGENT_YYYYMMDD_HHMMSS.json`
@@ -578,19 +584,24 @@ How agents are created, merged, split, or deprecated.
 **Summary:**  
 How to propose, change, or maintain agents.
 
-- Propose new agents or changes via pull request
-- Update this document and Task Ownership Matrix for every change
-- Ensure CI passes and logging is updated
-- Tag maintainers for review
-- For docs, ensure markdownlint passes
-- All changes must be recorded in [Changelog](#changelog)
+- Propose new agents or changes via pull request.
+- **Before formulating a pull request, all agents must re-download (fetch/clone) the latest state of the repository and check for conflicts with their proposed changes. If conflicts are detected, agents must omit the conflicting changes from their PR.**
+- Update this document and Task Ownership Matrix for every *manual* or *policy* change.
+- Ensure CI passes and logging is updated.
+- Tag maintainers for review.
+- For docs, ensure markdownlint passes.
+- **Automated/agent-driven changes:**  
+   - Must generate a detailed, timestamped report in `var/logs/codex/`.
+   - **Do not update [AGENTS.md](AGENTS.md) or the changelog directly for automated changes.**
+- All manual or policy changes must be recorded in version control history.
 
 **Checklist for Contributors:**
 - [ ] PR submitted and reviewed
+- [ ] Repository re-downloaded and checked for conflicts before PR creation (automated agents must omit conflicting changes)
 - [ ] CI green
-- [ ] Documentation updated
-- [ ] Logging implemented
-- [ ] Changelog entry added
+- [ ] Documentation updated (manual/policy changes only)
+- [ ] Logging implemented (all changes)
+- [ ] Changelog entry added (manual/policy changes only, if changelog is reinstated)
 
 [⬆️ Back to Top](#agents-refined)
 
@@ -736,22 +747,9 @@ A: Follow the steps in [Conflict Avoidance Policy](#conflict-avoidance-policy) a
 
 - Domains must be minimal and well-defined
 - All agents require CI integration ([ci.yml](.github/workflows/ci.yml))
-- All additions must update this document
+- All *manual* or *policy* additions must update this document
+- All agent- or automation-driven changes must generate a log report in `var/logs/codex/`.  
 - Agents must respect scope and logging conventions
 - Violations must be logged and resolved per [Conflict Avoidance Policy](#conflict-avoidance-policy)
-
-[⬆️ Back to Top](#agents-refined)
-
----
-
-## Changelog
-
-| Date       | Version | Author         | Change Summary                                                              |
-|------------|---------|----------------|-----------------------------------------------------------------------------|
-| 2024-06-08 | 1.0     | asafelobotomy  | Initial draft                                                               |
-| 2025-06-08 | 2.0     | asafelobotomy  | Major rewrite: expanded agent details, navigation, logging, FAQ, quick reference, lifecycle, and contribution guidelines |
-| 2025-06-08 | 2.1     | asafelobotomy  | Added "Suggested Commands" section for recommended environment-appropriate commands |
-| 2025-06-08 | 2.2     | asafelobotomy  | Improved formatting, added troubleshooting tips, expanded FAQ, checklist templates, and visual flowcharts |
-| 2025-06-08 | 2.3     | Codex-Security | Added default `clamav.conf` and `rkhunter.conf` |
 
 [⬆️ Back to Top](#agents-refined)
