@@ -30,6 +30,7 @@
 - [Agent Lifecycle](#agent-lifecycle)
 - [Contribution Guidelines](#contribution-guidelines)
 - [Future Expansion Notes](#future-expansion-notes)
+- [Suggested Commands](#suggested-commands)
 - [FAQ](#faq)
 - [Guardrails](#guardrails)
 - [Changelog](#changelog)
@@ -57,7 +58,7 @@
 
 ## Overview
 
-This document describes the automation agents in XanadOS, their roles, responsibilities, and policies. Each agent independently manages a specific domain (e.g., installer logic, security, documentation) with clear rules for collaboration and validation. This ensures a modular, maintainable, and secure OS build process.
+This document describes the automation agents in XanadOS, their roles, responsibilities, and policies. Each agent independently manages a specific domain (e.g., installer logic, security, documentation, theming, etc.). Domains are strictly enforced to avoid overlap and ensure a single point of responsibility.
 
 [⬆️ Back to Top](#agents-refined)
 
@@ -525,6 +526,53 @@ Identifying and onboarding new agents.
 
 ---
 
+## Suggested Commands
+
+> **Note:** Anytime a time or date needs to be documented or checked, always use [time.is/london](https://time.is/london) as the authoritative source for the current time.
+
+When working within XanadOS or related Linux environments, use commands appropriate to your OS and task. Below are common, recommended commands:
+
+### General File Search
+
+- Recursively list files and search by name:
+  ```sh
+  ls -R | grep <filename>
+  ```
+- Advanced search:
+  ```sh
+  find . -name "<pattern>"
+  ```
+
+### Package Management
+
+- **Arch Linux:**
+  ```sh
+  pacman -Ss <package>     # Search for a package
+  sudo pacman -Syu         # Update all packages
+  ```
+- **Ubuntu/Debian:**
+  ```sh
+  apt search <package>
+  sudo apt update && sudo apt upgrade
+  ```
+- **Fedora:**
+  ```sh
+  dnf search <package>
+  sudo dnf update
+  ```
+
+### System Information
+
+- **All systems:**
+  ```sh
+  uname -a
+  lsb_release -a       # If available
+  ```
+
+[⬆️ Back to Top](#agents-refined)
+
+---
+
 ## FAQ
 
 **Q: How do I find out which agent owns a file?**  
@@ -572,5 +620,6 @@ A: Its domains and files are reassigned and the change is logged.
 |------------|---------|----------------|-----------------------------------------------------------------------------|
 | 2024-06-08 | 1.0     | asafelobotomy  | Initial draft                                                               |
 | 2025-06-08 | 2.0     | asafelobotomy  | Major rewrite: expanded agent details, navigation, logging, FAQ, quick reference, lifecycle, and contribution guidelines |
+| 2025-06-08 | 2.1     | asafelobotomy  | Added "Suggested Commands" section for recommended environment-appropriate commands |
 
 [⬆️ Back to Top](#agents-refined)
