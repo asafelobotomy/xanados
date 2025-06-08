@@ -57,6 +57,7 @@ This approach allows Codex to efficiently organize and delegate work, using agen
 | xanados-iso/profiledef.sh                       | Codex-Core         | Kernel and ISO settings  |
 | xanados-iso/build.sh                            | Codex-Core         | ISO build script         |
 | xanados-iso/airootfs/usr/bin/install_gaming.sh  | Codex-Gaming       | Game layer scripting     |
+| xanados-iso/airootfs/usr/bin/packages/gaming/   | Codex-Gaming       | Package lists for games  |
 | xanados-iso/calamares/                          | Codex-Calamares    | Installer logic          |
 | xanados-iso/airootfs/etc/clamav.conf            | Codex-Security     | Security config          |
 | .github/                                        | Codex-LintOps      | CI config and workflows  |
@@ -752,5 +753,6 @@ A: Follow the steps in [Conflict Avoidance Policy](#conflict-avoidance-policy) a
 | 2025-06-08 | 2.0     | asafelobotomy  | Major rewrite: expanded agent details, navigation, logging, FAQ, quick reference, lifecycle, and contribution guidelines |
 | 2025-06-08 | 2.1     | asafelobotomy  | Added "Suggested Commands" section for recommended environment-appropriate commands |
 | 2025-06-08 | 2.2     | asafelobotomy  | Improved formatting, added troubleshooting tips, expanded FAQ, checklist templates, and visual flowcharts |
+| 2025-06-08 | 2.3     | codex          | Added `install_gaming.sh` to `/usr/bin` and gaming package lists directory |
 
 [⬆️ Back to Top](#agents-refined)
