@@ -73,7 +73,7 @@ fuse3
 gvfs
 gvfs-smb
 gvfs-nfs
-qemu
+qemu-desktop
 libvirt
 qemu-guest-agent
 virt-manager
