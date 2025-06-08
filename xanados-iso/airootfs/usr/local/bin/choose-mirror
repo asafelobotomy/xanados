@@ -34,7 +34,7 @@ if [[ -z "$mirror" ]]; then
         echo "$(date +'%F %T') - No mirror specified, using default mirrorlist" >> "$log_file"
         exit 0
     else
-        read -p "Enter mirror URL: " mirror < /dev/tty
+        read -r -p "Enter mirror URL: " mirror < /dev/tty
         if [[ -z "$mirror" ]]; then
             echo "$(date +'%F %T') - No mirror provided, exiting" >> "$log_file"
             exit 1
