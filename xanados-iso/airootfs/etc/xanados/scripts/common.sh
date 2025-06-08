@@ -40,7 +40,8 @@ check_paru() {
 run_cmd() {
     if [[ "${DRY_RUN:-false}" == true ]]; then
         echo "DRY RUN: $*"
-    else
-        "$@"
+        return 0
     fi
+    "$@"
+    return $?
 }
