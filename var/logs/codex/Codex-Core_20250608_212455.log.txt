@@ -1,0 +1,1 @@
+[20250608_212455] Codex-Core: Added -r to read command in choose-mirror. Validation: shellcheck clean; bats tests passed. Outcome: SUCCESS.
