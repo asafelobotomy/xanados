@@ -42,7 +42,7 @@ breeze
 breeze-gtk
 breeze-icons
 firefox
-network-manager-applet
+plasma-nm
 flatpak
 gnome-keyring
 torbrowser-launcher
