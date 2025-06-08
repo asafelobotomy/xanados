@@ -2,165 +2,379 @@
 
 ![CI](https://github.com/asafelobotomy/xanados/actions/workflows/ci.yml/badge.svg)
 
+---
+
+## How to Use This Document
+
+- Use the [Table of Contents](#table-of-contents) for navigation.
+- Each major section has a [⬆️ Back to Top](#agents-refined) link at the end.
+- Use [Quick Reference](#quick-reference) to find which agent owns which files.
+- Need clarification? See the [FAQ](#faq).
+
+---
+
 ## Table of Contents
 
+- [Quick Reference](#quick-reference)
 - [Overview](#overview)
 - [Glossary](#glossary)
 - [Agent Assignment Philosophy](#agent-assignment-philosophy)
-  - [Single Point of Responsibility (SPR)](#single-point-of-responsibility-spr)
-  - [Domain-Based Ownership](#domain-based-ownership)
-  - [Task Encapsulation](#task-encapsulation)
-  - [Delegation](#delegation)
-  - [Emergency Override](#emergency-override)
-  - [LintOps Enforcement](#lintops-enforcement)
 - [Shared Resources](#shared-resources)
 - [Agent Definitions](#agent-definitions)
-  - [🧠 Codex-Core](#-codex-core)
-  - [🎮 Codex-Gaming](#-codex-gaming)
-  - [🔐 Codex-Security](#-codex-security)
-  - [🖥️ Codex-Calamares](#-codex-calamares)
-  - [🧹 Codex-LintOps](#-codex-lintops)
-  - [🛠️ Codex-Infra](#-codex-infra)
-  - [🎨 Codex-UX](#-codex-ux)
-  - [🦮 Codex-FixIt (New)](#-codex-fixit-new)
-  - [📚 Codex-Docs (New)](#-codex-docs-new)
+    - [Agents Covered](#agents-covered)
+- [Inter-Agent Communication](#inter-agent-communication)
 - [Task Ownership Matrix](#task-ownership-matrix)
 - [Conflict Avoidance Policy](#conflict-avoidance-policy)
 - [Validation & Testing Requirements](#validation--testing-requirements)
-  - [General Tools](#general-tools)
-  - [Per-Agent Testing](#per-agent-testing)
 - [Logging Policy](#logging-policy)
-  - [JSON Log](#json-log)
-  - [Human-Readable Log](#human-readable-log)
 - [Agent Lifecycle](#agent-lifecycle)
+- [Contribution Guidelines](#contribution-guidelines)
 - [Future Expansion Notes](#future-expansion-notes)
-  - [When to Add an Agent](#when-to-add-an-agent)
-  - [How to Add an Agent](#how-to-add-an-agent)
-  - [Examples of Possible Agents](#examples-of-possible-agents)
+- [FAQ](#faq)
 - [Guardrails](#guardrails)
+- [Changelog](#changelog)
+
+---
+
+## Quick Reference
+
+| File/Directory                                  | Responsible Agent  | Notes                    |
+|-------------------------------------------------|--------------------|--------------------------|
+| xanados-iso/profiledef.sh                       | Codex-Core         | Kernel and ISO settings  |
+| xanados-iso/build.sh                            | Codex-Core         | ISO build script         |
+| xanados-iso/airootfs/usr/bin/install_gaming.sh  | Codex-Gaming       | Game layer scripting     |
+| xanados-iso/calamares/                          | Codex-Calamares    | Installer logic          |
+| xanados-iso/airootfs/etc/clamav.conf            | Codex-Security     | Security config          |
+| .github/                                        | Codex-LintOps      | CI config and workflows  |
+| docs/                                           | Codex-Docs         | Documentation files      |
+| fixes/                                          | Codex-FixIt        | Patches/bugfixes         |
+| var/VM/                                         | Codex-Infra        | Virtual machine assets   |
+| xanados-iso/airootfs/usr/share/themes/          | Codex-UX           | Desktop theming          |
+
+[⬆️ Back to Top](#agents-refined)
 
 ---
 
 ## Overview
 
-Codex agents are intelligent automation units powered by Codex-ChatGPT and GitHub Copilot, tasked with maintaining the XanadOS Arch-based distribution. They ensure the independent and safe upkeep of subsystems like the gaming stack, security tools, installer, UX, CI, and more, leveraging knowledge from the Arch Wiki, forums, and Reddit.
+This document describes the automation agents in XanadOS, their roles, responsibilities, and policies. Each agent independently manages a specific domain (e.g., installer logic, security, documentation) with clear rules for collaboration and validation. This ensures a modular, maintainable, and secure OS build process.
 
-**Each agent:**
-
-- Has read-access to the entire repository and must only use ls -R when searching for full discoverability
-- Has exclusive write-access to defined files/directories
-- Runs pre-task feasibility checks
-- Validates outputs using domain-specific tests and linting
-- Logs both machine- and human-readable results
-- Timestamps and logs are standardized to London time.
+[⬆️ Back to Top](#agents-refined)
 
 ---
 
 ## Glossary
 
-- **Agent**: An automation unit responsible for a subsystem or domain.
-- **Domain**: The area of responsibility for an agent.
-- **SPR**: Single Point of Responsibility; ensures only one agent writes to a file or directory.
-- **LintOps**: Linting and formatting operations, enforced by Codex-LintOps.
-- **CI**: Continuous Integration.
+- **Agent:** An automated unit responsible for a subsystem/domain.
+- **Domain:** The area of responsibility for an agent.
+- **SPR:** Single Point of Responsibility; only one agent writes to any given file/dir.
+- **LintOps:** Linting/formatting operations, enforced by Codex-LintOps.
+- **Delegation:** When one agent requests another to perform an action outside its domain.
+- **Override:** Emergency action allowing an agent to break domain boundaries for critical fixes.
+- **Validation:** Automated or manual checks confirming successful, standards-compliant operation.
+- **CI:** Continuous Integration (automated testing/build pipelines).
+
+[⬆️ Back to Top](#agents-refined)
 
 ---
 
 ## Agent Assignment Philosophy
 
-### Single Point of Responsibility (SPR)
+**Summary:**  
+Outlines the guiding principles for agent roles, boundaries, and collaboration.
 
-Each file or directory is writable by **one agent only**. This ensures accountability and prevents conflicting logic.
+- **Single Point of Responsibility (SPR):**  
+  Only one agent has write access to a given file/directory.  
+  _Example:_ Only Codex-Gaming can update `install_gaming.sh`.
 
-### Domain-Based Ownership
+- **Domain-Based Ownership:**  
+  Agents align with major functional domains (e.g., gaming, security, installer).  
+  _Example:_ Codex-Security manages all firewall scripts.
 
-Agents are assigned by domain (e.g., gaming, installer, core), inspired by Unix modularity and Arch packaging discipline.
+- **Task Encapsulation:**  
+  Multi-component tasks (like combined kernel/game optimization) are assigned to one agent for the full scope.
 
-### Task Encapsulation
+- **Delegation:**  
+  Agents may formally request another agent to act outside their own domain, and must log these exchanges.
 
-Multi-component tasks (e.g., kernel patch plus gaming optimization) are assigned wholly to one agent.
+- **Emergency Override:**  
+  In critical cases (e.g., build failure), agents may override boundaries—always with full audit logging.
 
-### Delegation
+- **LintOps Enforcement:**  
+  Formatting, CI, and validation rules are set and enforced by Codex-LintOps.
 
-Agents cannot modify files outside their domain. Delegated tasks must be logged, with both the source and target agent identified.
-
-### Emergency Override
-
-In critical scenarios (e.g., ISO build failure), agents may override domain rules with an explicit audit log.
-
-### LintOps Enforcement
-
-Codex-LintOps defines standards for formatting, linting, CI configuration, and validation enforcement.
+[⬆️ Back to Top](#agents-refined)
 
 ---
 
 ## Shared Resources
 
-Some files or directories may be shared as **read-only** or used for reference by multiple agents. All such shared resources must be documented here:
+**Summary:**  
+Read-only or reference files usable by multiple agents.
 
-- `README.md`
-- `LICENSE`
-- `.gitignore`
+- `README.md`, `LICENSE`, `.gitignore`
 - Documentation in `docs/`
 - Top-level changelogs
+
+[⬆️ Back to Top](#agents-refined)
 
 ---
 
 ## Agent Definitions
 
+This section defines each automation agent, its domain, owned files, validations, and practical examples.
+
+### Agents Covered
+
+- [🧠 Codex-Core](#-codex-core)
+- [🎮 Codex-Gaming](#-codex-gaming)
+- [🔐 Codex-Security](#-codex-security)
+- [🖥️ Codex-Calamares](#-codex-calamares)
+- [🧹 Codex-LintOps](#-codex-lintops)
+- [🛠️ Codex-Infra](#-codex-infra)
+- [🎨 Codex-UX](#-codex-ux)
+- [🦮 Codex-FixIt](#-codex-fixit)
+- [📚 Codex-Docs](#-codex-docs)
+
+---
+
 ### 🧠 Codex-Core
 
 - **Domain:** ISO architecture, kernel variants, base layout
-- **Owns:** [`xanados-iso/profiledef.sh`](xanados-iso/profiledef.sh), [`build.sh`](build.sh), [`xanados-iso/package-options.conf`](xanados-iso/package-options.conf), mirror logic
-- **Validation:** ISO builds with correct kernel flags and mirror config
+- **Owns:**  
+  - [`xanados-iso/profiledef.sh`](xanados-iso/profiledef.sh)  
+  - [`xanados-iso/build.sh`](xanados-iso/build.sh)  
+  - [`xanados-iso/package-options.conf`](xanados-iso/package-options.conf)  
+  - Mirror logic/scripts
+- **Validation:** ISO builds with correct kernel flags, working mirror config
+
+**Example Tasks:**  
+- Update kernel version in `profiledef.sh`  
+- Validate ISO after mirror list change
+
+**Delegation Example:**  
+Codex-Core requests Codex-Security to review a new bootloader config.
+
+**Validation Output Example:**  
+`ISO build completed. Kernel: 6.8.1. Mirrors: All reachable. SUCCESS.`
+
+[⬆️ Back to Top](#agents-refined)
+
+---
 
 ### 🎮 Codex-Gaming
 
 - **Domain:** Game support layers, launchers, optimizations
-- **Owns:** [`xanados-iso/airootfs/usr/bin/install_gaming.sh`](xanados-iso/airootfs/usr/bin/install_gaming.sh), [`xanados-iso/airootfs/usr/bin/packages/gaming/`](xanados-iso/airootfs/usr/bin/packages/gaming/), Proton tweaks, MangoHud, and vkBasalt
-- **Validation:** `paru -Si` resolution, dry-run install success
+- **Owns:**  
+  - [`xanados-iso/airootfs/usr/bin/install_gaming.sh`](xanados-iso/airootfs/usr/bin/install_gaming.sh)  
+  - [`xanados-iso/airootfs/usr/bin/packages/gaming/`](xanados-iso/airootfs/usr/bin/packages/gaming/)
+- **Validation:** `paru -Si` resolution, install dry-run success
+
+**Example Tasks:**  
+- Add new launcher for Steam  
+- Optimize kernel parameters for gaming
+
+**Delegation Example:**  
+Requests Codex-Core to add missing kernel module for game compatibility.
+
+**Validation Output Example:**  
+`install_gaming.sh dry-run OK. All required packages available.`
+
+[⬆️ Back to Top](#agents-refined)
+
+---
 
 ### 🔐 Codex-Security
 
 - **Domain:** Hardening, antivirus, boot security, firewall
-- **Owns:** [`xanados-iso/calamares/modules/secureboot-toggle/`](xanados-iso/calamares/modules/secureboot-toggle/), UFW/nftables, [`xanados-iso/airootfs/etc/clamav.conf`](xanados-iso/airootfs/etc/clamav.conf), [`xanados-iso/airootfs/etc/rkhunter.conf`](xanados-iso/airootfs/etc/rkhunter.conf)
-- **Validation:** Secure boot test VM, passing scans
+- **Owns:**  
+  - [`xanados-iso/calamares/modules/secureboot-toggle/`](xanados-iso/calamares/modules/secureboot-toggle/)
+  - UFW/nftables configs
+  - [`xanados-iso/airootfs/etc/clamav.conf`](xanados-iso/airootfs/etc/clamav.conf)
+- **Validation:** Secure boot test VMs, passing antivirus/firewall scans
+
+**Example Tasks:**  
+- Update firewall defaults  
+- Enable/disable secure boot
+
+**Delegation Example:**  
+Requests Codex-Calamares to run installer with new security settings.
+
+**Validation Output Example:**  
+`UFW: active. Secure Boot: enabled. ClamAV scan: clean.`
+
+[⬆️ Back to Top](#agents-refined)
+
+---
 
 ### 🖥️ Codex-Calamares
 
 - **Domain:** Installer logic, Calamares scripts, post-install modules
-- **Owns:** [`xanados-iso/calamares/`](xanados-iso/calamares/), [`xanados-iso/calamares/settings.conf`](xanados-iso/calamares/settings.conf), YAML modules, custom install scripts
-- **Validation:** QEMU install success, filesystem validation
+- **Owns:**  
+  - [`xanados-iso/calamares/`](xanados-iso/calamares/)  
+  - [`xanados-iso/calamares/settings.conf`](xanados-iso/calamares/settings.conf)  
+  - YAML modules, custom install scripts
+- **Validation:** QEMU install, filesystem validation
+
+**Example Tasks:**  
+- Add new user setup steps  
+- Validate partition logic
+
+**Delegation Example:**  
+Requests Codex-Docs to update install instructions
+
+**Validation Output Example:**  
+`QEMU install completed. Filesystem matches expected layout.`
+
+[⬆️ Back to Top](#agents-refined)
+
+---
 
 ### 🧹 Codex-LintOps
 
 - **Domain:** Code health, CI pipelines, format enforcement
-- **Owns:** [`.github/`](.github/), [`var/tests/`](var/tests/), [`.eslintrc`](.eslintrc), [`.prettierrc`](.prettierrc), [`black`](https://github.com/psf/black), [`markdownlint`](https://github.com/DavidAnson/markdownlint)
-- **Validation:** CI passes, zero linting issues
+- **Owns:**  
+  - [`.github/`](.github/)  
+  - [`var/tests/`](var/tests/)  
+  - [`.eslintrc`](.eslintrc), [`.prettierrc`](.prettierrc)
+  - Linting tool configs (e.g. `black`, `markdownlint`)
+- **Validation:** CI passes, linting clean
+
+**Example Tasks:**  
+- Enforce `black` on Python scripts  
+- Add markdownlint to CI
+
+**Delegation Example:**  
+Notifies Codex-Docs of markdown formatting issues.
+
+**Validation Output Example:**  
+`CI: green. 0 lint errors.`
+
+[⬆️ Back to Top](#agents-refined)
+
+---
 
 ### 🛠️ Codex-Infra
 
 - **Domain:** Virtual environments, ISO deployment, Docker testbeds
-- **Owns:** `Dockerfile*`, [`var/VM/`](var/VM/), [`var/out/`](var/out/), mirror scripts
-- **Validation:** ISO artifacts and Docker boot success
+- **Owns:**  
+  - `Dockerfile*`  
+  - [`var/VM/`](var/VM/)  
+  - [`var/out/`](var/out/)  
+  - Mirror scripts
+- **Validation:** ISO artifacts boot in VM/containers
+
+**Example Tasks:**  
+- Rebuild containers after base image update  
+- Validate ISO boots in QEMU
+
+**Delegation Example:**  
+Requests Codex-Security to test container for vulnerabilities.
+
+**Validation Output Example:**  
+`Docker container boot: PASS. ISO artifact: boots in QEMU.`
+
+[⬆️ Back to Top](#agents-refined)
+
+---
 
 ### 🎨 Codex-UX
 
 - **Domain:** Aesthetic polish and branding
-- **Owns:** [`xanados-iso/airootfs/etc/skel/`](xanados-iso/airootfs/etc/skel/), [`xanados-iso/airootfs/usr/share/themes/`](xanados-iso/airootfs/usr/share/themes/), [`xanados-iso/airootfs/usr/share/plymouth/`](xanados-iso/airootfs/usr/share/plymouth/), [`xanados-iso/airootfs/usr/share/wallpapers/`](xanados-iso/airootfs/usr/share/wallpapers/), login manager themes
-- **Validation:** Theming applies correctly to greeter/DE; valid wallpaper paths
+- **Owns:**  
+  - [`xanados-iso/airootfs/etc/skel/`](xanados-iso/airootfs/etc/skel/)  
+  - [`xanados-iso/airootfs/usr/share/themes/`](xanados-iso/airootfs/usr/share/themes/)  
+  - Wallpapers, icons, display manager configs
+- **Validation:** Theming applies in greeter/desktop; paths valid
 
-### 🦮 Codex-FixIt (New)
+**Example Tasks:**  
+- Update default wallpaper  
+- Add new icon theme
+
+**Delegation Example:**  
+Requests Codex-Calamares to display new branding during install.
+
+**Validation Output Example:**  
+`Wallpaper: displayed. Icon theme: loaded. Greeter: themed.`
+
+[⬆️ Back to Top](#agents-refined)
+
+---
+
+### 🦮 Codex-FixIt
 
 - **Domain:** Bug fixes, missing files, deprecated package/tool replacement, conflict resolution
-- **Owns:** [`fixes/`](fixes/), `*.patch`, `*.bak`, refactoring scripts, deprecation tracker
-- **Validation:** Repo build/test passes, deprecated items resolved, issue tracker cleared
+- **Owns:**  
+  - [`fixes/`](fixes/)  
+  - `*.patch`, `*.bak`  
+  - Refactor scripts, deprecation tracker
+- **Validation:** Build/test pass, deprecated items resolved, issue tracker cleared
 
-### 📚 Codex-Docs (New)
+**Example Tasks:**  
+- Patch broken script  
+- Replace deprecated tool
+
+**Delegation Example:**  
+Requests Codex-LintOps to verify formatting of refactored code.
+
+**Validation Output Example:**  
+`Patch applied. Tests: PASS. Deprecated package removed.`
+
+[⬆️ Back to Top](#agents-refined)
+
+---
+
+### 📚 Codex-Docs
 
 - **Domain:** Documentation consistency and updates
-- **Owns:** `*.md`, [`docs/`](docs/), changelogs, help scripts
-- **Validation:** Passes markdownlint, consistent formatting, updated references
+- **Owns:**  
+  - `*.md`  
+  - [`docs/`](docs/)  
+  - Changelogs, help scripts
+- **Validation:** Markdownlint passes, formatting and references up to date
+
+**Example Tasks:**  
+- Update install guide  
+- Add changelog entry
+
+**Delegation Example:**  
+Requests Codex-LintOps to lint documentation.
+
+**Validation Output Example:**  
+`docs/install.md: lint OK. References: updated.`
+
+[⬆️ Back to Top](#agents-refined)
+
+---
+
+## Inter-Agent Communication
+
+**Summary:**  
+How agents collaborate, escalate, and log cross-domain actions.
+
+- **Delegation:**  
+  When one agent needs another to change something outside its domain, it must log the request, task, and results.  
+  _Example Log:_  
+  ```json
+  {
+    "delegator": "Codex-Docs",
+    "delegatee": "Codex-LintOps",
+    "task": "Run markdownlint on new docs",
+    "timestamp": "2025-06-08T18:00:00Z"
+  }
+  ```
+
+- **Emergency Override:**  
+  Used only for critical fixes. Must log the action, justification, and notify maintainers.
+
+<details>
+<summary>Advanced: Emergency Override Scenarios</summary>
+
+- Build system failure blocks release: Codex-Core temporarily edits installer config, logs justification, and reverts after resolution.
+- Security breach: Codex-Security patches files outside its domain to stop an exploit, then initiates review and reverts changes as appropriate.
+</details>
+
+[⬆️ Back to Top](#agents-refined)
 
 ---
 
@@ -168,28 +382,38 @@ Some files or directories may be shared as **read-only** or used for reference b
 
 | Agent           | Domain        | Write Access                                                                 |
 |-----------------|--------------|------------------------------------------------------------------------------|
-| Codex-Core      | ISO/Kernel   | [`xanados-iso/build.sh`](xanados-iso/build.sh), [`xanados-iso/profiledef.sh`](xanados-iso/profiledef.sh), etc.                    |
+| Codex-Core      | ISO/Kernel   | [`xanados-iso/build.sh`](xanados-iso/build.sh), [`xanados-iso/profiledef.sh`](xanados-iso/profiledef.sh), etc. |
 | Codex-Gaming    | Gaming Stack | [`xanados-iso/airootfs/usr/bin/install_gaming.sh`](xanados-iso/airootfs/usr/bin/install_gaming.sh), [`xanados-iso/airootfs/usr/bin/packages/gaming/`](xanados-iso/airootfs/usr/bin/packages/gaming/) |
-| Codex-Security  | Security     | [`xanados-iso/calamares/modules/secureboot-toggle/`](xanados-iso/calamares/modules/secureboot-toggle/), configs                  |
-| Codex-Calamares | Installer    | [`xanados-iso/calamares/`](xanados-iso/calamares/), [`xanados-iso/calamares/modules/*.yaml`](xanados-iso/calamares/modules/), [`xanados-iso/calamares/settings.conf`](xanados-iso/calamares/settings.conf) |
-| Codex-LintOps   | CI/Linting   | [`.github/`](.github/), [`var/tests/`](var/tests/), format configs                                     |
-| Codex-Infra     | Infrastructure| `Dockerfile*`, [`var/VM/`](var/VM/), [`var/out/`](var/out/), mirror scripts                        |
-| Codex-UX        | UX/Branding  | [`xanados-iso/airootfs/etc/skel/`](xanados-iso/airootfs/etc/skel/), [`xanados-iso/airootfs/usr/share/themes/`](xanados-iso/airootfs/usr/share/themes/), wallpapers/ |
-| Codex-FixIt     | Maintenance  | [`fixes/`](fixes/), `*.patch`, deprecated tools                                        |
-| Codex-Docs      | Documentation| [`docs/`](docs/), `*.md`, changelogs                                                 |
+| Codex-Security  | Security     | [`xanados-iso/calamares/modules/secureboot-toggle/`](xanados-iso/calamares/modules/secureboot-toggle/), configs |
+| Codex-Calamares | Installer    | [`xanados-iso/calamares/`](xanados-iso/calamares/), [`xanados-iso/calamares/settings.conf`](xanados-iso/calamares/settings.conf) |
+| Codex-LintOps   | CI/Linting   | [`.github/`](.github/), [`var/tests/`](var/tests/) |
+| Codex-Infra     | Infrastructure| `Dockerfile*`, [`var/VM/`](var/VM/), [`var/out/`](var/out/) |
+| Codex-UX        | UX/Branding  | [`xanados-iso/airootfs/etc/skel/`](xanados-iso/airootfs/etc/skel/), [`xanados-iso/airootfs/usr/share/themes/`](xanados-iso/airootfs/usr/share/themes/) |
+| Codex-FixIt     | Maintenance  | [`fixes/`](fixes/), `*.patch`, deprecated tools |
+| Codex-Docs      | Documentation| [`docs/`](docs/), `*.md`, changelogs |
+
+[⬆️ Back to Top](#agents-refined)
 
 ---
 
 ## Conflict Avoidance Policy
 
-- One agent per writable scope
-- Delegations must be logged
-- Overrides allowed only via emergency procedure with audit trail
-- All merges require CI and validations
+**Summary:**  
+How to handle file/domain collisions and escalation.
+
+- Only one agent per writable scope (see [Task Ownership Matrix](#task-ownership-matrix)).
+- All delegations and overrides must be logged.
+- Emergency overrides must follow audit procedures.
+- All merges require CI and validations.
+
+[⬆️ Back to Top](#agents-refined)
 
 ---
 
 ## Validation & Testing Requirements
+
+**Summary:**  
+Tools and procedures for code and artifact validation.
 
 ### General Tools
 
@@ -212,9 +436,14 @@ Some files or directories may be shared as **read-only** or used for reference b
 | Codex-FixIt     | Fixes applied, deprecated tools resolved, tests pass        |
 | Codex-Docs      | Formatting consistency, references updated, markdownlint OK  |
 
+[⬆️ Back to Top](#agents-refined)
+
 ---
 
 ## Logging Policy
+
+**Summary:**  
+Standardized logging for auditability and traceability.
 
 ### JSON Log
 
@@ -226,43 +455,122 @@ Some files or directories may be shared as **read-only** or used for reference b
 - **Path:** `/xanados/var/logs/codex/AGENT_YYYYMMDD_HHMMSS.log.txt`
 - **Contents:** Summary format, key highlights, timestamp, affected scope
 
+[⬆️ Back to Top](#agents-refined)
+
 ---
 
 ## Agent Lifecycle
 
+**Summary:**  
+How agents are created, merged, split, or deprecated.
+
 - Agents may be added, merged, split, or deprecated as domains change.
-- Deprecation or major changes must be discussed in a PR and logged in the human-readable log.
+- Major changes must be discussed in a PR and logged.
 - All changes must update this document and the Task Ownership Matrix.
+
+**Lifecycle Flowchart:**  
+1. Identify new domain / need  
+2. Propose agent via PR  
+3. Define scope, validation, and logging  
+4. Update matrix and docs  
+5. Review and merge  
+6. Maintain agent until deprecated
+
+[⬆️ Back to Top](#agents-refined)
+
+---
+
+## Contribution Guidelines
+
+**Summary:**  
+How to propose, change, or maintain agents.
+
+- Propose new agents or changes via pull request
+- Update this document and Task Ownership Matrix for every change
+- Ensure CI passes and logging is updated
+- Tag maintainers for review
+- For docs, ensure markdownlint passes
+- All changes must be recorded in [Changelog](#changelog)
+
+[⬆️ Back to Top](#agents-refined)
 
 ---
 
 ## Future Expansion Notes
 
+**Summary:**  
+Identifying and onboarding new agents.
+
 ### When to Add an Agent
 
-- A new domain emerges (e.g., telemetry, localization)
-- An existing agent becomes overloaded
-- New validation tools or workflows are introduced
+- New domain emerges (e.g., telemetry, localization)
+- Existing agent overloaded
+- New validation tools/workflows needed
 
 ### How to Add an Agent
 
 - [ ] Define domain, scope, and validation
 - [ ] Register in Task Ownership Matrix
-- [ ] Implement JSON and human-readable logging
+- [ ] Implement logging
 - [ ] Submit PR with passing tests and logs
 
-### Examples of Possible Agents
+### Example Future Agents
 
-- Codex-Hardware: Drivers, detection, microcode
-- Codex-Network: VPN, DNS, net profiles
-- Codex-Locale: I18n, timezones, keymaps
-- Codex-Telemetry: Metrics, crash logs, diagnostics
+- Codex-Hardware: Drivers, microcode
+- Codex-Network: VPN, DNS, profiles
+- Codex-Locale: I18n, timezones
+- Codex-Telemetry: Metrics, crash logs
+
+[⬆️ Back to Top](#agents-refined)
+
+---
+
+## FAQ
+
+**Q: How do I find out which agent owns a file?**  
+A: Use [Quick Reference](#quick-reference) or [Task Ownership Matrix](#task-ownership-matrix).
+
+**Q: How do agents collaborate?**  
+A: Through formal delegation, logged in JSON logs.
+
+**Q: Can I propose a new agent?**  
+A: Yes, via PR—see [Contribution Guidelines](#contribution-guidelines).
+
+**Q: What if two agents need the same file?**  
+A: Only one can have write access—propose a split or restructure.
+
+**Q: How are emergency overrides handled?**  
+A: Log the event, notify maintainers, and review post-action.
+
+**Q: How can I navigate this document efficiently?**  
+A: Use the [Table of Contents](#table-of-contents) and [⬆️ Back to Top](#agents-refined) links.
+
+**Q: Are all agent actions logged?**  
+A: Yes, both in machine-readable JSON and human logs.
+
+**Q: What happens if an agent is deprecated?**  
+A: Its domains and files are reassigned and the change is logged.
+
+[⬆️ Back to Top](#agents-refined)
 
 ---
 
 ## Guardrails
 
 - Domains must be minimal and well-defined
-- All agents require CI integration (see [`.github/workflows/ci.yml`](.github/workflows/ci.yml))
+- All agents require CI integration ([ci.yml](.github/workflows/ci.yml))
 - All additions must update this document
 - Agents must respect scope and logging conventions
+
+[⬆️ Back to Top](#agents-refined)
+
+---
+
+## Changelog
+
+| Date       | Version | Author         | Change Summary                                                              |
+|------------|---------|----------------|-----------------------------------------------------------------------------|
+| 2024-06-08 | 1.0     | asafelobotomy  | Initial draft                                                               |
+| 2025-06-08 | 2.0     | asafelobotomy  | Major rewrite: expanded agent details, navigation, logging, FAQ, quick reference, lifecycle, and contribution guidelines |
+
+[⬆️ Back to Top](#agents-refined)
