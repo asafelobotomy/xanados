@@ -47,7 +47,7 @@ Codex agents are intelligent automation units powered by Codex-ChatGPT and GitHu
 
 **Each agent:**
 
-- Has read-access to the entire repository and must only use ls -s when searching for full discoverability
+- Has read-access to the entire repository and must only use ls -R when searching for full discoverability
 - Has exclusive write-access to defined files/directories
 - Runs pre-task feasibility checks
 - Validates outputs using domain-specific tests and linting
