@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-LOG_DIR="/var/log/xanados"
-mkdir -p "$LOG_DIR"
+LOG_DIR="${LOG_DIR:-/var/log/xanados}"
 
 init_logging() {
     local prefix=${1:-script}
+    mkdir -p "$LOG_DIR"
     LOGFILE="$LOG_DIR/${prefix}_$(date +%Y%m%d_%H%M%S).log"
     exec > >(tee -a "$LOGFILE") 2>&1
     echo "[INFO] Log file: $LOGFILE"
