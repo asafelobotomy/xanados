@@ -1,3 +1,19 @@
+3caf072 Merge pull request #133 from asafelobotomy/codex/add--r-to-read-invocations-in-shell-scripts
+a70c6e1 log: document choose-mirror fix
+7315ffb Merge pull request #132 from asafelobotomy/codex/add--r-to-all-read-commands
+1481834 log: record mirror script fix
+cf67af0 Create CONTRIBUTIONS.md
+ca64460 Update README.md
+b9ad692 Create pull_request_template.md
+34fce97 Merge pull request #131 from asafelobotomy/codex/run-markdownlint-on-codex-docs
+c7d659f docs: run markdownlint check
+1c7a3c0 Merge pull request #130 from asafelobotomy/codex/check-readme.md-files-for-missing-content
+bbd863d docs: add content to var readmes
+0fd572a Merge pull request #129 from asafelobotomy/codex/update-ci-workflow-with-explicit-script-paths
+57cceb3 lintops: update shellcheck paths
+f10c8ec Update AGENTS.md
+9e40ecd Merge pull request #128 from asafelobotomy/codex/create-changelog-for-last-50-commits
+53a389f log: update commit id
 2325ca9 Merge pull request #127 from asafelobotomy/codex/enable-strict-mode-in-helper-scripts
 c0943cc log: record strict mode update
 00bdcdd Merge pull request #126 from asafelobotomy/codex/consolidate-build-scripts
@@ -32,19 +48,3 @@ b7bb6c3 Add browser options
 f8d2770 Add files via upload
 2a83ded Merge pull request #118 from asafelobotomy/codex/add-qemu,-libvirt,-btrfs-assistant,-flatpak-builder
 60ccdb1 Add virtualization and packaging tools
-3f4b632 Add files via upload
-a777592 Merge pull request #117 from asafelobotomy/codex/replace-network-manager-applet-with-plasma-nm
-e48f236 Replace network-manager-applet with plasma-nm
-bdd9b0e Merge pull request #116 from asafelobotomy/codex/replace-7zip-with-p7zip
-57f7a92 Replace 7zip with p7zip
-231271a Merge pull request #115 from asafelobotomy/codex/update-ci-workflow-with-shellcheck
-d059051 ci: lint more shell scripts
-5e80233 Merge pull request #114 from asafelobotomy/codex/modify-run_cmd-in-common.sh
-8d350ad feat: improve run_cmd handling
-46de34b Merge pull request #113 from asafelobotomy/codex/set-log_dir-in-tests-and-verify-modes
-544cd80 Merge branch 'main' into codex/set-log_dir-in-tests-and-verify-modes
-e0749b5 fix logging dir and update tests
-c33ae92 Merge pull request #112 from asafelobotomy/codex/update-init_logging-to-handle-log_dir
-47f7845 refactor(logging): init logging dir lazily
-8be7caa Merge pull request #110 from asafelobotomy/codex/enhance-script-robustness-and-ci
-c2eba09 Fix shellcheck path for install scripts
