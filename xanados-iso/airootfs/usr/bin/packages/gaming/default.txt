@@ -1,0 +1,4 @@
+# Default gaming packages
+steam
+lutris
+heroic-games-launcher
