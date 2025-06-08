@@ -64,7 +64,7 @@ cd xanados/xanados-iso
 # Example using archiso:
 sudo mkarchiso -v .
 # or if you use a custom script:
-./build.sh
+./xanados-iso/build.sh    # or ./build.sh for compatibility
 ```
 
 The generated ISO will appear in the `out/` directory by default.

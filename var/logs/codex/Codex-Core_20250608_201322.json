@@ -1,0 +1,9 @@
+{
+  "timestamp": "2025-06-08T20:13:22Z",
+  "task_description": "Unify ISO build scripts and update docs",
+  "files_modified": ["build.sh", "xanados-iso/build.sh", "README.md", ".github/workflows/ci.yml"],
+  "validation_results": "shellcheck: pass; bats: pass; markdownlint: fail",
+  "outcome": "SUCCESS",
+  "commit_id": null,
+  "branch": "work"
+}
