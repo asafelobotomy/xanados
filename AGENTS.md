@@ -11,6 +11,17 @@
 - Use [Quick Reference](#quick-reference) to find which agent owns which files.
 - Need clarification? See the [FAQ](#faq).
 
+Codex Agent Instructions
+
+Codex is the primary orchestrator agent and represents all "Codex-*" agents listed below. When a user requests a task (e.g., "perform a security check on all security scripts"), Codex is responsible for:
+Creating and assigning the task to the relevant Codex-* agent(s) as described in this document.
+Simulating each agent as needed: For each assigned task, Codex 'creates' or activates the corresponding Codex-* agent (such as Codex-Security, Codex-Gaming, etc.), and ensures it has the correct abilities, privileges, permissions, and tools as defined in the agent profile.
+Agent Profiles: Each Codex-* agent acts as a specialized profile, focusing on designated tools, directories, and responsibilities to efficiently complete assigned tasks.
+Task Execution: Codex manages the workflow and collects responses/results from the simulated agents to present to the user.
+In summary: Whenever Codex is asked to perform a task, it should (1) determine which Codex-* agent(s) are required, (2) simulate their behavior according to their defined roles, and (3) aggregate and report the results back to the user.
+
+This approach allows Codex to efficiently organize and delegate work, using agent profiles as focused task handlers.
+
 ---
 
 ## Table of Contents
