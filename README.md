@@ -1,11 +1,32 @@
-# XanadOS ISO
-
 [![License: GPL-3.0](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE)
 ![Shell](https://img.shields.io/badge/language-shell-brightgreen)
 ![Python](https://img.shields.io/badge/language-python-yellow)
 <!-- Add build status or release badges here if available -->
 
 XanadOS is a gaming, security, and performance-focused Arch Linux build. This repository contains all the build files, scripts, and profiles for generating the XanadOS ISO.
+
+---
+
+## Repository Structure
+
+```plaintext
+xanados-iso/         # ISO build scripts, profiles, installer logic
+├── build.sh         # ISO build script
+├── profiledef.sh    # ISO profile and kernel settings
+├── airootfs/        # Root filesystem for the ISO
+│   └── etc/xanados/scripts/   # Installer scripts (minimal, recommended, gaming)
+│   └── usr/bin/install_gaming.sh
+│   └── usr/bin/packages/gaming/
+│   └── etc/clamav.conf        # Security config
+├── calamares/       # Calamares installer configs and modules
+docs/                # Project documentation
+var/
+├── bugs/            # Temporary bug reports and troubleshooting files
+├── logs/            # Run logs and agent reports
+├── tests/           # Automated test scripts and helpers
+.github/             # CI config and workflows
+fixes/               # Patches/bugfixes
+```
 
 ---
 
@@ -79,6 +100,17 @@ The repository previously included a Next.js frontend. These Node.js packages ar
 
 ---
 
+## Troubleshooting
+
+If you encounter build or installation issues:
+
+- Check logs in `var/logs/codex/` for error details.
+- Consult the `var/bugs/README.md` for troubleshooting tips and to log reproducible bugs.
+- Search [GitHub Issues](https://github.com/asafelobotomy/xanados/issues) for similar problems.
+- If the problem persists, open a new issue with detailed steps to reproduce and attach relevant logs.
+
+---
+
 ## Custom Gaming Installation
 
 When you boot into XanadOS, the welcome application allows you to select individual gaming packages to install. The installer passes your choices to `install_gaming.sh`, which can also be used manually:
@@ -148,10 +180,11 @@ XanadOS supports Secure Boot via the `secureboot-toggle` Calamares module. Packa
 
 ## Screenshots
 
-<!-- If you have images, add them here!
-![Welcome App](screenshots/welcome.png)
-![Gaming Stack Selection](screenshots/gaming.png)
--->
+<!-- Please add screenshots of the Welcome App, gaming stack selection, or installation process here! -->
+
+If you have images or demo videos, please contribute them to help showcase XanadOS.
+
+---
 
 ## Testing
 Run `bats var/tests` to execute the basic shell unit tests. Shell scripts are linted with `shellcheck` and both run automatically in CI.
