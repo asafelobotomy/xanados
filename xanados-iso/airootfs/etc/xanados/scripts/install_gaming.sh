@@ -3,7 +3,7 @@
 source "$(dirname "$0")/common.sh"
 init_logging install_gaming
 
-# Prebuilt packages from xanados-iso/packages/repo include btrfs-assistant, brave, opera, preload, and paru.
+# Prebuilt packages from xanados-iso/packages/repo include btrfs-assistant, brave, and paru.
 DRY_RUN=false
 REMOVE=false
 POSITIONAL=()

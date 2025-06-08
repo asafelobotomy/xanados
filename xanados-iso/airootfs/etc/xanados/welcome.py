@@ -158,7 +158,6 @@ class WelcomeApp(QtWidgets.QWidget):
             "Chromium": "chromium",
             "Vivaldi": "vivaldi",
             "Tor Browser": "torbrowser-launcher",
-            "Opera": "opera",
         }
         browser_layout = QtWidgets.QHBoxLayout()
         browser_label = QtWidgets.QLabel("Web Browser:")

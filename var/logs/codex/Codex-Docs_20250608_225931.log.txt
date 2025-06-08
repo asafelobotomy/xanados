@@ -1,0 +1,1 @@
+[2025-06-08 22:59:39Z] Codex-Docs: Removed references to Opera and preload packages. Validation: shellcheck clean; bats tests passed. Outcome: SUCCESS.
