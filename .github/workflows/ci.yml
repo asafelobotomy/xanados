@@ -18,4 +18,4 @@ jobs:
             xanados-iso/airootfs/usr/local/bin/*.sh \
             build.sh
       - name: Run tests
-        run: bats tests
+        run: bats var/tests

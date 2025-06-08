@@ -1,0 +1,1 @@
+[2025-06-08 20:11:19Z] Codex-LintOps: Updated CI workflow to use var/tests. Validation: bats tests passed. Outcome: SUCCESS.
