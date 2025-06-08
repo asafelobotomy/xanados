@@ -753,6 +753,7 @@ A: Follow the steps in [Conflict Avoidance Policy](#conflict-avoidance-policy) a
 | 2025-06-08 | 2.0     | asafelobotomy  | Major rewrite: expanded agent details, navigation, logging, FAQ, quick reference, lifecycle, and contribution guidelines |
 | 2025-06-08 | 2.1     | asafelobotomy  | Added "Suggested Commands" section for recommended environment-appropriate commands |
 | 2025-06-08 | 2.2     | asafelobotomy  | Improved formatting, added troubleshooting tips, expanded FAQ, checklist templates, and visual flowcharts |
-| 2025-06-08 | 2.3     | codex          | Added `install_gaming.sh` to `/usr/bin` and gaming package lists directory |
+| 2025-06-08 | 2.3     | asafelobotomy  | Added skeleton dotfiles and placeholder theme directories |
+| 2025-06-08 | 2.4     | codex          | Added `install_gaming.sh` to `/usr/bin` and gaming package lists directory |
 
 [⬆️ Back to Top](#agents-refined)
