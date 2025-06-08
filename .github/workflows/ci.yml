@@ -10,6 +10,12 @@ jobs:
       - name: Install dependencies
         run: sudo apt-get update && sudo apt-get install -y shellcheck bats
       - name: Lint shell scripts
-        run: shellcheck xanados-iso/airootfs/etc/xanados/scripts/*.sh xanados-iso/calamares/scripts/*.sh build.sh
+        run: |
+          shellcheck \
+            xanados-iso/airootfs/etc/xanados/scripts/*.sh \
+            xanados-iso/calamares/scripts/*.sh \
+            xanados-iso/calamares/modules/**/*.sh \
+            xanados-iso/airootfs/usr/local/bin/*.sh \
+            build.sh
       - name: Run tests
         run: bats tests
