@@ -3,6 +3,7 @@
 source "$(dirname "$0")/common.sh"
 init_logging install_recommended
 
+# Prebuilt packages from xanados-iso/packages/repo include btrfs-assistant, brave, opera, preload, and paru.
 DRY_RUN=false
 BROWSER="brave"
 while [[ $# -gt 0 ]]; do

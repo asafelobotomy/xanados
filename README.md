@@ -36,7 +36,7 @@ fixes/               # Patches/bugfixes
 - **Security Tools Out-of-the-Box**: Includes essential security packages.
 - **Performance Tweaks**: Ships with tools to optimize system responsiveness and battery life.
 - **Gamer-Ready**: Custom gaming stack installer lets you pick only what you want.
-- **AUR Helper Included**: Comes with `paru` for easy package management.
+- **Built-in Repo**: Prebuilt AUR packages (`btrfs-assistant`, `brave`, `opera`, `preload`, `paru`) are included via `xanados-iso/packages/repo`.
 
 ---
 
@@ -56,12 +56,12 @@ fixes/               # Patches/bugfixes
 - `thermald` — CPU thermal protection
 - `cpupower` — CPU frequency scaling
 - `irqbalance` — IRQ distribution
-- `preload` — Adaptive readahead daemon
+- `preload` — Adaptive readahead daemon (from the built-in repo)
 - `earlyoom` — Early Out of Memory killer
 
 ### Notable Extras
 
-- `paru` — Pre-installed for AUR and Arch repo package management
+- `paru` — Provided via the built-in repo for AUR and Arch package management
 
 ---
 
