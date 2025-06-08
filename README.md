@@ -36,7 +36,7 @@ fixes/               # Patches/bugfixes
 - **Security Tools Out-of-the-Box**: Includes essential security packages.
 - **Performance Tweaks**: Ships with tools to optimize system responsiveness and battery life.
 - **Gamer-Ready**: Custom gaming stack installer lets you pick only what you want.
-- **Built-in Repo**: Prebuilt AUR packages (`btrfs-assistant`, `brave`, `paru`) are included via `xanados-iso/packages/repo`.
+- **Built-in Repo**: AUR archives (`btrfs-assistant`, `brave`, `paru`) live in `xanados-iso/packages/repo` and are built automatically.
 
 ---
 
@@ -109,7 +109,7 @@ If you encounter build or installation issues:
 - If the problem persists, open a new issue with detailed steps to reproduce and attach relevant logs.
  - If pacman reports missing packages from the local repo, rebuild the repository
    database as described in [docs/package-policy.md](docs/package-policy.md).
- - To extract packaged archives and refresh the repo automatically, run
+ - To build the AUR archives and refresh the repo automatically, run
    `xanados-iso/packages/build_repo.sh` before building the ISO.
 
 ---
