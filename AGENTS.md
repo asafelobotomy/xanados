@@ -479,6 +479,10 @@ How to handle file/domain collisions and escalation.
 
 ---
 
+# Local Package Repository
+
+Zipped packages for the XanadOS ISO are stored in xanados-iso/packages/rep
+
 ## Validation & Testing Requirements
 
 **Summary:**  
