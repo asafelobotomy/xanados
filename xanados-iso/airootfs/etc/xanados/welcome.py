@@ -118,9 +118,7 @@ class WelcomeApp(QtWidgets.QWidget):
         layout.addLayout(top_bar)
 
         self.checkbox_gaming = QtWidgets.QCheckBox("Gaming Mode")
-        self.checkbox_gaming.setToolTip(
-            "Install selected gaming packages."
-        )
+        self.checkbox_gaming.setToolTip("Install selected gaming packages.")
         self.checkbox_minimal = QtWidgets.QCheckBox("Minimal Mode")
         self.checkbox_minimal.setToolTip(
             "Install only the essential packages for a clean setup."
@@ -154,10 +152,25 @@ class WelcomeApp(QtWidgets.QWidget):
         layout.addWidget(self.checkbox_minimal)
         layout.addWidget(self.checkbox_recommended)
 
+        self.browser_options = {
+            "Brave": "brave",
+            "Firefox": "firefox",
+            "Chromium": "chromium",
+            "Vivaldi": "vivaldi",
+            "Tor Browser": "torbrowser-launcher",
+            "Opera": "opera",
+        }
+        browser_layout = QtWidgets.QHBoxLayout()
+        browser_label = QtWidgets.QLabel("Web Browser:")
+        self.browser_combo = QtWidgets.QComboBox()
+        self.browser_combo.addItems(self.browser_options.keys())
+        self.browser_combo.setCurrentText("Brave")
+        browser_layout.addWidget(browser_label)
+        browser_layout.addWidget(self.browser_combo)
+        layout.addLayout(browser_layout)
+
         self.checkbox_dry_run = QtWidgets.QCheckBox("Dry Run")
-        self.checkbox_dry_run.setToolTip(
-            "Show the commands without executing them."
-        )
+        self.checkbox_dry_run.setToolTip("Show the commands without executing them.")
         self.checkbox_dry_run.setChecked(self.dry_run_default)
         layout.addWidget(self.checkbox_dry_run)
 
@@ -243,13 +256,23 @@ class WelcomeApp(QtWidgets.QWidget):
         if self.checkbox_gaming.isChecked():
             selected = [pkg for pkg, cb in self.gaming_checks.items() if cb.isChecked()]
             if selected:
-                scripts.append(["/etc/xanados/scripts/install_gaming.sh", *selected, *dry_flag])
+                scripts.append(
+                    ["/etc/xanados/scripts/install_gaming.sh", *selected, *dry_flag]
+                )
             else:
                 scripts.append(["/etc/xanados/scripts/install_gaming.sh", *dry_flag])
         if self.checkbox_minimal.isChecked():
             scripts.append(["/etc/xanados/scripts/install_minimal.sh", *dry_flag])
         if self.checkbox_recommended.isChecked():
-            scripts.append(["/etc/xanados/scripts/install_recommended.sh", *dry_flag])
+            browser_pkg = self.browser_options[self.browser_combo.currentText()]
+            scripts.append(
+                [
+                    "/etc/xanados/scripts/install_recommended.sh",
+                    "--browser",
+                    browser_pkg,
+                    *dry_flag,
+                ]
+            )
 
         self.thread = InstallerThread(scripts)
         self.thread.progress.connect(

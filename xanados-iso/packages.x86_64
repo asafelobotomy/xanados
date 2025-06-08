@@ -42,12 +42,17 @@ plasma-pa
 breeze
 breeze-gtk
 breeze-icons
+# Browsers
+brave
 firefox
+chromium
+vivaldi
+opera
+torbrowser-launcher
 plasma-nm
 flatpak
 flatpak-builder
 gnome-keyring
-torbrowser-launcher
 alacritty
 btop
 conky
