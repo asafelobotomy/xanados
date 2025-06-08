@@ -26,7 +26,9 @@ check_paru() {
 run_cmd() {
     if [[ "${DRY_RUN:-false}" == true ]]; then
         echo "DRY RUN: $*"
+        return 0  # Explicitly return success status for dry-run
     else
         "$@"
+        return $?  # Return the status of the executed command
     fi
 }
