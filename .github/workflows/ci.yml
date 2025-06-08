@@ -12,10 +12,12 @@ jobs:
       - name: Lint shell scripts
         run: |
           shellcheck \
+            xanados-iso/airootfs/usr/local/bin/choose-mirror \
+            xanados-iso/airootfs/usr/local/bin/livecd-sound \
+            xanados-iso/airootfs/usr/local/bin/pacman \
             xanados-iso/airootfs/etc/xanados/scripts/*.sh \
             xanados-iso/calamares/scripts/*.sh \
             xanados-iso/calamares/modules/**/*.sh \
-            xanados-iso/airootfs/usr/local/bin/*.sh \
             xanados-iso/build.sh
       - name: Run tests
         run: bats var/tests
