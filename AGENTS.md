@@ -524,7 +524,9 @@ Tools and procedures for code and artifact validation.
 **Summary:**  
 Standardized logging for auditability and traceability.
 
-**All agent and automation-driven changes must be logged exclusively in `var/logs/codex/` and not in AGENTS.md.**
+Before performing any actions, agents must check the var/logs directory for a history of previous changes or commits. Agents should review these logs to ensure they do not repeat actions or commit the same mistakes as before.
+
+**All agent and automation-driven changes must be logged exclusively in `var/logs/codex/` **
 
 ### JSON Log
 
