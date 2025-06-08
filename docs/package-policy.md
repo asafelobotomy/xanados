@@ -16,31 +16,18 @@ packages to keep maintenance overhead low.
 
 ## Maintaining the Local Repository
 
-Prebuilt AUR packages live under `xanados-iso/packages/repo/`. To add or update
+Prebuilt AUR tarballs live under `xanados-iso/packages/repo/`. To add or update
 packages:
 
-1. On an Arch-based system, clone the package's PKGBUILD and build it:
+1. Download the package's AUR tarball (e.g. via `paru -G <package>` or from the
+   AUR website) and place the resulting `*.tar.gz` archive in
+   `xanados-iso/packages/repo/`.
 
-   ```bash
-   git clone <aur-url>
-   cd <package>
-   makepkg -s
-   ```
+2. Run `xanados-iso/packages/build_repo.sh` to build the packages and refresh
+   the repository database. The script extracts each archive, runs `makepkg`, and
+   adds the resulting `*.pkg.tar.zst` files to the repo.
 
-2. Copy the resulting `*.pkg.tar.zst` file(s) into `xanados-iso/packages/repo/`.
-
-3. From inside that directory, update the repository database:
-
-   ```bash
-   repo-add xanados.db.tar.gz *.pkg.tar.zst
-   repo-add xanados.files.tar.gz *.pkg.tar.zst
-   ```
-
-4. Commit the new package files and updated database.
-
-5. If the repository contains compressed archives instead of package files,
-   run `xanados-iso/packages/build_repo.sh` to extract them and rebuild the
-   database automatically.
+3. Commit the updated package files and repository database.
 
 Keep the repository small and only include packages required by the ISO or
 installer scripts. Remove outdated packages to avoid bloat.
