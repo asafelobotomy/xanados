@@ -154,7 +154,7 @@ XanadOS supports Secure Boot via the `secureboot-toggle` Calamares module. Packa
 -->
 
 ## Testing
-Run `bats tests` to execute the basic shell unit tests. Shell scripts are linted with `shellcheck` and both run automatically in CI.
+Run `bats var/tests` to execute the basic shell unit tests. Shell scripts are linted with `shellcheck` and both run automatically in CI.
 ---
 
 ## Community & Support
