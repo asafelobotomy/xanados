@@ -3,6 +3,7 @@ linux
 linux-firmware
 mkinitcpio
 btrfs-progs
+btrfs-assistant
 efibootmgr
 grub
 plymouth
@@ -44,6 +45,7 @@ breeze-icons
 firefox
 plasma-nm
 flatpak
+flatpak-builder
 gnome-keyring
 torbrowser-launcher
 alacritty
@@ -69,6 +71,8 @@ fuse3
 gvfs
 gvfs-smb
 gvfs-nfs
+qemu
+libvirt
 qemu-guest-agent
 virt-manager
 memtest86+-efi
