@@ -1,0 +1,1 @@
+[20250608_221521] Codex-Core: Removed unsupported AUR packages and documented built-in repo. Validation: shellcheck clean; bats passed. Outcome: SUCCESS.

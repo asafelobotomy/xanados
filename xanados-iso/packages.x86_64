@@ -3,7 +3,6 @@ linux
 linux-firmware
 mkinitcpio
 btrfs-progs
-btrfs-assistant
 efibootmgr
 grub
 plymouth
@@ -43,11 +42,9 @@ breeze
 breeze-gtk
 breeze-icons
 # Browsers
-brave
 firefox
 chromium
 vivaldi
-opera
 torbrowser-launcher
 plasma-nm
 flatpak
@@ -173,7 +170,5 @@ tlp
 thermald
 cpupower
 irqbalance
-preload
 earlyoom
 
-paru
