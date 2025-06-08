@@ -108,8 +108,10 @@ If you encounter build or installation issues:
 - Consult the `var/bugs/README.md` for troubleshooting tips and to log reproducible bugs.
 - Search [GitHub Issues](https://github.com/asafelobotomy/xanados/issues) for similar problems.
 - If the problem persists, open a new issue with detailed steps to reproduce and attach relevant logs.
-- If pacman reports missing packages from the local repo, rebuild the repository
-  database as described in [docs/package-policy.md](docs/package-policy.md).
+ - If pacman reports missing packages from the local repo, rebuild the repository
+   database as described in [docs/package-policy.md](docs/package-policy.md).
+ - To extract packaged archives and refresh the repo automatically, run
+   `xanados-iso/packages/build_repo.sh` before building the ISO.
 
 ---
 

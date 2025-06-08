@@ -38,5 +38,9 @@ packages:
 
 4. Commit the new package files and updated database.
 
+5. If the repository contains compressed archives instead of package files,
+   run `xanados-iso/packages/build_repo.sh` to extract them and rebuild the
+   database automatically.
+
 Keep the repository small and only include packages required by the ISO or
 installer scripts. Remove outdated packages to avoid bloat.

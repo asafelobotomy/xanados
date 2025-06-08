@@ -1,0 +1,1 @@
+[20250608_225433] Codex-Core: Added build_repo.sh script and updated docs. Validation: shellcheck clean; bats passed. Outcome: SUCCESS.
