@@ -585,6 +585,7 @@ How agents are created, merged, split, or deprecated.
 How to propose, change, or maintain agents.
 
 - Propose new agents or changes via pull request.
+- **Before formulating a pull request, all agents must re-download (fetch/clone) the latest state of the repository and check for conflicts with their proposed changes. If conflicts are detected, agents must omit the conflicting changes from their PR.**
 - Update this document and Task Ownership Matrix for every *manual* or *policy* change.
 - Ensure CI passes and logging is updated.
 - Tag maintainers for review.
@@ -596,6 +597,7 @@ How to propose, change, or maintain agents.
 
 **Checklist for Contributors:**
 - [ ] PR submitted and reviewed
+- [ ] Repository re-downloaded and checked for conflicts before PR creation (automated agents must omit conflicting changes)
 - [ ] CI green
 - [ ] Documentation updated (manual/policy changes only)
 - [ ] Logging implemented (all changes)
