@@ -1,11 +1,13 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+
 # Allow overriding the log directory via the LOG_DIR environment variable
 LOG_DIR="${LOG_DIR:-/var/log/xanados}"
 
 init_logging() {
     local prefix=${1:-script}
+
 
     # Attempt to create the preferred log directory. If that fails, fall back to
     # /tmp/xanados so logging still works even on read-only filesystems.
