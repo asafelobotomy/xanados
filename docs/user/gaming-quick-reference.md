@@ -7,16 +7,16 @@
 ```bash
 cd /home/vm/Documents/xanadOS/scripts/setup
 ./gaming-setup.sh
-# Choose option 1 for complete setup
-```
 
+# Choose option 1 for complete setup
+
+```bash
 
 ### 2. Launch Gaming Hub
 
 ```bash
 xanados-gaming
-```
-
+```bash
 
 ## Essential Commands
 
@@ -50,27 +50,32 @@ xanados-gaming
 ### Individual Components
 
 ```bash
+
 # Steam only
+
 ./install-steam.sh install
 
 # Lutris only
+
 ./install-lutris.sh install
 
 # GameMode only
-./install-gamemode.sh install
-```
 
+./install-gamemode.sh install
+```bash
 
 ### Update Components
 
 ```bash
+
 # Update Proton-GE
+
 ./install-steam.sh update
 
 # Update Wine runners
-lutris --update-runners
-```
 
+lutris --update-runners
+```bash
 
 ## Configuration Locations
 
@@ -105,34 +110,42 @@ lutris --update-runners
 ### Common Fixes
 
 ```bash
+
 # Steam not starting
+
 steam --reset
 
 # Proton-GE missing
+
 ./install-steam.sh update
 
 # Wine issues
+
 winecfg
 
 # GameMode not working
+
 sudo systemctl restart gamemode
 
 # MangoHud not showing
-MANGOHUD=1 glxgears
-```
 
+MANGOHUD=1 glxgears
+```bash
 
 ### Check Installation Status
 
 ```bash
+
 # Verify components
+
 ./gaming-setup.sh
+
 # Choose option to check status
 
 # Manual checks
-which steam lutris gamemoderun mangohud
-```
 
+which steam lutris gamemoderun mangohud
+```bash
 
 ## Performance Tips
 
@@ -177,51 +190,51 @@ which steam lutris gamemoderun mangohud
 
 ### Games Storage
 
-```
+```bash
 ~/Games/
 ├── native/           # Native Linux games
 ├── wine-prefixes/    # Wine game prefixes
 ├── steam/           # Steam games
 └── emulation/       # Emulated games
-```
-
+```bash
 
 ### Logs and Cache
 
-```
+```bash
 ~/.cache/
 ├── steam/
 ├── lutris/
 └── wine/
 
 /tmp/xanados-gaming-setup.log  # Installation log
-```
-
+```bash
 
 ## Emergency Recovery
 
 ### Reset Gaming Environment
 
 ```bash
+
 # Backup first
+
 tar -czf ~/gaming-backup.tar.gz ~/.steam ~/.local/share/lutris ~/Games
 
 # Clean reset
+
 rm -rf ~/.steam
 rm -rf ~/.local/share/lutris
 rm -rf ~/Games/wine-prefixes
 
 # Reinstall
-./gaming-setup.sh
-```
 
+./gaming-setup.sh
+```bash
 
 ### Restore from Backup
 
 ```bash
 tar -xzf ~/gaming-backup.tar.gz -C ~/
-```
-
+```bash
 
 ## Environment Variables
 
@@ -232,8 +245,7 @@ export MANGOHUD=1                    # Enable MangoHud
 export DXVK_HUD=fps                 # DXVK overlay
 export RADV_PERFTEST=aco            # AMD optimizations
 export __GL_THREADED_OPTIMIZATIONS=1 # NVIDIA threading
-```
-
+```bash
 
 ### Compatibility
 
@@ -241,8 +253,7 @@ export __GL_THREADED_OPTIMIZATIONS=1 # NVIDIA threading
 export PROTON_USE_WINED3D=1         # Force D3D translation
 export PROTON_NO_ESYNC=1            # Disable esync
 export WINE_CPU_TOPOLOGY=4:2       # CPU topology for Wine
-```
-
+```bash
 
 ## Support and Resources
 

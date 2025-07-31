@@ -128,9 +128,10 @@ Successfully completed Priority 1 of Phase 2 for xanadOS development, implementi
 ```bash
 cd /home/vm/Documents/xanadOS/scripts/setup
 ./gaming-setup.sh
-# Choose option 1 for complete gaming setup
-```
 
+# Choose option 1 for complete gaming setup
+
+```bash
 
 ### Individual Components
 
@@ -138,8 +139,7 @@ cd /home/vm/Documents/xanadOS/scripts/setup
 ./install-steam.sh install      # Steam only
 ./install-lutris.sh install     # Lutris only
 ./install-gamemode.sh install   # Performance tools only
-```
-
+```bash
 
 ### Launch Gaming
 
@@ -147,8 +147,7 @@ cd /home/vm/Documents/xanadOS/scripts/setup
 xanados-gaming                  # Unified gaming hub
 steam-gamemode                  # Optimized Steam
 lutris-gamemode                 # Optimized Lutris
-```
-
+```bash
 
 ## Testing and Validation
 
@@ -184,7 +183,7 @@ lutris-gamemode                 # Optimized Lutris
 
 ## File Structure Summary
 
-```
+```bash
 xanadOS/
 ├── scripts/setup/
 │   ├── gaming-setup.sh          # Master gaming installer
@@ -196,8 +195,7 @@ xanadOS/
 │   └── gaming-quick-reference.md # Quick reference guide
 └── scripts/utilities/
     └── xanados-gaming-optimizer  # Gaming process detection (Phase 1)
-```
-
+```bash
 
 ## Success Metrics
 

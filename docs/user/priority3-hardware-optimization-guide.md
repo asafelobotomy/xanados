@@ -34,29 +34,30 @@ Priority 3 focuses on hardware-specific optimizations to maximize gaming perform
 ```bash
 cd /path/to/xanadOS/scripts/setup
 ./priority3-hardware-optimization.sh complete
-```
-
+```bash
 
 ### Individual Component Optimization
 
 ```bash
+
 # Graphics optimization only
+
 ./priority3-hardware-optimization.sh graphics
 
 # Audio optimization only
+
 ./priority3-hardware-optimization.sh audio
 
 # Hardware device optimization only
-./priority3-hardware-optimization.sh hardware
-```
 
+./priority3-hardware-optimization.sh hardware
+```bash
 
 ### Interactive Mode
 
 ```bash
 ./priority3-hardware-optimization.sh
-```
-
+```bash
 
 ## 📋 Component Details
 
@@ -73,15 +74,17 @@ cd /path/to/xanadOS/scripts/setup
 #### Usage
 
 ```bash
+
 # Interactive mode
+
 ./graphics-driver-optimizer.sh
 
 # Command-line options
+
 ./graphics-driver-optimizer.sh detect    # Detect hardware
 ./graphics-driver-optimizer.sh optimize  # Apply optimizations
 ./graphics-driver-optimizer.sh all       # Complete setup
-```
-
+```bash
 
 #### Generated Tools
 
@@ -102,15 +105,17 @@ cd /path/to/xanadOS/scripts/setup
 #### Usage
 
 ```bash
+
 # Interactive mode
+
 ./audio-latency-optimizer.sh
 
 # Command-line options
+
 ./audio-latency-optimizer.sh configure  # Setup configurations
 ./audio-latency-optimizer.sh services   # Enable services
 ./audio-latency-optimizer.sh all        # Complete setup
-```
-
+```bash
 
 #### Generated Tools
 
@@ -131,15 +136,17 @@ cd /path/to/xanadOS/scripts/setup
 #### Usage
 
 ```bash
+
 # Interactive mode
+
 ./hardware-device-optimizer.sh
 
 # Command-line options
+
 ./hardware-device-optimizer.sh controllers  # Controller optimization
 ./hardware-device-optimizer.sh steamdeck    # Steam Deck specific
 ./hardware-device-optimizer.sh all          # Complete setup
-```
-
+```bash
 
 #### Generated Tools
 
@@ -154,30 +161,36 @@ cd /path/to/xanadOS/scripts/setup
 The `xanados-gaming-mode` script coordinates all optimizations:
 
 ```bash
+
 # Enable all optimizations
+
 xanados-gaming-mode enable
 
 # Disable all optimizations
+
 xanados-gaming-mode disable
 
 # Check optimization status
-xanados-gaming-mode status
-```
 
+xanados-gaming-mode status
+```bash
 
 ### Individual Component Control
 
 ```bash
+
 # Graphics only
+
 graphics-gaming-mode enable
 
 # Audio only
+
 audio-gaming-mode enable
 
 # Hardware only
-hardware-gaming-mode enable
-```
 
+hardware-gaming-mode enable
+```bash
 
 ## 🔧 Configuration Files
 
@@ -205,56 +218,67 @@ hardware-gaming-mode enable
 ### Graphics Monitoring
 
 ```bash
+
 # GPU status and performance
+
 gpu-monitor
 
 # Continuous monitoring
+
 gpu-monitor --continuous
 
 # Graphics driver information
+
 glxinfo | head -20
 vulkaninfo --summary
-```
-
+```bash
 
 ### Audio Testing
 
 ```bash
+
 # Complete audio test
+
 audio-latency-test full
 
 # Latency testing only
+
 audio-latency-test latency
 
 # Performance testing
-audio-latency-test performance
-```
 
+audio-latency-test performance
+```bash
 
 ### Hardware Information
 
 ```bash
+
 # Complete hardware info
+
 gaming-hardware-info all
 
 # Hardware details only
+
 gaming-hardware-info hardware
 
 # Performance metrics
-gaming-hardware-info performance
-```
 
+gaming-hardware-info performance
+```bash
 
 ### Controller Testing
 
 ```bash
+
 # List connected controllers
+
 controller-monitor list
 
 # Test specific controller
-controller-monitor test /dev/input/js0
-```
 
+controller-monitor test /dev/input/js0
+```bash
 
 ## 🎯 Device-Specific Optimizations
 
@@ -296,89 +320,106 @@ controller-monitor test /dev/input/js0
 #### Driver Not Loading
 
 ```bash
+
 # Check driver status
+
 lsmod | grep -E "(nvidia|amdgpu|i915)"
 
 # Rebuild initramfs
+
 sudo mkinitcpio -P
 
 # Check Xorg logs
-sudo journalctl -u display-manager
-```
 
+sudo journalctl -u display-manager
+```bash
 
 #### Performance Issues
 
 ```bash
+
 # Check GPU utilization
+
 gpu-monitor
 
 # Verify driver settings
+
 graphics-gaming-mode status
 
 # Test OpenGL performance
-glxgears -info
-```
 
+glxgears -info
+```bash
 
 ### Audio Issues
 
 #### High Latency
 
 ```bash
+
 # Check current settings
+
 audio-latency-test latency
 
 # Verify PipeWire quantum
+
 pw-metadata -n settings | grep quantum
 
 # Restart audio services
-systemctl --user restart pipewire
-```
 
+systemctl --user restart pipewire
+```bash
 
 #### No Audio Output
 
 ```bash
+
 # Check audio services
+
 systemctl --user status pipewire
 systemctl --user status pipewire-pulse
 
 # Check audio devices
-pactl list sinks short
-```
 
+pactl list sinks short
+```bash
 
 ### Controller Issues
 
 #### Controller Not Detected
 
 ```bash
+
 # Check USB devices
+
 lsusb | grep -E "(Xbox|PlayStation|Nintendo)"
 
 # Check input devices
+
 ls -la /dev/input/js*
 
 # Reload udev rules
+
 sudo udevadm control --reload-rules
 sudo udevadm trigger
-```
-
+```bash
 
 #### Controller Not Working in Games
 
 ```bash
+
 # Test controller input
+
 controller-monitor test /dev/input/js0
 
 # Check permissions
+
 ls -la /dev/input/js*
 
 # Verify controller mapping
-jstest /dev/input/js0
-```
 
+jstest /dev/input/js0
+```bash
 
 ## 📈 Performance Validation
 
@@ -406,20 +447,24 @@ jstest /dev/input/js0
 ### Benchmarking
 
 ```bash
+
 # Graphics benchmarks
+
 unigine-heaven
 glxgears
 
 # Audio latency test
+
 audio-latency-test full
 
 # Controller input test
+
 controller-monitor test /dev/input/js0
 
 # System performance
-gaming-hardware-info performance
-```
 
+gaming-hardware-info performance
+```bash
 
 ## 🔄 Integration with Other Priorities
 
@@ -452,31 +497,37 @@ gaming-hardware-info performance
 ### Updates
 
 ```bash
+
 # Update graphics drivers
+
 sudo pacman -S nvidia nvidia-utils  # For NVIDIA
 sudo pacman -S mesa lib32-mesa       # For AMD/Intel
 
 # Update audio stack
+
 sudo pacman -S pipewire pipewire-pulse
 
 # Update controller support
-sudo pacman -S xf86-input-libinput
-```
 
+sudo pacman -S xf86-input-libinput
+```bash
 
 ### Backup Configurations
 
 ```bash
+
 # Backup graphics configs
+
 sudo cp -r /etc/X11/xorg.conf.d/ ~/backups/
 
 # Backup audio configs
+
 cp -r ~/.config/pipewire/ ~/backups/
 
 # Backup udev rules
-sudo cp /etc/udev/rules.d/99-*.rules ~/backups/
-```
 
+sudo cp /etc/udev/rules.d/99-*.rules ~/backups/
+```bash
 
 ## 🎯 Success Metrics
 

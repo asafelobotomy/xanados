@@ -243,15 +243,13 @@ Priority 3 has been successfully completed with comprehensive hardware-specific 
 ```bash
 cd /path/to/xanadOS/scripts/setup
 ./priority3-hardware-optimization.sh complete
-```
-
+```bash
 
 ### Enable Gaming Mode
 
 ```bash
 xanados-gaming-mode enable
-```
-
+```bash
 
 ### Monitor Performance
 
@@ -259,19 +257,20 @@ xanados-gaming-mode enable
 gpu-monitor --continuous
 audio-latency-test full
 controller-monitor list
-```
-
+```bash
 
 ### Device-Specific Optimization
 
 ```bash
+
 # Steam Deck users
+
 steam-deck-tdp performance
 
 # ROG Ally users
-asusctl profile -P Performance
-```
 
+asusctl profile -P Performance
+```bash
 
 ## 🔄 Integration with xanadOS Ecosystem
 

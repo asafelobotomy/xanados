@@ -39,54 +39,58 @@ Priority 4 focuses on creating a polished, user-friendly gaming experience throu
 ### Gaming Setup Wizard (`gaming-setup-wizard.sh`)
 
 ```bash
+
 # Core Features:
+
 - Hardware detection and analysis
 - Gaming software installation wizard
 - Performance optimization recommendations
 - Controller and peripheral setup
 - Gaming profile creation
 - Integration with existing xanadOS components
-```
-
+```bash
 
 ### KDE Plasma Customization (`kde-gaming-customization.sh`)
 
 ```bash
+
 # Core Features:
+
 - Gaming theme installation and configuration
 - Desktop layout optimization
 - Widget installation and configuration
 - Panel customization for gaming workflow
 - Compositor settings for performance
 - Shortcut and hotkey setup
-```
-
+```bash
 
 ### First-Boot Experience (`first-boot-experience.sh`)
 
 ```bash
+
 # Core Features:
+
 - Welcome screen and introduction
 - System analysis and recommendations
 - User preference collection
 - Gaming profile setup
 - Community integration options
 - Final system optimization
-```
-
+```bash
 
 ### Gaming Desktop Environment (`gaming-desktop-mode.sh`)
 
 ```bash
+
 # Core Features:
+
 - Gaming mode desktop switching
 - Performance-optimized desktop layouts
 - Gaming-specific widget arrangements
 - Notification management for gaming
 - Window management optimization
 - Quick access gaming tools
-```
-
+```bash
 
 ## 📊 Integration Points
 

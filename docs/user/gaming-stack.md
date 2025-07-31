@@ -68,8 +68,7 @@ The unified installation script that orchestrates the complete gaming environmen
 ```bash
 cd /home/vm/Documents/xanadOS/scripts/setup
 ./gaming-setup.sh
-```
-
+```bash
 
 **Installation Options:**
 
@@ -108,8 +107,7 @@ Automated Steam installation with Proton-GE integration.
 ./install-steam.sh update     # Update Proton-GE
 ./install-steam.sh status     # Check installation status
 ./install-steam.sh remove     # Uninstall components
-```
-
+```bash
 
 #### Lutris Setup (`install-lutris.sh`)
 
@@ -130,8 +128,7 @@ Comprehensive Lutris and Wine gaming environment.
 ./install-lutris.sh configure # Configure Wine settings
 ./install-lutris.sh status    # Check installation status
 ./install-lutris.sh remove    # Uninstall components
-```
-
+```bash
 
 #### GameMode Setup (`install-gamemode.sh`)
 
@@ -152,8 +149,7 @@ Performance optimization tools and monitoring.
 ./install-gamemode.sh configure  # Configure settings
 ./install-gamemode.sh status     # Check installation status
 ./install-gamemode.sh remove     # Uninstall components
-```
-
+```bash
 
 ## Gaming Launchers
 
@@ -173,8 +169,7 @@ Central hub for launching all gaming platforms with optimizations.
 
 ```bash
 xanados-gaming
-```
-
+```bash
 
 ### Optimized Platform Launchers
 
@@ -184,8 +179,7 @@ xanados-gaming
 steam-gamemode          # Steam with GameMode
 steam-mangohud          # Steam with MangoHud
 steam-optimized         # Steam with full optimizations
-```
-
+```bash
 
 #### Lutris with Optimizations
 
@@ -193,15 +187,13 @@ steam-optimized         # Steam with full optimizations
 lutris-gamemode         # Lutris with GameMode
 lutris-mangohud         # Lutris with MangoHud
 lutris-optimized        # Lutris with full optimizations
-```
-
+```bash
 
 #### Universal Game Launcher
 
 ```bash
 gamemode-launch <game>  # Launch any game with optimizations
-```
-
+```bash
 
 ## Configuration Files
 
@@ -232,7 +224,9 @@ gamemode-launch <game>  # Launch any game with optimizations
 **Key Settings:**
 
 ```ini
+
 # Main configuration (~/.config/MangoHud/MangoHud.conf)
+
 fps_limit=0
 toggle_fps_limit=F1
 legacy_layout=false
@@ -246,8 +240,7 @@ table_columns=14
 frame_timing=1
 engine_version
 vulkan_driver
-```
-
+```bash
 
 ### GameMode Configuration
 
@@ -317,20 +310,24 @@ vulkan_driver
 
 ```bash
 ./install-steam.sh update
-# Restart Steam and check compatibility tools
-```
 
+# Restart Steam and check compatibility tools
+
+```bash
 
 **Problem**: Steam games not launching
 **Solution**:
 
 ```bash
-# Check Steam runtime
-steam --reset
-# Verify Proton-GE installation
-ls ~/.steam/compatibilitytools.d/
-```
 
+# Check Steam runtime
+
+steam --reset
+
+# Verify Proton-GE installation
+
+ls ~/.steam/compatibilitytools.d/
+```bash
 
 #### Lutris Issues
 
@@ -338,23 +335,29 @@ ls ~/.steam/compatibilitytools.d/
 **Solution**:
 
 ```bash
-# Reinstall Wine dependencies
-./install-lutris.sh configure
-# Check Wine prefix
-winecfg
-```
 
+# Reinstall Wine dependencies
+
+./install-lutris.sh configure
+
+# Check Wine prefix
+
+winecfg
+```bash
 
 **Problem**: DXVK/VKD3D not working
 **Solution**:
 
 ```bash
-# Verify Vulkan support
-vulkaninfo | head -20
-# Reinstall DXVK
-lutris --install-runner dxvk
-```
 
+# Verify Vulkan support
+
+vulkaninfo | head -20
+
+# Reinstall DXVK
+
+lutris --install-runner dxvk
+```bash
 
 #### Performance Issues
 
@@ -362,55 +365,67 @@ lutris --install-runner dxvk
 **Solution**:
 
 ```bash
-# Check GameMode status
-gamemoded -s
-# Restart GameMode daemon
-sudo systemctl restart gamemode
-```
 
+# Check GameMode status
+
+gamemoded -s
+
+# Restart GameMode daemon
+
+sudo systemctl restart gamemode
+```bash
 
 **Problem**: MangoHud not displaying
 **Solution**:
 
 ```bash
-# Test MangoHud
-MANGOHUD=1 glxgears
-# Check configuration
-cat ~/.config/MangoHud/MangoHud.conf
-```
 
+# Test MangoHud
+
+MANGOHUD=1 glxgears
+
+# Check configuration
+
+cat ~/.config/MangoHud/MangoHud.conf
+```bash
 
 ### Debug Commands
 
 #### System Information
 
 ```bash
+
 # Check gaming environment
+
 ./scripts/utilities/xanados-gaming-optimizer --status
 
 # Graphics information
+
 glxinfo | grep -E "(OpenGL|vendor|renderer)"
 vulkaninfo | head -30
 
 # Audio information
+
 pactl info
 aplay -l
-```
-
+```bash
 
 #### Gaming Process Monitoring
 
 ```bash
+
 # Monitor gaming processes
+
 ps aux | grep -E "(steam|lutris|wine|proton)"
 
 # Check GameMode status
+
 gamemoded -s
 
 # Monitor system resources
-htop -u $USER
-```
 
+htop -u $USER
+```bash
 
 ## Advanced Configuration
 
@@ -441,8 +456,7 @@ RADV_PERFTEST=aco
 [Limits]
 fps_limit=60
 cpu_limit=90
-```
-
+```bash
 
 ### Integration with System Optimization
 
@@ -477,30 +491,36 @@ The gaming stack integrates with the broader xanadOS optimization framework:
 #### Weekly
 
 ```bash
+
 # Update Proton-GE
+
 ./install-steam.sh update
 
 # Update Wine runners in Lutris
+
 lutris --update-runners
 
 # Clean gaming caches
-./scripts/utilities/cleanup-gaming-cache.sh
-```
 
+./scripts/utilities/cleanup-gaming-cache.sh
+```bash
 
 #### Monthly
 
 ```bash
+
 # Full gaming stack update
+
 ./gaming-setup.sh
 
 # Verify system optimizations
+
 ./scripts/utilities/xanados-gaming-optimizer --verify
 
 # Clean old Wine prefixes
-./scripts/utilities/cleanup-wine-prefixes.sh
-```
 
+./scripts/utilities/cleanup-wine-prefixes.sh
+```bash
 
 ### Backup and Recovery
 
@@ -515,7 +535,9 @@ lutris --update-runners
 
 ```bash
 #!/bin/bash
+
 # Gaming backup script
+
 BACKUP_DIR="$HOME/Backups/gaming-$(date +%Y%m%d)"
 mkdir -p "$BACKUP_DIR"
 
@@ -523,8 +545,7 @@ tar -czf "$BACKUP_DIR/steam-config.tar.gz" ~/.steam/config/
 tar -czf "$BACKUP_DIR/lutris-config.tar.gz" ~/.local/share/lutris/
 tar -czf "$BACKUP_DIR/mangohud-config.tar.gz" ~/.config/MangoHud/
 cp -r ~/Games/wine-prefixes/ "$BACKUP_DIR/"
-```
-
+```bash
 
 ## Performance Metrics
 

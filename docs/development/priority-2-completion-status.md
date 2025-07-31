@@ -125,15 +125,17 @@ The performance testing framework fully integrates with the gaming software stac
 To use the complete testing framework:
 
 ```bash
+
 # Run the unified testing suite
+
 ./scripts/testing/testing-suite.sh
 
 # Or run individual components
+
 ./scripts/testing/performance-benchmark.sh
 ./scripts/testing/gaming-validator.sh
 ./scripts/testing/automated-benchmark-runner.sh
-```
-
+```bash
 
 ### 📈 Expected Results
 
