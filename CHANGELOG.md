@@ -40,6 +40,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed read commands to use -r flag preventing backslash mangling (SC2162)
 - Replaced inefficient grep | wc -l patterns with grep -c (SC2126)
 - Fixed nested EOF delimiter conflicts causing parsing errors (SC1089)
+- Fixed broken internal link in dev-environment.sh documentation
+- Added missing execute permission to ufw-gaming-rules.sh script
 
 ### Removed
 
