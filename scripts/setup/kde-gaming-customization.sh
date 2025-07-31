@@ -120,7 +120,7 @@ check_kde_environment() {
         echo -e "${YELLOW}Warning: This script is designed for KDE Plasma desktop environment.${NC}"
         echo -e "Some customizations may not work properly in other desktop environments."
         
-        read -p "Do you want to continue anyway? [y/N]: " -n 1 -r
+        read -r -p "Do you want to continue anyway? [y/N]: " -n 1 -r
         echo
         if [[ ! $REPLY =~ ^[Yy]$ ]]; then
             log_message "INFO" "User cancelled due to non-KDE environment"

@@ -186,7 +186,7 @@ run_complete_optimization() {
     print_status "Starting complete hardware-specific optimization..."
     print_warning "This may take 15-30 minutes to complete"
     
-    read -p "Continue with complete Priority 3 optimization? (y/N): " -n 1 -r
+    read -r -p "Continue with complete Priority 3 optimization? (y/N): " -n 1 -r
     echo
     if [[ ! $REPLY =~ ^[Yy]$ ]]; then
         return
@@ -498,37 +498,37 @@ main() {
         # Interactive mode
         while true; do
             show_menu
-            read -p "Select option [1-8]: " choice
+            read -r -p "Select option [1-8]: " choice
             
             case $choice in
                 1)
                     run_graphics_optimization
-                    read -p "Press Enter to continue..."
+                    read -r -p "Press Enter to continue..."
                     ;;
                 2)
                     run_audio_optimization
-                    read -p "Press Enter to continue..."
+                    read -r -p "Press Enter to continue..."
                     ;;
                 3)
                     run_hardware_optimization
-                    read -p "Press Enter to continue..."
+                    read -r -p "Press Enter to continue..."
                     ;;
                 4)
                     run_complete_optimization
                     create_unified_gaming_mode
-                    read -p "Press Enter to continue..."
+                    read -r -p "Press Enter to continue..."
                     ;;
                 5)
                     test_integrated_optimizations
-                    read -p "Press Enter to continue..."
+                    read -r -p "Press Enter to continue..."
                     ;;
                 6)
                     show_hardware_overview
-                    read -p "Press Enter to continue..."
+                    read -r -p "Press Enter to continue..."
                     ;;
                 7)
                     show_optimization_summary
-                    read -p "Press Enter to continue..."
+                    read -r -p "Press Enter to continue..."
                     ;;
                 8)
                     print_status "Exiting Priority 3 optimization"

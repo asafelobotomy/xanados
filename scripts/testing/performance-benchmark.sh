@@ -866,7 +866,7 @@ view_previous_results() {
     done
     
     echo
-    read -p "Press Enter to continue..."
+    read -r -p "Press Enter to continue..."
 }
 
 # Main function
@@ -876,7 +876,7 @@ main() {
     
     while true; do
         show_menu
-        read -p "Select option [1-9]: " choice
+        read -r -p "Select option [1-9]: " choice
         
         case $choice in
             1)

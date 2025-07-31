@@ -80,4 +80,3 @@ When adding new documentation:
 ---
 
 **Status**: Documentation organized and maintained as of July 31, 2025
-

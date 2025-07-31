@@ -118,4 +118,3 @@
 ---
 
 *xanadOS is now ready to move into Phase 2 with a solid foundation of gaming optimizations, security measures, and automated performance management.*
-

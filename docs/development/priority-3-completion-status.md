@@ -43,7 +43,7 @@ Priority 3 has been successfully completed with comprehensive hardware-specific 
 
 ### 5. Comprehensive Documentation
 
-- **`docs/priority3-hardware-optimization-guide.md`** (Comprehensive guide)
+- **`docs/user/priority3-hardware-optimization-guide.md`** (Comprehensive guide)
   - Complete usage instructions and methodology
   - Troubleshooting guide and best practices
   - Device-specific optimization details

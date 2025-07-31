@@ -20,6 +20,7 @@ Thumbs.db
 
 # Archive and backup files
 archive/backups/*
+archive/reports/*
 testing/results/*
 
 # System files

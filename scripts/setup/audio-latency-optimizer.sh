@@ -619,7 +619,7 @@ setup_realtime_audio() {
     fi
     
     # Configure real-time limits
-    sudo tee /etc/security/limits.d/95-audio-realtime.conf > /dev/null << 'EOF'
+    sudo tee /etc/security/limits.d/95-audio-realtime.conf > /dev/null << 'LIMITS_EOF'
 # Real-time audio configuration for xanadOS
 @audio   -  rtprio     95
 @audio   -  memlock    unlimited
@@ -631,7 +631,7 @@ $USER    -  rtprio     95
 $USER    -  memlock    unlimited
 $USER    -  nice       -10
 $USER    -  nofile     16384
-EOF
+LIMITS_EOF
 
     # Configure PAM limits
     if ! grep -q "pam_limits.so" /etc/pam.d/login 2>/dev/null; then
@@ -894,40 +894,40 @@ main() {
         # Interactive mode
         while true; do
             show_menu
-            read -p "Select option [1-11]: " choice
+            read -r -p "Select option [1-11]: " choice
             
             case $choice in
                 1)
                     detect_audio_hardware
-                    read -p "Press Enter to continue..."
+                    read -r -p "Press Enter to continue..."
                     ;;
                 2)
                     check_audio_status
-                    read -p "Press Enter to continue..."
+                    read -r -p "Press Enter to continue..."
                     ;;
                 3)
                     install_audio_packages
-                    read -p "Press Enter to continue..."
+                    read -r -p "Press Enter to continue..."
                     ;;
                 4)
                     configure_pipewire_low_latency
-                    read -p "Press Enter to continue..."
+                    read -r -p "Press Enter to continue..."
                     ;;
                 5)
                     configure_alsa_gaming
-                    read -p "Press Enter to continue..."
+                    read -r -p "Press Enter to continue..."
                     ;;
                 6)
                     create_audio_testing_tools
-                    read -p "Press Enter to continue..."
+                    read -r -p "Press Enter to continue..."
                     ;;
                 7)
                     create_audio_gaming_mode
-                    read -p "Press Enter to continue..."
+                    read -r -p "Press Enter to continue..."
                     ;;
                 8)
                     enable_audio_services
-                    read -p "Press Enter to continue..."
+                    read -r -p "Press Enter to continue..."
                     ;;
                 9)
                     install_audio_packages
@@ -941,7 +941,7 @@ main() {
                     ;;
                 10)
                     show_optimization_summary
-                    read -p "Press Enter to continue..."
+                    read -r -p "Press Enter to continue..."
                     ;;
                 11)
                     print_status "Exiting audio optimization"

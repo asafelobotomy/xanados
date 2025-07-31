@@ -352,7 +352,7 @@ run_desktop_customization_only() {
         echo -e "${YELLOW}Warning: Not running in KDE environment.${NC}"
         echo -e "Desktop customization is optimized for KDE Plasma."
         
-        read -p "Do you want to continue anyway? [y/N]: " -n 1 -r
+        read -r -p "Do you want to continue anyway? [y/N]: " -n 1 -r
         echo
         if [[ ! $REPLY =~ ^[Yy]$ ]]; then
             echo -e "${YELLOW}Desktop customization cancelled.${NC}"
@@ -469,7 +469,7 @@ show_menu() {
 
 while true; do
     show_menu
-    read -p "Enter your choice [0-7]: " choice
+    read -r -p "Enter your choice [0-7]: " choice
     
     case "$choice" in
         1)
@@ -539,7 +539,7 @@ while true; do
     esac
     
     echo
-    read -p "Press Enter to continue..."
+    read -r -p "Press Enter to continue..."
 done
 EOF
     
@@ -697,7 +697,7 @@ show_status_and_testing() {
     
     # Offer to generate report
     echo
-    read -p "Generate detailed system report? [Y/n]: " -n 1 -r
+    read -r -p "Generate detailed system report? [Y/n]: " -n 1 -r
     echo
     if [[ ! $REPLY =~ ^[Nn]$ ]]; then
         generate_priority4_report
@@ -793,7 +793,7 @@ EOF
     echo -e "  ${CHECKMARK} Report generated: $report_file"
     
     # Offer to view report
-    read -p "View report now? [Y/n]: " -n 1 -r
+    read -r -p "View report now? [Y/n]: " -n 1 -r
     echo
     if [[ ! $REPLY =~ ^[Nn]$ ]]; then
         if command -v less &> /dev/null; then
@@ -871,7 +871,7 @@ main() {
     # Show options and get user choice
     while true; do
         show_user_experience_options
-        read -p "Please enter your choice [1-5, 0 to exit]: " -n 1 -r
+        read -r -p "Please enter your choice [1-5, 0 to exit]: " -n 1 -r
         echo
         
         if handle_user_experience_choice "$REPLY"; then

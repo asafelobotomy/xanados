@@ -162,7 +162,7 @@ show_welcome_screen() {
     echo -e "${BOLD}This process will take approximately 10-15 minutes.${NC}"
     echo
     
-    read -p "Press Enter to begin your xanadOS gaming journey... "
+    read -r -p "Press Enter to begin your xanadOS gaming journey... "
     
     log_message "INFO" "Welcome screen completed, starting first-boot setup"
 }
@@ -590,7 +590,7 @@ collect_user_preferences() {
     echo
     
     GAMING_PLATFORMS=()
-    read -p "Enter numbers separated by spaces (e.g., 1 2 3): " platform_choices
+    read -r -p "Enter numbers separated by spaces (e.g., 1 2 3): " platform_choices
     for choice in $platform_choices; do
         case "$choice" in
             1) GAMING_PLATFORMS+=("steam") ;;
@@ -616,7 +616,7 @@ collect_user_preferences() {
     echo -e "  6. Mixed gaming"
     echo
     
-    read -p "Enter your choice [1-6]: " gaming_style_choice
+    read -r -p "Enter your choice [1-6]: " gaming_style_choice
     case "$gaming_style_choice" in
         1) GAMING_STYLE="competitive" ;;
         2) GAMING_STYLE="aaa_singleplayer" ;;
@@ -636,7 +636,7 @@ collect_user_preferences() {
     echo -e "  3. Quiet operation (lower performance if needed)"
     echo
     
-    read -p "Enter your choice [1-3]: " performance_choice
+    read -r -p "Enter your choice [1-3]: " performance_choice
     case "$performance_choice" in
         1) PERFORMANCE_PREFERENCE="maximum" ;;
         2) PERFORMANCE_PREFERENCE="balanced" ;;
@@ -649,7 +649,7 @@ collect_user_preferences() {
     
     # Monitoring preference
     echo -e "${BOLD}Do you want performance monitoring overlays during gaming?${NC}"
-    read -p "Enable MangoHud and performance monitoring? [Y/n]: " -n 1 -r
+    read -r -p "Enable MangoHud and performance monitoring? [Y/n]: " -n 1 -r
     echo
     if [[ $REPLY =~ ^[Nn]$ ]]; then
         ENABLE_MONITORING=false

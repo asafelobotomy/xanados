@@ -26,7 +26,8 @@ See `docs/user/project_structure.md` for detailed directory structure.
 ## Documentation
 
 - [Project Plan](docs/user/xanadOS_plan.md)
-- [Development Setup](docs/development/setup.md)
+- [Project Structure](docs/user/project_structure.md)
+- [Development Status](docs/development/phase1-summary.md)
 
 ## Development
 

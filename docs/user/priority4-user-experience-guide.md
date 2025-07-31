@@ -53,16 +53,13 @@ Priority 4 represents the final major development phase of xanadOS, focusing on 
 **Usage**:
 
 ```bash
-
 # Interactive wizard
-
 ./gaming-setup-wizard.sh
 
 # Automated setup options
-
 ./gaming-setup-wizard.sh --automated --setup-type=complete
 ./gaming-setup-wizard.sh --automated --setup-type=essential
-```bash
+```
 
 **Hardware Support**:
 
@@ -87,9 +84,7 @@ Priority 4 represents the final major development phase of xanadOS, focusing on 
 **Customizations Applied**:
 
 ```bash
-
 # Gaming theme components
-
 - xanadOS Gaming color scheme
 - Gaming-optimized Plasma theme
 - Breeze Dark icon theme
@@ -97,13 +92,12 @@ Priority 4 represents the final major development phase of xanadOS, focusing on 
 - Gaming wallpaper collection
 
 # Desktop optimization
-
 - Auto-hide panels during gaming
 - Disabled resource-heavy effects
 - Optimized compositor settings
 - Gaming window rules
 - Controller-friendly navigation
-```bash
+```
 
 **Gaming Mode Features**:
 
@@ -225,44 +219,33 @@ Priority 4 represents the final major development phase of xanadOS, focusing on 
 ### Quick Start
 
 ```bash
-
 # Complete Priority 4 setup
-
 cd /home/vm/Documents/xanadOS/scripts/setup
 ./priority4-user-experience.sh
 
 # Choose option 1 for complete user experience setup
-
-```bash
+```
 
 ### Individual Components
 
 ```bash
-
 # Gaming setup wizard only
-
 ./gaming-setup-wizard.sh
 
 # KDE customization only (requires KDE Plasma)
-
 ./kde-gaming-customization.sh
 
 # First-boot experience
-
 ./first-boot-experience.sh
-```bash
+```
 
 ### Automated First-Boot
 
 ```bash
-
 # For new installations
-
 ./first-boot-experience.sh
-
 # Includes all components with automated setup based on user preferences
-
-```bash
+```
 
 ## 🎯 Gaming Setup Options
 
@@ -408,9 +391,7 @@ cd /home/vm/Documents/xanadOS/scripts/setup
 **Central Hub Features**:
 
 ```bash
-
 # Gaming Control Center Main Menu
-
 1. Launch Steam (Optimized)      # Steam with GameMode integration
 2. Launch Lutris                 # Multi-platform game management
 3. Toggle Gaming Mode            # System-wide gaming optimization
@@ -419,7 +400,7 @@ cd /home/vm/Documents/xanadOS/scripts/setup
 6. Gaming Setup Wizard          # Re-run setup and configuration
 7. System Status                 # Current optimization status
 0. Exit                          # Return to desktop
-```bash
+```
 
 **Quick Access Functions**:
 
@@ -428,7 +409,7 @@ cd /home/vm/Documents/xanadOS/scripts/setup
 - **Profile Management**: Gaming profile switching and customization
 - **Optimization Control**: Manual gaming mode and optimization toggles
 
-### System Integration
+### Gaming Control Center Integration
 
 **Desktop Integration**:
 
@@ -437,12 +418,19 @@ cd /home/vm/Documents/xanadOS/scripts/setup
 - Context menu integration for gaming optimization
 - Notification integration for gaming status updates
 
-**Service Coordination**:
+### Desktop & Service Integration
 
-- Integration with systemd gaming services
-- Gaming process detection and management
-- Performance optimization coordination
-- Hardware optimization integration
+**Desktop Environment**:
+
+- KDE Plasma deep integration with gaming optimizations
+- System service coordination for gaming performance
+- Desktop customization with performance considerations
+
+**User Session Management**:
+
+- Gaming session detection and optimization
+- User preference management and persistence
+- Profile-based configuration management
 
 ## 📊 Performance Impact
 
@@ -502,7 +490,7 @@ AutoGamingMode=true
 PerformanceOptimizations=true
 DesktopCustomization=true
 HardwareOptimizations=true
-```bash
+```
 
 ### Gaming Mode Configuration
 
@@ -523,7 +511,7 @@ hide_panel=true
 [Services]
 stop_services=baloo-file,kdeconnectd
 start_services=baloo-file,kdeconnectd
-```bash
+```
 
 ### Priority Integration Configuration
 
@@ -551,7 +539,7 @@ User_Experience=true
 Desktop_Customization=true
 First_Boot_Experience=true
 Unified_Interface=true
-```bash
+```
 
 ## 🚨 Troubleshooting
 
@@ -563,34 +551,27 @@ Unified_Interface=true
 **Solution**:
 
 ```bash
-
 # Update hardware detection tools
-
 sudo pacman -S lshw dmidecode pciutils
 
 # Re-run wizard with verbose logging
-
 ./gaming-setup-wizard.sh 2>&1 | tee setup-debug.log
-```bash
+```
 
 **Problem**: Gaming software installation fails
 **Solution**:
 
 ```bash
-
 # Check internet connectivity
-
 ping -c 4 8.8.8.8
 
 # Update package databases
-
 sudo pacman -Sy
 
 # Retry with manual component installation
-
 ./install-steam.sh install
 ./install-lutris.sh install
-```bash
+```
 
 #### KDE Customization Issues
 
@@ -598,33 +579,27 @@ sudo pacman -Sy
 **Solution**:
 
 ```bash
-
 # Verify KDE environment
-
 echo $XDG_CURRENT_DESKTOP
 echo $KDE_FULL_SESSION
 
 # Reset KDE configuration if needed
-
 rm -rf ~/.config/plasma*
 kquitapp5 plasmashell && plasmashell &
-```bash
+```
 
 **Problem**: Gaming mode not working
 **Solution**:
 
 ```bash
-
 # Check gaming mode script
-
 ls -la /usr/local/bin/xanados-gaming-mode
 
 # Test gaming mode manually
-
 xanados-gaming-mode enable
 xanados-gaming-mode status
 xanados-gaming-mode disable
-```bash
+```
 
 #### First-Boot Experience Issues
 
@@ -632,34 +607,28 @@ xanados-gaming-mode disable
 **Solution**:
 
 ```bash
-
 # Check system requirements
-
 df -h  # Ensure sufficient disk space
 free -h  # Check available memory
 
 # Skip problematic components
-
 ./gaming-setup-wizard.sh  # Run components individually
 ./kde-gaming-customization.sh
-```bash
+```
 
 **Problem**: Hardware analysis incomplete
 **Solution**:
 
 ```bash
-
 # Install missing tools
-
 sudo pacman -S vulkan-tools mesa-utils
 
 # Run analysis components separately
-
 lscpu
 lspci | grep VGA
 lsblk
 free -h
-```bash
+```
 
 ### Log Files and Debugging
 
@@ -674,25 +643,19 @@ free -h
 #### Debug Commands
 
 ```bash
-
 # Check component status
-
 ./priority4-user-experience.sh
-
 # Choose option 5 for status and testing
 
 # Generate comprehensive report
-
 cat ~/.config/xanados/priority4-user-experience-report.txt
 
 # Check gaming control center
-
 xanados-gaming-center
 
 # Validate all configurations
-
 find ~/.config/xanados -name "*.conf" -exec echo "=== {} ===" \; -exec cat {} \;
-```bash
+```
 
 ## 📈 Performance Validation
 
@@ -714,27 +677,20 @@ find ~/.config/xanados -name "*.conf" -exec echo "=== {} ===" \; -exec cat {} \;
 ### Validation Commands
 
 ```bash
-
 # Run complete Priority 4 validation
-
 ./priority4-user-experience.sh
-
 # Choose option 5 for status and testing
 
 # Test gaming setup wizard
-
 ./gaming-setup-wizard.sh
-
 # Choose option 5 for hardware analysis only
 
 # Validate KDE customization
-
 kreadconfig5 --file ~/.config/kdeglobals --group General --key ColorScheme
 
 # Check gaming mode functionality
-
 xanados-gaming-mode status
-```bash
+```
 
 ## 🎯 Success Metrics
 
@@ -816,6 +772,5 @@ The xanadOS user experience framework now includes:
 
 **Next Steps**: Move to **Release Preparation Phase** including final testing, security audit, ISO generation, and distribution preparation.
 
-**Status:** Priority 4 - User Experience Polish ✅ **COMPLETE**
+**Status:** Priority 4 - User Experience Polish ✅ **COMPLETE**  
 **Overall Project Status:** Ready for Release Preparation Phase
-

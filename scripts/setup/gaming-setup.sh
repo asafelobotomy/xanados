@@ -70,7 +70,7 @@ check_prerequisites() {
     # Check if on Arch Linux
     if [ ! -f /etc/arch-release ]; then
         print_warning "This script is designed for Arch Linux"
-        read -p "Continue anyway? (y/N): " -n 1 -r
+        read -r -p "Continue anyway? (y/N): " -n 1 -r
         echo
         if [[ ! $REPLY =~ ^[Yy]$ ]]; then
             exit 1
@@ -145,7 +145,7 @@ complete_setup() {
     echo "  • All gaming tools and utilities"
     echo
     
-    read -p "Continue with complete installation? (Y/n): " -n 1 -r
+    read -r -p "Continue with complete installation? (Y/n): " -n 1 -r
     echo
     if [[ $REPLY =~ ^[Nn]$ ]]; then
         return
@@ -202,7 +202,7 @@ custom_installation() {
     echo
     
     # Steam selection
-    read -p "Install Steam with Proton-GE? (Y/n): " -n 1 -r
+    read -r -p "Install Steam with Proton-GE? (Y/n): " -n 1 -r
     echo
     local install_steam=true
     if [[ $REPLY =~ ^[Nn]$ ]]; then
@@ -210,7 +210,7 @@ custom_installation() {
     fi
     
     # Lutris selection
-    read -p "Install Lutris and Wine? (Y/n): " -n 1 -r
+    read -r -p "Install Lutris and Wine? (Y/n): " -n 1 -r
     echo
     local install_lutris=true
     if [[ $REPLY =~ ^[Nn]$ ]]; then
@@ -218,7 +218,7 @@ custom_installation() {
     fi
     
     # GameMode selection
-    read -p "Install GameMode and MangoHud? (Y/n): " -n 1 -r
+    read -r -p "Install GameMode and MangoHud? (Y/n): " -n 1 -r
     echo
     local install_gamemode=true
     if [[ $REPLY =~ ^[Nn]$ ]]; then
@@ -312,7 +312,7 @@ launch_bottles() {
 
 launch_native() {
     echo -e "${YELLOW}Enter the command for your native game:${NC}"
-    read -p "Game command: " game_cmd
+    read -r -p "Game command: " game_cmd
     if [ -n "$game_cmd" ]; then
         echo -e "${GREEN}Launching $game_cmd with optimizations...${NC}"
         export MANGOHUD=1
@@ -328,7 +328,7 @@ show_performance() {
 
 while true; do
     show_menu
-    read -p "Select option [1-7]: " choice
+    read -r -p "Select option [1-7]: " choice
     
     case $choice in
         1) launch_steam ;;
@@ -342,7 +342,7 @@ while true; do
     esac
     
     echo
-    read -p "Press Enter to continue..."
+    read -r -p "Press Enter to continue..."
 done
 EOF
     
@@ -448,7 +448,7 @@ main() {
     
     while true; do
         show_menu
-        read -p "Select option [1-6]: " choice
+        read -r -p "Select option [1-6]: " choice
         
         case $choice in
             1)

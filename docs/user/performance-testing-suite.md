@@ -24,7 +24,7 @@ The xanadOS Performance Testing & Validation Suite provides comprehensive tools 
 ```bash
 cd /home/vm/Documents/xanadOS/scripts/testing
 ./performance-benchmark.sh
-```bash
+```
 
 **Available Test Types**:
 
@@ -54,7 +54,7 @@ cd /home/vm/Documents/xanadOS/scripts/testing
 ```bash
 cd /home/vm/Documents/xanadOS/scripts/testing
 ./gaming-validator.sh
-```bash
+```
 
 **Validation Categories**:
 
@@ -82,7 +82,7 @@ cd /home/vm/Documents/xanadOS/scripts/testing
 ```bash
 cd /home/vm/Documents/xanadOS/scripts/testing
 ./automated-benchmark-runner.sh
-```bash
+```
 
 **Monitoring Modes**:
 
@@ -118,17 +118,20 @@ The testing suite requires several system tools and utilities:
 ### Setup Instructions
 
 1. **Ensure Gaming Stack is Installed**:
+
    ```bash
    cd /home/vm/Documents/xanadOS/scripts/setup
    ./gaming-setup.sh
    ```
 
 2. **Verify Testing Scripts are Executable**:
+
    ```bash
    chmod +x /home/vm/Documents/xanadOS/scripts/testing/*.sh
    ```
 
 3. **Run Initial Validation**:
+
    ```bash
    cd /home/vm/Documents/xanadOS/scripts/testing
    ./gaming-validator.sh
@@ -188,7 +191,7 @@ The testing suite requires several system tools and utilities:
 
 All test results are stored in organized directories:
 
-```bash
+```text
 ~/.local/share/xanados/
 ├── benchmarks/                     # Performance benchmark results
 │   ├── cpu-benchmark-*.json
@@ -210,7 +213,7 @@ All test results are stored in organized directories:
     ├── system-metrics-*.json
     ├── performance-trends-*.json
     └── automated-benchmark-report-*.html
-```bash
+```
 
 ### Report Types
 
@@ -308,69 +311,49 @@ All test results are stored in organized directories:
 ### Quick Performance Check
 
 ```bash
-
 # Run quick system validation
-
 cd /home/vm/Documents/xanadOS/scripts/testing
 ./performance-benchmark.sh
 
 # Select option 1 for complete benchmark
-
 # Results will be saved and HTML report generated
-
-```bash
+```
 
 ### Gaming Optimization Validation
 
 ```bash
-
 # Validate gaming optimizations
-
 ./gaming-validator.sh
 
 # Select option 1 for complete validation
-
 # Comprehensive gaming performance report generated
-
-```bash
+```
 
 ### Continuous Performance Monitoring
 
 ```bash
-
 # Start automated monitoring
-
 ./automated-benchmark-runner.sh
 
 # Select option 2 for standard 30-minute test
-
 # Or option 5 for continuous monitoring
-
-```bash
+```
 
 ### Custom Testing Scenario
 
 ```bash
-
 # Run specific component tests
-
 ./performance-benchmark.sh
-
 # Select individual test types (2-7)
 
 # Run targeted gaming validation
-
 ./gaming-validator.sh
-
 # Select specific validation categories (2-5)
 
 # Custom automated testing
-
 ./automated-benchmark-runner.sh
-
 # Select option 4 for custom duration/interval
-
-```bash
+```
 
 ## Interpreting Results
 
@@ -541,21 +524,18 @@ The testing framework is designed to be extensible. You can create custom tests 
 The testing suite can be integrated into automated workflows:
 
 ```bash
-
 # Example CI/CD integration
-
 ./performance-benchmark.sh <<< "1"  # Non-interactive complete test
 ./gaming-validator.sh <<< "1"       # Non-interactive gaming validation
 
 # Parse results for pass/fail status
-
 if [ $? -eq 0 ]; then
     echo "Performance tests passed"
 else
     echo "Performance tests failed"
     exit 1
 fi
-```bash
+```
 
 ### Performance Regression Testing
 
@@ -596,4 +576,3 @@ The testing framework supports continuous performance improvement:
 - **User Feedback**: Validate real-world performance improvements
 
 This comprehensive testing and validation suite ensures that xanadOS delivers optimal gaming and system performance while providing the tools to measure, validate, and maintain that performance over time.
-

@@ -781,34 +781,34 @@ main() {
         # Interactive mode
         while true; do
             show_menu
-            read -p "Select option [1-9]: " choice
+            read -r -p "Select option [1-9]: " choice
             
             case $choice in
                 1)
                     detect_gaming_hardware
-                    read -p "Press Enter to continue..."
+                    read -r -p "Press Enter to continue..."
                     ;;
                 2)
                     optimize_controllers
-                    read -p "Press Enter to continue..."
+                    read -r -p "Press Enter to continue..."
                     ;;
                 3)
                     detect_gaming_hardware
                     optimize_steam_deck
-                    read -p "Press Enter to continue..."
+                    read -r -p "Press Enter to continue..."
                     ;;
                 4)
                     detect_gaming_hardware
                     optimize_rog_ally
-                    read -p "Press Enter to continue..."
+                    read -r -p "Press Enter to continue..."
                     ;;
                 5)
                     create_hardware_monitoring
-                    read -p "Press Enter to continue..."
+                    read -r -p "Press Enter to continue..."
                     ;;
                 6)
                     create_optimization_launcher
-                    read -p "Press Enter to continue..."
+                    read -r -p "Press Enter to continue..."
                     ;;
                 7)
                     detect_gaming_hardware
@@ -823,7 +823,7 @@ main() {
                 8)
                     detect_gaming_hardware
                     show_optimization_summary
-                    read -p "Press Enter to continue..."
+                    read -r -p "Press Enter to continue..."
                     ;;
                 9)
                     print_status "Exiting hardware optimization"

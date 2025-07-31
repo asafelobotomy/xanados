@@ -38,7 +38,7 @@ check_arch_linux() {
         print_success "Running on Arch Linux"
     else
         print_warning "Not running on Arch Linux. Some packages may not be available."
-        read -p "Do you want to continue? (y/N): " -n 1 -r
+        read -r -p "Do you want to continue? (y/N): " -n 1 -r
         echo
         if [[ ! $REPLY =~ ^[Yy]$ ]]; then
             exit 1
@@ -124,7 +124,7 @@ setup_git() {
     print_status "Setting up Git configuration..."
     
     if [ -z "$(git config --global user.name)" ]; then
-        read -p "Enter your Git username: " git_username
+        read -r -p "Enter your Git username: " git_username
         git config --global user.name "$git_username"
         print_success "Git username set to: $git_username"
     else
@@ -132,7 +132,7 @@ setup_git() {
     fi
     
     if [ -z "$(git config --global user.email)" ]; then
-        read -p "Enter your Git email: " git_email
+        read -r -p "Enter your Git email: " git_email
         git config --global user.email "$git_email"
         print_success "Git email set to: $git_email"
     else

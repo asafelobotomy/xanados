@@ -187,7 +187,8 @@ run_gaming_validation() {
 
 # Function to collect system metrics
 collect_system_metrics() {
-    local metrics_file="$RESULTS_DIR/system-metrics-$(date +%Y%m%d-%H%M%S).json"
+    local metrics_file
+    metrics_file="$RESULTS_DIR/system-metrics-$(date +%Y%m%d-%H%M%S).json"
     
     cat > "$metrics_file" << EOF
 {
@@ -254,7 +255,7 @@ monitor_gaming_processes() {
         local memory_usage
         local cpu_usage
         
-        process_count=$(pgrep -f "$process" | wc -l || echo "0")
+        process_count=$(pgrep -c -f "$process" || echo "0")
         
         if [ "$process_count" -gt 0 ]; then
             memory_usage=$(ps -C "$process" -o rss= 2>/dev/null | awk '{sum+=$1} END {print sum*1024}' || echo "0")
@@ -555,9 +556,14 @@ EOF
 EOF
 
     # Add performance metrics from trend analysis
-    if [ -f "$RESULTS_DIR/performance-trends-"*".json" ]; then
-        local trends_file
-        trends_file=$(ls "$RESULTS_DIR/performance-trends-"*".json" | tail -1)
+    local trends_file=""
+    for f in "$RESULTS_DIR"/performance-trends-*.json; do
+        if [ -f "$f" ]; then
+            trends_file="$f"
+        fi
+    done
+    if [ -n "$trends_file" ]; then
+        trends_file=$(ls "$RESULTS_DIR"/performance-trends-*.json | tail -1)
         
         local avg_cpu
         local samples_count
@@ -782,7 +788,7 @@ run_continuous_monitoring() {
     print_section "Starting Continuous Monitoring Mode"
     print_warning "This will run continuously until stopped with Ctrl+C"
     
-    read -p "Continue? (y/N): " -n 1 -r
+    read -r -p "Continue? (y/N): " -n 1 -r
     echo
     if [[ ! $REPLY =~ ^[Yy]$ ]]; then
         return
@@ -872,7 +878,7 @@ view_previous_results() {
     done
     
     echo
-    read -p "Press Enter to continue..."
+    read -r -p "Press Enter to continue..."
 }
 
 # Main function
@@ -882,7 +888,7 @@ main() {
     
     while true; do
         show_menu
-        read -p "Select option [1-7]: " choice
+        read -r -p "Select option [1-7]: " choice
         
         case $choice in
             1)
@@ -899,9 +905,9 @@ main() {
                 ;;
             4)
                 echo
-                read -p "Enter duration in minutes: " duration_min
-                read -p "Enter interval in minutes: " interval_min
-                read -p "Enter iterations per test: " iterations
+                read -r -p "Enter duration in minutes: " duration_min
+                read -r -p "Enter interval in minutes: " interval_min
+                read -r -p "Enter iterations per test: " iterations
                 
                 local duration_sec=$((duration_min * 60))
                 local interval_sec=$((interval_min * 60))

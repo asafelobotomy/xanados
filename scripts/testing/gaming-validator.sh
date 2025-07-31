@@ -182,7 +182,7 @@ check_gaming_environment() {
     if command -v vulkaninfo >/dev/null 2>&1; then
         print_success "Vulkan is available"
         local vulkan_devices
-        vulkan_devices=$(vulkaninfo --summary 2>/dev/null | grep "deviceName" | wc -l || echo "0")
+        vulkan_devices=$(vulkaninfo --summary 2>/dev/null | grep -c "deviceName" || echo "0")
         echo "        \"vulkan\": {" >> "$validation_results"
         echo "            \"available\": true," >> "$validation_results"
         echo "            \"devices\": $vulkan_devices" >> "$validation_results"
@@ -950,7 +950,7 @@ view_previous_results() {
     done
     
     echo
-    read -p "Press Enter to continue..."
+    read -r -p "Press Enter to continue..."
 }
 
 # Function to run complete validation
@@ -982,7 +982,7 @@ main() {
     
     while true; do
         show_menu
-        read -p "Select option [1-7]: " choice
+        read -r -p "Select option [1-7]: " choice
         
         case $choice in
             1)

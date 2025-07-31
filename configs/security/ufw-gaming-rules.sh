@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # xanadOS UFW Gaming Firewall Rules
 # Gaming-optimized firewall configuration
 

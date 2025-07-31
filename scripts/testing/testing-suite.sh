@@ -149,7 +149,7 @@ run_complete_testing() {
     print_status "Starting comprehensive performance testing and validation..."
     print_warning "This may take 45-60 minutes to complete"
     
-    read -p "Continue with complete testing suite? (y/N): " -n 1 -r
+    read -r -p "Continue with complete testing suite? (y/N): " -n 1 -r
     echo
     if [[ ! $REPLY =~ ^[Yy]$ ]]; then
         return
@@ -641,7 +641,7 @@ view_previous_results() {
     fi
     
     echo
-    read -p "Press Enter to continue..."
+    read -r -p "Press Enter to continue..."
 }
 
 # Function to open documentation
@@ -679,7 +679,7 @@ main() {
     
     while true; do
         show_menu
-        read -p "Select option [1-8]: " choice
+        read -r -p "Select option [1-8]: " choice
         
         case $choice in
             1)
@@ -707,7 +707,7 @@ main() {
                 ;;
             6)
                 show_system_status
-                read -p "Press Enter to continue..."
+                read -r -p "Press Enter to continue..."
                 continue
                 ;;
             7)

@@ -756,34 +756,34 @@ main() {
         # Interactive mode
         while true; do
             show_menu
-            read -p "Select option [1-9]: " choice
+            read -r -p "Select option [1-9]: " choice
             
             case $choice in
                 1)
                     detect_graphics_hardware
-                    read -p "Press Enter to continue..."
+                    read -r -p "Press Enter to continue..."
                     ;;
                 2)
                     check_driver_status
-                    read -p "Press Enter to continue..."
+                    read -r -p "Press Enter to continue..."
                     ;;
                 3)
                     detect_graphics_hardware
                     apply_graphics_optimizations
-                    read -p "Press Enter to continue..."
+                    read -r -p "Press Enter to continue..."
                     ;;
                 4)
                     install_optimization_tools
-                    read -p "Press Enter to continue..."
+                    read -r -p "Press Enter to continue..."
                     ;;
                 5)
                     create_graphics_monitoring
-                    read -p "Press Enter to continue..."
+                    read -r -p "Press Enter to continue..."
                     ;;
                 6)
                     detect_graphics_hardware
                     configure_hybrid_graphics
-                    read -p "Press Enter to continue..."
+                    read -r -p "Press Enter to continue..."
                     ;;
                 7)
                     detect_graphics_hardware
@@ -796,7 +796,7 @@ main() {
                 8)
                     detect_graphics_hardware
                     show_optimization_summary
-                    read -p "Press Enter to continue..."
+                    read -r -p "Press Enter to continue..."
                     ;;
                 9)
                     print_status "Exiting graphics optimization"
