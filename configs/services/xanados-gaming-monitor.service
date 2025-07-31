@@ -1,0 +1,22 @@
+[Unit]
+Description=xanadOS Gaming Monitor Daemon
+After=multi-user.target graphical-session.target
+Wants=graphical-session.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/xanados-gaming-optimizer daemon
+Restart=always
+RestartSec=10
+User=root
+Environment=HOME=/root
+
+# Security settings
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectHome=read-only
+ProtectSystem=false
+RestrictSUIDSGID=true
+
+[Install]
+WantedBy=multi-user.target

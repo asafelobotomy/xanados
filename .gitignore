@@ -2,7 +2,6 @@
 build/work/*
 build/out/*
 build/cache/*
-build/archiso-profile/
 *.iso
 *.img
 
@@ -26,20 +25,3 @@ testing/results/*
 # System files
 .directory
 desktop.ini
-
-# Package build files
-src/
-pkg/
-*.pkg.tar.xz
-*.pkg.tar.zst
-
-# Virtual machine files
-*.vdi
-*.vmdk
-*.qcow2
-
-# Sensitive configuration
-*.key
-*.pem
-*.p12
-secrets/

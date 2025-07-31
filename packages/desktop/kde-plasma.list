@@ -1,0 +1,51 @@
+# xanadOS KDE Plasma Gaming Configuration
+# Optimized settings for gaming performance
+
+# Desktop Environment
+plasma-meta
+plasma-wayland-session
+sddm
+sddm-kcm
+
+# KDE Applications (Essential)
+dolphin
+konsole
+kate
+gwenview
+spectacle
+ark
+kcalc
+krunner
+systemsettings
+
+# Gaming-specific KDE packages
+kdeconnect
+kde-cli-tools
+kdenetwork-filesharing
+
+# Window Manager optimizations
+kwin-scripts
+kwin-effects
+
+# Audio integration
+plasma-pa
+kdeplasma-addons
+
+# System monitoring
+ksysguard
+plasma-systemmonitor
+
+# Theming and customization
+plasma-themes-extra
+qt5-graphicaleffects
+qt6-base
+
+# Fonts for gaming
+ttf-liberation
+ttf-dejavu
+noto-fonts
+
+# Additional utilities
+kio-extras
+kimageformats
+qt5-imageformats
