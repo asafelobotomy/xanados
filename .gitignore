@@ -1,0 +1,45 @@
+# Build artifacts
+build/work/*
+build/out/*
+build/cache/*
+build/archiso-profile/
+*.iso
+*.img
+
+# Temporary files
+*.tmp
+*.log
+*~
+.DS_Store
+Thumbs.db
+
+# IDE/Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Archive and backup files
+archive/backups/*
+testing/results/*
+
+# System files
+.directory
+desktop.ini
+
+# Package build files
+src/
+pkg/
+*.pkg.tar.xz
+*.pkg.tar.zst
+
+# Virtual machine files
+*.vdi
+*.vmdk
+*.qcow2
+
+# Sensitive configuration
+*.key
+*.pem
+*.p12
+secrets/

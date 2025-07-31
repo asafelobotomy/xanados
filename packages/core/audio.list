@@ -1,0 +1,43 @@
+# xanadOS Audio Stack
+# High-quality, low-latency audio for gaming
+
+# PipeWire audio server
+pipewire
+pipewire-alsa
+pipewire-pulse
+pipewire-jack
+lib32-pipewire
+lib32-pipewire-jack
+wireplumber
+
+# Audio utilities
+alsa-utils
+alsa-plugins
+lib32-alsa-plugins
+pulseaudio-equalizer
+easyeffects
+pavucontrol
+helvum
+
+# Codecs and formats
+gstreamer
+gst-plugins-base
+gst-plugins-good
+gst-plugins-bad
+gst-plugins-ugly
+gst-libav
+lib32-gstreamer
+lib32-gst-plugins-base
+lib32-gst-plugins-good
+
+# Professional audio (optional)
+carla
+hydrogen
+audacity
+ardour
+
+# Gaming audio enhancements
+openal
+lib32-openal
+openal-soft
+lib32-openal-soft
