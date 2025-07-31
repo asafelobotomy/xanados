@@ -3,25 +3,20 @@
 ## Quick Start
 
 ### 1. Complete Gaming Setup
-
 ```bash
 cd /home/vm/Documents/xanadOS/scripts/setup
 ./gaming-setup.sh
 # Choose option 1 for complete setup
 ```
 
-
 ### 2. Launch Gaming Hub
-
 ```bash
 xanados-gaming
 ```
 
-
 ## Essential Commands
 
 ### Gaming Launchers
-
 | Command | Description |
 |---------|-------------|
 | `xanados-gaming` | Unified gaming hub |
@@ -30,7 +25,6 @@ xanados-gaming
 | `gamemode-launch <game>` | Launch any game optimized |
 
 ### Performance Monitoring
-
 | Command | Description |
 |---------|-------------|
 | `mangohud <game>` | Launch game with overlay |
@@ -38,7 +32,6 @@ xanados-gaming
 | `goverlay` | MangoHud configuration GUI |
 
 ### System Optimization
-
 | Command | Description |
 |---------|-------------|
 | `./xanados-gaming-optimizer --enable` | Enable gaming optimizations |
@@ -48,7 +41,6 @@ xanados-gaming
 ## Installation Scripts
 
 ### Individual Components
-
 ```bash
 # Steam only
 ./install-steam.sh install
@@ -60,9 +52,7 @@ xanados-gaming
 ./install-gamemode.sh install
 ```
 
-
 ### Update Components
-
 ```bash
 # Update Proton-GE
 ./install-steam.sh update
@@ -70,7 +60,6 @@ xanados-gaming
 # Update Wine runners
 lutris --update-runners
 ```
-
 
 ## Configuration Locations
 
@@ -85,7 +74,6 @@ lutris --update-runners
 ## Keyboard Shortcuts
 
 ### MangoHud Overlay
-
 | Key | Action |
 |-----|--------|
 | `Shift + F12` | Toggle overlay |
@@ -93,7 +81,6 @@ lutris --update-runners
 | `F4` | Reload configuration |
 
 ### Steam
-
 | Key | Action |
 |-----|--------|
 | `Shift + Tab` | Steam overlay |
@@ -103,7 +90,6 @@ lutris --update-runners
 ## Troubleshooting
 
 ### Common Fixes
-
 ```bash
 # Steam not starting
 steam --reset
@@ -121,9 +107,7 @@ sudo systemctl restart gamemode
 MANGOHUD=1 glxgears
 ```
 
-
 ### Check Installation Status
-
 ```bash
 # Verify components
 ./gaming-setup.sh
@@ -133,18 +117,15 @@ MANGOHUD=1 glxgears
 which steam lutris gamemoderun mangohud
 ```
 
-
 ## Performance Tips
 
 ### Best Game Settings
-
 - Enable Proton-GE for Steam games
 - Use DXVK for DirectX games in Wine
 - Enable GameMode for CPU optimization
 - Use MangoHud for performance monitoring
 
 ### System Optimization
-
 - Set CPU governor to performance while gaming
 - Close unnecessary background applications
 - Ensure adequate cooling for sustained performance
@@ -153,21 +134,18 @@ which steam lutris gamemoderun mangohud
 ## Gaming Platforms Supported
 
 ### Native Linux
-
 - Steam (native games)
 - Native GOG games
 - Humble Bundle native games
 - Itch.io native games
 
 ### Windows Compatibility
-
 - Steam (Proton/Proton-GE)
 - Lutris (Wine + DXVK)
 - Heroic Games Launcher
 - Bottles (Wine containers)
 
 ### Emulation
-
 - RetroArch (retro consoles)
 - PCSX2 (PlayStation 2)
 - RPCS3 (PlayStation 3)
@@ -176,7 +154,6 @@ which steam lutris gamemoderun mangohud
 ## File Locations
 
 ### Games Storage
-
 ```
 ~/Games/
 ├── native/           # Native Linux games
@@ -185,9 +162,7 @@ which steam lutris gamemoderun mangohud
 └── emulation/       # Emulated games
 ```
 
-
 ### Logs and Cache
-
 ```
 ~/.cache/
 ├── steam/
@@ -197,11 +172,9 @@ which steam lutris gamemoderun mangohud
 /tmp/xanados-gaming-setup.log  # Installation log
 ```
 
-
 ## Emergency Recovery
 
 ### Reset Gaming Environment
-
 ```bash
 # Backup first
 tar -czf ~/gaming-backup.tar.gz ~/.steam ~/.local/share/lutris ~/Games
@@ -215,18 +188,14 @@ rm -rf ~/Games/wine-prefixes
 ./gaming-setup.sh
 ```
 
-
 ### Restore from Backup
-
 ```bash
 tar -xzf ~/gaming-backup.tar.gz -C ~/
 ```
 
-
 ## Environment Variables
 
 ### Performance
-
 ```bash
 export MANGOHUD=1                    # Enable MangoHud
 export DXVK_HUD=fps                 # DXVK overlay
@@ -234,35 +203,28 @@ export RADV_PERFTEST=aco            # AMD optimizations
 export __GL_THREADED_OPTIMIZATIONS=1 # NVIDIA threading
 ```
 
-
 ### Compatibility
-
 ```bash
 export PROTON_USE_WINED3D=1         # Force D3D translation
 export PROTON_NO_ESYNC=1            # Disable esync
 export WINE_CPU_TOPOLOGY=4:2       # CPU topology for Wine
 ```
 
-
 ## Support and Resources
 
 ### Documentation
-
 - Full documentation: `docs/gaming-stack.md`
 - Project structure: `docs/project_structure.md`
 - xanadOS plan: `docs/xanadOS_plan.md`
 
 ### Community Resources
-
 - ProtonDB: Game compatibility database
 - Lutris: Game installation scripts
 - WineHQ: Wine compatibility database
 - DXVK: DirectX compatibility layer
 
 ### Getting Help
-
 1. Check installation logs: `/tmp/xanados-gaming-setup.log`
 2. Verify system requirements and dependencies
 3. Consult gaming-stack.md for detailed troubleshooting
 4. Check ProtonDB for game-specific issues
-

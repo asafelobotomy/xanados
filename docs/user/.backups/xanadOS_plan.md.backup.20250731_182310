@@ -8,7 +8,6 @@
 xanadOS is a solo development project aimed at creating the ultimate personal Linux gaming distribution. Built on Arch Linux with AI assistance, this project focuses on delivering exceptional gaming performance while maintaining system security for personal use.
 
 **Development Philosophy:**
-
 - **Quality Over Quantity**: Focus on core gaming optimizations rather than broad feature sets
 - **Personal Optimization**: Tailored for specific hardware and gaming preferences
 - **AI-Assisted Development**: Leverage modern AI tools for efficient development and optimization
@@ -16,14 +15,12 @@ xanadOS is a solo development project aimed at creating the ultimate personal Li
 - **Performance-First**: Every decision evaluated based on gaming performance impact
 
 **Success Metrics:**
-
 - **Performance**: Measurable improvements over standard Arch Linux gaming setups
 - **Stability**: Rock-solid performance for personal gaming sessions
 - **Maintenance**: Sustainable update and maintenance workflow
 - **Documentation**: Complete documentation for replication and modification
 
 **Personal Benefits:**
-
 - **Optimized Gaming**: Custom-tuned system for maximum gaming performance
 - **Learning Experience**: Deep understanding of Linux gaming optimization
 - **AI Collaboration**: Experience with AI-assisted system development
@@ -33,7 +30,6 @@ xanadOS is a solo development project aimed at creating the ultimate personal Li
 Create a highly optimized, personally maintained Linux gaming distribution that serves as both a high-performance gaming platform and a learning laboratory for Linux gaming optimization techniques. The project will demonstrate the potential of solo development with AI assistance in creating specialized Linux distributions.
 
 **Key Features:**
-
 - **KDE Plasma Desktop Environment**: Lightweight, customizable, and user-friendly interface.
 - **Gamepad Support**: Extensive support for various gamepads, including Xbox, PlayStation, and custom controllers.
 - **Security Hardening**: Enhanced security measures including SELinux/AppArmor, secure boot, and regular security updates.
@@ -45,7 +41,6 @@ Create a highly optimized, personally maintained Linux gaming distribution that 
 **Technical Architecture:**
 
 **Base System:**
-
 - **Base Distribution**: Arch Linux (rolling release)
 - **Kernel Options**:
   - Primary: Linux-zen (low-latency, preemptible kernel)Yes
@@ -59,7 +54,6 @@ Create a highly optimized, personally maintained Linux gaming distribution that 
   - Custom xanadOS repository for gaming-specific packages
 
 **Graphics Stack:**
-
 - **NVIDIA**:
   - Latest proprietary drivers (nvidia, nvidia-dkms)
   - NVENC/NVDEC hardware acceleration
@@ -77,7 +71,6 @@ Create a highly optimized, personally maintained Linux gaming distribution that 
   - Hardware-accelerated video decode/encode
 
 **Audio Stack:**
-
 - **Primary**: PipeWire with low-latency gaming profile
 - **Compatibility Layers**:
   - ALSA compatibility for legacy applications
@@ -89,7 +82,6 @@ Create a highly optimized, personally maintained Linux gaming distribution that 
   - Low-latency JACK compatibility for professional audio
 
 **Security Framework:**
-
 - **Mandatory Access Control**: AppArmor (chosen for better gaming compatibility over SELinux)
 - **Secure Boot**:
   - UEFI Secure Boot support with custom signing keys
@@ -104,7 +96,6 @@ Create a highly optimized, personally maintained Linux gaming distribution that 
   - Balanced security vs performance profile
 
 **File System & Storage:**
-
 - **Primary**: Btrfs with automatic snapshots and transparent compression (zstd)
 - **Gaming Storage**: Optional ext4 partitions for maximum I/O performance
 - **Swap Management**:
@@ -115,7 +106,6 @@ Create a highly optimized, personally maintained Linux gaming distribution that 
   - Gaming session snapshots for save game protection
 
 **Network Stack:**
-
 - **TCP Congestion Control**: BBR for improved network performance
 - **DNS**: systemd-resolved with DoH/DoT support
 - **Gaming Network Optimization**:
@@ -126,7 +116,6 @@ Create a highly optimized, personally maintained Linux gaming distribution that 
 **Enhanced Gaming Optimizations:**
 
 **Kernel & System Level:**
-
 - **CPU Governor**: Performance governor for gaming sessions with automatic switching
 - **Memory Management**: vm.swappiness=10, transparent hugepages optimization
 - **I/O Scheduler**: mq-deadline for SSDs, BFQ for HDDs with gaming workload tuning
@@ -140,7 +129,6 @@ Create a highly optimized, personally maintained Linux gaming distribution that 
 - **Kernel Lockdown**: Enhanced security with kernel lockdown mode
 
 **Gaming-Specific Tools & Applications:**
-
 - **Steam Integration**: Native Steam with Proton-GE pre-installed
 - **Lutris & Bottles**: Pre-configured Wine runners and gaming tools
 - **GameMode**: Feral Interactive's GameMode for automatic performance switching
@@ -151,7 +139,6 @@ Create a highly optimized, personally maintained Linux gaming distribution that 
 - **Game Compatibility Layer**: Pre-configured Wine/Proton compatibility layers for popular games
 
 **Proton & Wine Enhancements:**
-
 - **Proton-GE**: Latest Proton-GE builds with community patches
 - **DXVK/VKD3D**: Latest builds for DirectX translation
 - **Wine-staging**: Staging patches for improved compatibility
@@ -161,7 +148,6 @@ Create a highly optimized, personally maintained Linux gaming distribution that 
 - **Winecfg Tweaks**: Pre-configured Wine settings for optimal performance
 
 **Additional Gaming Features:**
-
 - **UDP Optimizations**: Enhanced UDP performance for online games
 - **Firewall Rules**: Pre-configured firewall rules for gaming traffic
 - **VPN Support**: Pre-configured VPN clients for secure gaming
@@ -170,7 +156,6 @@ Create a highly optimized, personally maintained Linux gaming distribution that 
 **Hardware Requirements:**
 
 **Minimum System Requirements:**
-
 - **CPU**: 64-bit processor with 4 cores (Intel Core i5-4000 series / AMD Ryzen 3 2000 series or equivalent)
 - **RAM**: 8 GB DDR4 (16 GB recommended for optimal gaming performance)
 - **Storage**:
@@ -184,7 +169,6 @@ Create a highly optimized, personally maintained Linux gaming distribution that 
 - **USB**: USB 2.0 ports for installation media and peripherals
 
 **Recommended System Requirements:**
-
 - **CPU**: 8+ cores with high single-thread performance (Intel Core i7-8000+ / AMD Ryzen 5 3000+ series)
 - **RAM**: 16-32 GB DDR4-3200 or faster
 - **Storage**:
@@ -197,14 +181,12 @@ Create a highly optimized, personally maintained Linux gaming distribution that 
 - **Audio**: Dedicated sound card or high-quality DAC for audiophile gaming
 
 **Portable Gaming Device Support:**
-
 - **Steam Deck**: Full compatibility with custom optimizations
 - **ASUS ROG Ally**: Hardware-specific drivers and optimizations
 - **GPD Win Series**: Community-supported configurations
 - **Other Handhelds**: Generic x86-64 handheld optimizations
 
 **Compatibility Notes:**
-
 - **UEFI**: UEFI firmware required (Legacy BIOS not supported)
 - **Secure Boot**: Compatible with Secure Boot enabled systems
 - **TPM**: TPM 2.0 support for enhanced security features
@@ -213,14 +195,12 @@ Create a highly optimized, personally maintained Linux gaming distribution that 
 **Installation & Setup Process:**
 
 **Installation Methods:**
-
 - **Live USB/DVD**: Standard bootable media with Calamares installer
 - **Network Install**: Minimal ISO with package download during installation
 - **OEM Installation**: Pre-configured images for system integrators
 - **Portable Device Images**: Ready-to-flash images for Steam Deck, ROG Ally, etc.
 
 **Calamares Installer Features:**
-
 - **Guided Installation**: Step-by-step wizard for beginners
 - **Advanced Partitioning**: Manual disk partitioning for experienced users
 - **Gaming Profile Selection**:
@@ -234,7 +214,6 @@ Create a highly optimized, personally maintained Linux gaming distribution that 
   - Paranoid (maximum security, some performance impact)
 
 **Post-Installation Setup:**
-
 - **Gaming Setup Wizard**: Automated configuration of:
   - Steam and Proton-GE installation
   - Controller detection and configuration
@@ -250,7 +229,6 @@ Create a highly optimized, personally maintained Linux gaming distribution that 
   - GPU overclocking setup (optional)
 
 **Update & Maintenance:**
-
 - **Rolling Release Model**: Regular package updates from Arch repositories
 - **Gaming Package Updates**: Weekly updates for gaming-specific packages
 - **Snapshot Management**:
@@ -262,7 +240,6 @@ Create a highly optimized, personally maintained Linux gaming distribution that 
   - Community-contributed optimizations
 
 **First Boot Experience:**
-
 - **Welcome Screen**: Introduction to xanadOS features and gaming optimizations
 - **Game Store Integration**: One-click setup for Steam, Lutris, Heroic Games Launcher
 - **Performance Baseline**: Initial system benchmark and optimization recommendations
@@ -271,7 +248,6 @@ Create a highly optimized, personally maintained Linux gaming distribution that 
 **Development Timeline & Roadmap:**
 
 **Phase 1: Foundation**
-
 - **Core System Development**:
   - Base Arch Linux customization and package selection
   - Custom xanadOS repository setup and infrastructure
@@ -283,7 +259,6 @@ Create a highly optimized, personally maintained Linux gaming distribution that 
   - Vulkan and OpenGL stack validation
 
 **Phase 2: Gaming Integration**
-
 - **Gaming Software Stack**:
   - Steam, Proton-GE, and Wine integration
   - GameMode, MangoHud, and CoreCtrl implementation
@@ -294,7 +269,6 @@ Create a highly optimized, personally maintained Linux gaming distribution that 
   - Network stack optimizations for gaming
 
 **Phase 3: Polish & Optimization**
-
 - **User Experience**:
   - KDE Plasma customization and theming
   - Gaming setup wizard development
@@ -305,7 +279,6 @@ Create a highly optimized, personally maintained Linux gaming distribution that 
   - Hardware-specific driver packages
 
 **Phase 4: Release & Community**
-
 - **Stable Release**:
   - Final testing and bug fixes
   - Security audit and validation
@@ -316,7 +289,6 @@ Create a highly optimized, personally maintained Linux gaming distribution that 
 **Development & Maintenance Strategy:**
 
 **Solo Development Approach**:
-
 - **Primary Developer**: Single maintainer with AI assistance (GitHub Copilot)
 - **Development Tools**:
   - AI-assisted coding and optimization
@@ -326,30 +298,25 @@ Create a highly optimized, personally maintained Linux gaming distribution that 
 - **Documentation**: Self-maintained documentation and guides
 
 **Release Strategy**:
-
 - **Personal Use Focus**: Optimized for personal gaming setup and preferences
 - **Stable Releases**: Quarterly stable releases after thorough personal testing
 - **Experimental Builds**: Monthly experimental builds for testing new features
 - **Backup Strategy**: Regular system snapshots and configuration backups
 
 **Quality Assurance**:
-
 - **Personal Testing**: Extensive testing on personal hardware configurations
 - **Automated Builds**: CI/CD pipeline for consistent ISO generation
 - **Performance Monitoring**: Regular benchmarking on personal gaming library
 - **Documentation**: Detailed change logs and configuration notes
 
 **Sustainability Plan**:
-
 - **Scope Management**: Focus on core gaming optimizations and personal use cases
 - **Time Investment**: Realistic development timeline with personal availability
 - **Feature Prioritization**: Gaming performance and stability over broad feature sets
 - **Long-term Vision**: Create a stable, high-performance gaming distribution for personal use
 
 **Knowledge Management**:
-
 - **AI Collaboration**: Leverage AI assistance for code optimization and problem-solving
 - **Documentation**: Maintain detailed development notes and configuration guides
 - **Learning Resources**: Continuous learning about Linux gaming optimizations
 - **Backup Knowledge**: Ensure all configurations and customizations are well-documented
-
