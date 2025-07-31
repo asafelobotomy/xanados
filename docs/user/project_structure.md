@@ -1,11 +1,14 @@
 xanadOS/
 ├── build/                    # ISO building scripts
 │   ├── bootloader/          # Bootloader configuration
+│   ├── cache/               # Build cache and temporary files
 │   ├── filesystem/          # Filesystem structure templates
-│   ├── kernel/              # Kernel build configs
 │   ├── iso/                 # ISO generation scripts
+│   ├── kernel/              # Kernel build configs
+│   ├── makefiles/           # Build automation
+│   ├── out/                 # Build output directory
 │   ├── packages/            # Package inclusion lists
-│   └── makefiles/           # Build automation
+│   └── work/                # Build working directory
 ├── configs/                 # System configuration files
 │   ├── desktop/             # Desktop environment configs
 │   ├── network/             # Network configuration
@@ -25,13 +28,15 @@ xanadOS/
 │   ├── deployment/          # Deployment scripts
 │   ├── maintenance/         # System maintenance scripts
 │   ├── setup/               # Initial setup scripts
+│   ├── testing/             # Testing automation scripts
 │   └── utilities/           # General utility scripts
 ├── testing/                 # Testing and benchmarking
-│   ├── unit/                # Unit tests
+│   ├── automated/           # Automated testing suites
+│   ├── compatibility/       # Hardware compatibility tests
 │   ├── integration/         # Integration tests
 │   ├── performance/         # Performance benchmarks
-│   ├── compatibility/       # Hardware compatibility tests
-│   └── automated/           # Automated testing suites
+│   ├── results/             # Test results and reports
+│   └── unit/                # Unit tests
 ├── docs/                    # Documentation
 │   ├── installation/        # Installation guides
 │   ├── configuration/       # Configuration documentation
@@ -45,7 +50,7 @@ xanadOS/
 │   ├── testing/             # Testing workflows
 │   └── templates/           # Workflow templates
 └── archive/                 # Archived files
-    ├── old-configs/         # Archived configuration files
+    ├── backups/             # Backup files and storage
     ├── deprecated/          # Deprecated code and scripts
-    ├── releases/            # Previous release artifacts
-    └── backup/              # Backup files
+    ├── old-configs/         # Archived configuration files
+    └── releases/            # Previous release artifacts
