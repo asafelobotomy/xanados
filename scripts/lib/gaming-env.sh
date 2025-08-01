@@ -9,7 +9,8 @@ readonly XANADOS_GAMING_LOADED="true"
 
 # Source required libraries
 source "$(dirname "${BASH_SOURCE[0]}")/common.sh"
-source "$(dirname "${BASH_SOURCE[0]}")/validation.sh"
+# Note: validation.sh sources this file, so we don't source it here to avoid circular dependency
+# command_exists is available from common.sh
 
 # Gaming environment cache
 declare -A GAMING_ENV_CACHE

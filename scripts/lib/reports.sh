@@ -75,7 +75,7 @@ generate_report() {
     
     # Set default output directory if not provided
     if [[ -z "$output_dir" ]]; then
-        output_dir="$(get_results_dir false)"
+        output_dir="$(get_results_dir "general" false)"
         if [[ $? -ne 0 ]]; then
             print_error "Failed to get default output directory"
             return 1

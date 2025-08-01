@@ -5,7 +5,7 @@
 ### 1. Complete Gaming Setup
 
 ```bash
-cd /home/vm/Documents/xanadOS/scripts/setup
+cd scripts/setup
 ./gaming-setup.sh
 # Choose option 1 for complete setup
 ```

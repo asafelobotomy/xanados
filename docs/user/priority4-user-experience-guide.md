@@ -220,7 +220,7 @@ Priority 4 represents the final major development phase of xanadOS, focusing on 
 
 ```bash
 # Complete Priority 4 setup
-cd /home/vm/Documents/xanadOS/scripts/setup
+cd scripts/setup
 ./priority4-user-experience.sh
 
 # Choose option 1 for complete user experience setup

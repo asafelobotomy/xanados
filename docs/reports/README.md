@@ -9,6 +9,7 @@ docs/reports/
 ├── data/           # Raw data files used to generate reports
 ├── generated/      # Generated reports (HTML, JSON, Markdown)
 ├── archive/        # Archived/historical reports
+├── temp/           # Temporary files during processing
 └── README.md       # This file
 ```
 
@@ -42,6 +43,12 @@ docs/reports/
 - **Behavior**: Reports are automatically moved here when limits are exceeded
 - **Configuration**: Controlled by `XANADOS_MAX_REPORTS` environment variable
 - **Default**: Keeps 10 most recent reports per type
+
+### `/temp/`
+- **Purpose**: Temporary files created during report processing
+- **Content**: Intermediate files, processing artifacts, temporary data
+- **Cleanup**: Automatically cleaned up after processing
+- **Usage**: Used by `get_xanados_temp_dir()` function
 
 ## Integration with xanadOS Scripts
 

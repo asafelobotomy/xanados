@@ -105,7 +105,15 @@ check_not_root() {
 
 # Check if command exists
 command_exists() {
-    command -v "$1" >/dev/null 2>&1
+    local cmd="$1"
+    local force_check="${2:-false}"
+    
+    if [[ -z "$cmd" ]]; then
+        return 1
+    fi
+    
+    # Simple implementation for common.sh - no caching to avoid dependencies
+    command -v "$cmd" >/dev/null 2>&1
 }
 
 # Safe directory creation with error handling

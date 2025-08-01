@@ -40,7 +40,9 @@ cache_commands() {
 
 # Cache all gaming tools
 cache_gaming_tools() {
-    # Source gaming-env.sh to access unified gaming tool arrays
+    # Source gaming-env.sh only when needed to access unified gaming tool arrays
+    # This avoids circular dependency at library load time
+    # shellcheck disable=SC1090
     source "$(dirname "${BASH_SOURCE[0]}")/gaming-env.sh"
     
     # Combine all gaming tools from both arrays
@@ -159,6 +161,7 @@ SYSTEM_TOOLS=(
 )
 
 # Check if command exists (with caching)
+# Enhanced command_exists with caching (overrides common.sh version when validation.sh is loaded)
 command_exists() {
     local cmd="$1"
     local force_check="${2:-false}"

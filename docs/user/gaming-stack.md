@@ -66,7 +66,7 @@ The unified installation script that orchestrates the complete gaming environmen
 **Usage:**
 
 ```bash
-cd /home/vm/Documents/xanadOS/scripts/setup
+cd scripts/setup
 ./gaming-setup.sh
 ```bash
 

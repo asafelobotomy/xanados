@@ -22,7 +22,7 @@ The xanadOS Performance Testing & Validation Suite provides comprehensive tools 
 **Usage**:
 
 ```bash
-cd /home/vm/Documents/xanadOS/scripts/testing
+cd scripts/testing
 ./performance-benchmark.sh
 ```
 
@@ -52,7 +52,7 @@ cd /home/vm/Documents/xanadOS/scripts/testing
 **Usage**:
 
 ```bash
-cd /home/vm/Documents/xanadOS/scripts/testing
+cd scripts/testing
 ./gaming-validator.sh
 ```
 
@@ -80,7 +80,7 @@ cd /home/vm/Documents/xanadOS/scripts/testing
 **Usage**:
 
 ```bash
-cd /home/vm/Documents/xanadOS/scripts/testing
+cd scripts/testing
 ./automated-benchmark-runner.sh
 ```
 
@@ -120,20 +120,20 @@ The testing suite requires several system tools and utilities:
 1. **Ensure Gaming Stack is Installed**:
 
    ```bash
-   cd /home/vm/Documents/xanadOS/scripts/setup
+   cd scripts/setup
    ./gaming-setup.sh
    ```
 
 2. **Verify Testing Scripts are Executable**:
 
    ```bash
-   chmod +x /home/vm/Documents/xanadOS/scripts/testing/*.sh
+   chmod +x scripts/testing/*.sh
    ```
 
 3. **Run Initial Validation**:
 
    ```bash
-   cd /home/vm/Documents/xanadOS/scripts/testing
+   cd scripts/testing
    ./gaming-validator.sh
    ```
 
@@ -312,7 +312,7 @@ All test results are stored in organized directories:
 
 ```bash
 # Run quick system validation
-cd /home/vm/Documents/xanadOS/scripts/testing
+cd scripts/testing
 ./performance-benchmark.sh
 
 # Select option 1 for complete benchmark

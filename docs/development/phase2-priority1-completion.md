@@ -126,7 +126,7 @@ Successfully completed Priority 1 of Phase 2 for xanadOS development, implementi
 ### Quick Setup
 
 ```bash
-cd /home/vm/Documents/xanadOS/scripts/setup
+cd scripts/setup
 ./gaming-setup.sh
 # Choose option 1 for complete gaming setup
 ```

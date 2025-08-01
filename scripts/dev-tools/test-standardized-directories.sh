@@ -63,7 +63,7 @@ test_legacy_comparison() {
     echo "--------------------------------------"
     
     echo "❌ BEFORE (hardcoded):"
-    echo "   RESULTS_DIR=\"\$HOME/.local/share/xanados/benchmarks\""
+    echo "   RESULTS_DIR=\"/tmp/benchmark-results\""
     echo "   LOG_FILE=\"\$RESULTS_DIR/benchmark-\$(date +%Y%m%d-%H%M%S).log\""
     echo ""
     

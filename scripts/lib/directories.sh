@@ -31,7 +31,8 @@ readonly XANADOS_DIRECTORIES=(
     "workflows"
 )
 
-# User data directories
+# User data directories - DEPRECATED: Kept for backward compatibility only
+# New projects should use docs/reports/ structure instead
 readonly USER_DATA_DIRS=(
     "$HOME/.local/share/xanados"
     "$HOME/.local/share/xanados/benchmarks"
@@ -226,7 +227,9 @@ get_config_dir() {
 
 # Get standard temp directory
 get_xanados_temp_dir() {
-    local temp_base="$HOME/.local/share/xanados/temp"
+    local project_root
+    project_root="$(get_project_root)"
+    local temp_base="$project_root/docs/reports/temp"
     safe_mkdir "$temp_base"
     mktemp -d "$temp_base/tmp.XXXXXXXX"
 }

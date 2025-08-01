@@ -3,7 +3,7 @@
 # Quick test of the docs directory structure
 #
 
-cd /home/vm/Documents/xanadOS
+cd "$(dirname "$0")/../.." || exit 1
 
 echo "🎯 DIRECTORY STRUCTURE UPDATE SUMMARY"
 echo ""
