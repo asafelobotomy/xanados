@@ -12,6 +12,11 @@
 
 set -euo pipefail
 
+# Source xanadOS shared libraries
+source "$(dirname "${BASH_SOURCE[0]}")/../lib/common.sh"
+source "$(dirname "${BASH_SOURCE[0]}")/../lib/validation.sh"
+source "$(dirname "${BASH_SOURCE[0]}")/../lib/gaming-env.sh"
+
 # Script directory and paths
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 XANADOS_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
@@ -296,7 +301,7 @@ EOF
 
 analyze_gpu() {
     # NVIDIA Detection
-    if command -v nvidia-smi &> /dev/null; then
+    if get_cached_command "nvidia-smi"; then
         local nvidia_gpu
         nvidia_gpu=$(nvidia-smi --query-gpu=name --format=csv,noheader,nounits | head -1)
         local nvidia_driver
@@ -345,7 +350,7 @@ analyze_gpu() {
     fi
     
     # Vulkan support check
-    if command -v vulkaninfo &> /dev/null; then
+    if get_cached_command "vulkaninfo"; then
         echo -e "    ${GREEN}Vulkan: Supported${NC}"
         VULKAN_SUPPORT=true
     else
@@ -438,32 +443,46 @@ assess_gaming_readiness() {
     log_message "INFO" "Assessing gaming readiness"
     print_section "Gaming Readiness Assessment"
     
-    local readiness_score=0
-    local max_score=10
+    # Use comprehensive gaming matrix analysis
+    echo -e "  ${GEAR} Analyzing gaming environment..."
+    echo
+    generate_gaming_matrix "table"
+    echo
+    
+    local readiness_score
+    readiness_score=$(get_gaming_readiness_score)
+    
+    echo -e "  ${GEAR} Overall Gaming Readiness: ${BOLD}${readiness_score}%${NC}"
+    echo
+    
     local recommendations=()
     
+    if [[ $readiness_score -ge 80 ]]; then
+        echo -e "  ${GREEN}${CHECKMARK} Excellent gaming setup! Your system is ready for high-end gaming.${NC}"
+    elif [[ $readiness_score -ge 60 ]]; then
+        echo -e "  ${GREEN}${CHECKMARK} Good gaming capability with room for improvement.${NC}"
+        recommendations+=("Consider installing additional gaming utilities for enhanced experience")
+    elif [[ $readiness_score -ge 40 ]]; then
+        echo -e "  ${YELLOW}${ARROW} Basic gaming capability detected.${NC}"
+        recommendations+=("Install core gaming platforms (Steam, Lutris)")
+        recommendations+=("Set up gaming optimization tools (GameMode, MangoHUD)")
+    else
+        echo -e "  ${RED}${CROSSMARK} Limited gaming capability.${NC}"
+        recommendations+=("Install essential gaming software and drivers")
+        recommendations+=("Configure graphics drivers for your hardware")
+        recommendations+=("Set up core gaming platforms")
+    fi
+    
+    # Hardware-specific recommendations
     # GPU assessment
     case "${GPU_STATUS:-unknown}" in
-        "excellent")
-            ((readiness_score += 4))
-            echo -e "  ${GREEN}${CHECKMARK} Graphics: Excellent (NVIDIA with drivers)${NC}"
-            ;;
-        "good")
-            ((readiness_score += 3))
-            echo -e "  ${GREEN}${CHECKMARK} Graphics: Good (AMD with AMDGPU)${NC}"
-            ;;
         "needs_improvement")
-            ((readiness_score += 2))
-            echo -e "  ${YELLOW}${ARROW} Graphics: Needs improvement (driver updates recommended)${NC}"
             recommendations+=("Update GPU drivers for better performance")
             ;;
         "basic")
-            ((readiness_score += 1))
-            echo -e "  ${YELLOW}${ARROW} Graphics: Basic (integrated graphics)${NC}"
             recommendations+=("Consider dedicated GPU for demanding games")
             ;;
-        *)
-            echo -e "  ${RED}${CROSSMARK} Graphics: Poor (no supported GPU detected)${NC}"
+        "unknown"|"poor")
             recommendations+=("Install supported graphics drivers")
             ;;
     esac
@@ -471,66 +490,18 @@ assess_gaming_readiness() {
     # Memory assessment
     local mem_gb
     mem_gb=$(free -g | grep "Mem:" | awk '{print $2}')
-    if [[ $mem_gb -ge 16 ]]; then
-        ((readiness_score += 2))
-        echo -e "  ${GREEN}${CHECKMARK} Memory: Excellent (${mem_gb}GB)${NC}"
-    elif [[ $mem_gb -ge 8 ]]; then
-        ((readiness_score += 1))
-        echo -e "  ${YELLOW}${ARROW} Memory: Good (${mem_gb}GB)${NC}"
-        recommendations+=("Consider upgrading to 16GB RAM for optimal performance")
-    else
-        echo -e "  ${RED}${CROSSMARK} Memory: Insufficient (${mem_gb}GB)${NC}"
+    if [[ $mem_gb -lt 8 ]]; then
         recommendations+=("Upgrade to at least 8GB RAM for basic gaming")
+    elif [[ $mem_gb -lt 16 ]]; then
+        recommendations+=("Consider upgrading to 16GB RAM for optimal performance")
     fi
     
     # Storage assessment
-    if [[ "$HAS_NVME" == "true" ]]; then
-        ((readiness_score += 2))
-        echo -e "  ${GREEN}${CHECKMARK} Storage: Excellent (NVMe SSD)${NC}"
-    elif [[ "$HAS_SSD" == "true" ]]; then
-        ((readiness_score += 1))
-        echo -e "  ${GREEN}${CHECKMARK} Storage: Good (SSD)${NC}"
-    else
-        echo -e "  ${RED}${CROSSMARK} Storage: Poor (HDD only)${NC}"
+    if [[ "$HAS_SSD" != "true" ]]; then
         recommendations+=("Install games on SSD for significantly better loading times")
     fi
     
-    # CPU assessment (simplified)
-    local cpu_cores
-    cpu_cores=$(nproc)
-    if [[ $cpu_cores -ge 8 ]]; then
-        ((readiness_score += 2))
-        echo -e "  ${GREEN}${CHECKMARK} CPU: Excellent (${cpu_cores} cores)${NC}"
-    elif [[ $cpu_cores -ge 4 ]]; then
-        ((readiness_score += 1))
-        echo -e "  ${GREEN}${CHECKMARK} CPU: Good (${cpu_cores} cores)${NC}"
-    else
-        echo -e "  ${YELLOW}${ARROW} CPU: Basic (${cpu_cores} cores)${NC}"
-        recommendations+=("Some modern games may require more CPU cores")
-    fi
-    
-    # Calculate percentage
-    local readiness_percentage
-    readiness_percentage=$((readiness_score * 100 / max_score))
-    
-    echo
-    echo -e "  ${BOLD}Gaming Readiness Score: ${readiness_score}/${max_score} (${readiness_percentage}%)${NC}"
-    
-    if [[ $readiness_percentage -ge 80 ]]; then
-        echo -e "  ${GREEN}${STAR} Your system is excellent for gaming!${NC}"
-        GAMING_READINESS="excellent"
-    elif [[ $readiness_percentage -ge 60 ]]; then
-        echo -e "  ${YELLOW}${STAR} Your system is good for gaming with some optimizations.${NC}"
-        GAMING_READINESS="good"
-    elif [[ $readiness_percentage -ge 40 ]]; then
-        echo -e "  ${YELLOW}${STAR} Your system can handle gaming but may need upgrades for best performance.${NC}"
-        GAMING_READINESS="fair"
-    else
-        echo -e "  ${RED}${STAR} Your system may struggle with modern games. Hardware upgrades recommended.${NC}"
-        GAMING_READINESS="poor"
-    fi
-    
-    # Show recommendations
+    # Display recommendations if any
     if [[ ${#recommendations[@]} -gt 0 ]]; then
         echo
         echo -e "  ${BOLD}Recommendations:${NC}"
@@ -539,10 +510,21 @@ assess_gaming_readiness() {
         done
     fi
     
+    # Store assessment for later use
+    GAMING_READINESS_SCORE="$readiness_score"
+    if [[ $readiness_score -ge 80 ]]; then
+        GAMING_READINESS="excellent"
+    elif [[ $readiness_score -ge 60 ]]; then
+        GAMING_READINESS="good"
+    elif [[ $readiness_score -ge 40 ]]; then
+        GAMING_READINESS="fair"
+    else
+        GAMING_READINESS="poor"
+    fi
+    
     # Store assessment
     cat > "$TEMP_DIR/gaming-readiness.txt" << EOF
 readiness_score=$readiness_score
-readiness_percentage=$readiness_percentage
 readiness_level=$GAMING_READINESS
 recommendations_count=${#recommendations[@]}
 EOF
@@ -862,7 +844,7 @@ setup_automatic_optimizations() {
     log_message "INFO" "Setting up automatic optimizations"
     
     # Enable gaming mode detection if available
-    if command -v systemctl &> /dev/null; then
+    if get_cached_command "systemctl"; then
         systemctl --user enable xanados-gaming-detector.service 2>/dev/null || true
         systemctl --user start xanados-gaming-detector.service 2>/dev/null || true
     fi
@@ -994,6 +976,11 @@ main() {
     
     # Initialize
     setup_logging
+    
+    # Initialize command cache for performance
+    print_status "Initializing first-boot cache..."
+    cache_gaming_tools
+    cache_system_tools
     
     # Check if first-boot is needed
     check_first_boot

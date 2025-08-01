@@ -12,6 +12,10 @@
 
 set -euo pipefail
 
+# Source xanadOS shared libraries
+source "$(dirname "${BASH_SOURCE[0]}")/../lib/common.sh"
+source "$(dirname "${BASH_SOURCE[0]}")/../lib/validation.sh"
+
 # Script directory and paths
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 XANADOS_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
@@ -133,7 +137,7 @@ check_kde_environment() {
     local missing_tools=()
     
     for tool in "${required_tools[@]}"; do
-        if ! command -v "$tool" &> /dev/null; then
+        if ! get_cached_command "$tool"; then
             missing_tools+=("$tool")
         fi
     done
@@ -958,6 +962,11 @@ main() {
     
     # Initialize
     setup_logging
+    
+    # Initialize command cache for performance
+    print_status "Initializing KDE gaming cache..."
+    cache_gaming_tools
+    cache_system_tools
     
     # Welcome
     print_header "${DESKTOP} xanadOS KDE Gaming Customization ${BRUSH}"

@@ -12,6 +12,11 @@
 
 set -euo pipefail
 
+# Source xanadOS shared libraries
+source "$(dirname "${BASH_SOURCE[0]}")/../lib/common.sh"
+source "$(dirname "${BASH_SOURCE[0]}")/../lib/validation.sh"
+source "$(dirname "${BASH_SOURCE[0]}")/../lib/gaming-env.sh"
+
 # Script directory and paths
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 LOG_FILE="/var/log/xanados/priority4-user-experience.log"
@@ -473,32 +478,32 @@ while true; do
     
     case "$choice" in
         1)
-            if command -v steam-gamemode &> /dev/null; then
+            if get_cached_command "steam-gamemode"; then
                 steam-gamemode
-            elif command -v steam &> /dev/null; then
+            elif get_cached_command "steam"; then
                 steam
             else
                 echo "Steam is not installed. Run gaming setup wizard to install."
             fi
             ;;
         2)
-            if command -v lutris &> /dev/null; then
+            if get_cached_command "lutris"; then
                 lutris
             else
                 echo "Lutris is not installed. Run gaming setup wizard to install."
             fi
             ;;
         3)
-            if command -v xanados-gaming-mode &> /dev/null; then
+            if get_cached_command "xanados-gaming-mode"; then
                 xanados-gaming-mode toggle
             else
                 echo "Gaming mode is not available."
             fi
             ;;
         4)
-            if command -v mangohud &> /dev/null; then
+            if get_cached_command "mangohud"; then
                 echo "MangoHud is available. Use 'mangohud <game>' to monitor performance."
-            elif command -v htop &> /dev/null; then
+            elif get_cached_command "htop"; then
                 htop
             else
                 echo "No performance monitor available."
@@ -520,10 +525,10 @@ while true; do
             ;;
         7)
             echo "=== System Status ==="
-            if command -v xanados-gaming-mode &> /dev/null; then
+            if get_cached_command "xanados-gaming-mode"; then
                 xanados-gaming-mode status
             fi
-            if command -v nvidia-smi &> /dev/null; then
+            if get_cached_command "nvidia-smi"; then
                 echo "GPU: $(nvidia-smi --query-gpu=name --format=csv,noheader,nounits)"
             fi
             echo "Memory: $(free -h | grep Mem | awk '{print $3 "/" $2}')"
@@ -720,7 +725,7 @@ show_current_configuration() {
     fi
     
     # Desktop customization
-    if [[ "$XDG_CURRENT_DESKTOP" == *"KDE"* ]] && command -v kreadconfig5 &> /dev/null; then
+    if [[ "$XDG_CURRENT_DESKTOP" == *"KDE"* ]] && get_cached_command "kreadconfig5"; then
         local color_scheme
         color_scheme=$(kreadconfig5 --file "$HOME/.config/kdeglobals" --group "General" --key "ColorScheme" 2>/dev/null || echo "Default")
         echo -e "    ${GREEN}${CHECKMARK} Desktop Theme: $color_scheme${NC}"
@@ -729,7 +734,7 @@ show_current_configuration() {
     fi
     
     # Gaming mode
-    if command -v xanados-gaming-mode &> /dev/null; then
+    if get_cached_command "xanados-gaming-mode"; then
         local gaming_mode_status
         gaming_mode_status=$(xanados-gaming-mode status 2>/dev/null || echo "Unknown")
         echo -e "    ${GREEN}${CHECKMARK} Gaming Mode: $gaming_mode_status${NC}"
@@ -796,7 +801,7 @@ EOF
     read -r -p "View report now? [Y/n]: " -n 1 -r
     echo
     if [[ ! $REPLY =~ ^[Nn]$ ]]; then
-        if command -v less &> /dev/null; then
+        if get_cached_command "less"; then
             less "$report_file"
         else
             cat "$report_file"
@@ -859,6 +864,11 @@ main() {
     # Initialize
     setup_logging
     
+    # Initialize command cache for performance
+    print_status "Initializing user experience cache..."
+    cache_gaming_tools
+    cache_system_tools
+    
     # Welcome
     print_header "${POLISH} xanadOS Priority 4: User Experience Polish ${GAMING}"
     echo -e "${BOLD}Welcome to xanadOS Priority 4: User Experience Polish!${NC}"
@@ -867,6 +877,29 @@ main() {
     
     # Check component status
     check_component_status
+    
+    # Quick gaming environment overview
+    echo
+    print_section "Gaming Environment Overview"
+    echo -e "  ${GEAR} Quick gaming readiness assessment..."
+    echo
+    generate_gaming_matrix "table"
+    echo
+    
+    local readiness_score
+    readiness_score=$(get_gaming_readiness_score)
+    echo -e "  ${GAMING} Gaming Readiness: ${BOLD}${readiness_score}%${NC}"
+    
+    if [[ $readiness_score -ge 80 ]]; then
+        echo -e "  ${GREEN}${CHECKMARK} Excellent! Your system is well-configured for gaming.${NC}"
+    elif [[ $readiness_score -ge 60 ]]; then
+        echo -e "  ${YELLOW}${ARROW} Good setup with room for enhancement.${NC}"
+    elif [[ $readiness_score -ge 40 ]]; then
+        echo -e "  ${YELLOW}${ARROW} Basic gaming capability. Consider additional setup.${NC}"
+    else
+        echo -e "  ${RED}${CROSSMARK} Limited gaming setup. Recommended to run full configuration.${NC}"
+    fi
+    echo
     
     # Show options and get user choice
     while true; do

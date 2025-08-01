@@ -12,6 +12,11 @@
 
 set -euo pipefail
 
+# Source xanadOS shared libraries
+source "$(dirname "${BASH_SOURCE[0]}")/../lib/common.sh"
+source "$(dirname "${BASH_SOURCE[0]}")/../lib/validation.sh"
+source "$(dirname "${BASH_SOURCE[0]}")/../lib/gaming-env.sh"
+
 # Script directory and paths
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 XANADOS_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
@@ -156,7 +161,7 @@ detect_gpu() {
     echo -e "  ${GEAR} Graphics:"
     
     # NVIDIA Detection
-    if command -v nvidia-smi &> /dev/null; then
+    if get_cached_command "nvidia-smi"; then
         local nvidia_gpu=$(nvidia-smi --query-gpu=name --format=csv,noheader,nounits | head -1)
         local nvidia_driver=$(nvidia-smi --query-gpu=driver_version --format=csv,noheader,nounits | head -1)
         echo -e "      ${GREEN}NVIDIA: $nvidia_gpu (Driver: $nvidia_driver)${NC}"
@@ -186,7 +191,7 @@ detect_gpu() {
     fi
     
     # Vulkan Support
-    if command -v vulkaninfo &> /dev/null; then
+    if get_cached_command "vulkaninfo"; then
         echo -e "      ${GREEN}Vulkan: Supported${NC}"
         VULKAN_SUPPORT=true
     else
@@ -311,7 +316,7 @@ detect_existing_gaming_software() {
     print_section "Gaming Software Detection"
     
     # Steam Detection
-    if command -v steam &> /dev/null; then
+    if get_cached_command "steam"; then
         echo -e "  ${GREEN}Steam: Installed${NC}"
         STEAM_INSTALLED=true
         
@@ -331,7 +336,7 @@ detect_existing_gaming_software() {
     fi
     
     # Lutris Detection
-    if command -v lutris &> /dev/null; then
+    if get_cached_command "lutris"; then
         echo -e "  ${GREEN}Lutris: Installed${NC}"
         LUTRIS_INSTALLED=true
     else
@@ -340,7 +345,7 @@ detect_existing_gaming_software() {
     fi
     
     # GameMode Detection
-    if command -v gamemoderun &> /dev/null; then
+    if get_cached_command "gamemoderun"; then
         echo -e "  ${GREEN}GameMode: Installed${NC}"
         GAMEMODE_INSTALLED=true
     else
@@ -349,7 +354,7 @@ detect_existing_gaming_software() {
     fi
     
     # MangoHud Detection
-    if command -v mangohud &> /dev/null; then
+    if get_cached_command "mangohud"; then
         echo -e "  ${GREEN}MangoHud: Installed${NC}"
         MANGOHUD_INSTALLED=true
     else
@@ -358,7 +363,7 @@ detect_existing_gaming_software() {
     fi
     
     # Wine Detection
-    if command -v wine &> /dev/null; then
+    if get_cached_command "wine"; then
         local wine_version=$(wine --version)
         echo -e "  ${GREEN}Wine: $wine_version${NC}"
         WINE_INSTALLED=true
@@ -383,7 +388,7 @@ generate_recommendations() {
     # Hardware-based recommendations
     if [[ "${GPU_VENDOR:-}" == "nvidia" ]]; then
         RECOMMENDATIONS+=("Install NVIDIA proprietary drivers for optimal gaming performance")
-        if ! command -v nvidia-smi &> /dev/null; then
+        if ! get_cached_command "nvidia-smi"; then
             PRIORITY_RECOMMENDATIONS+=("NVIDIA drivers are not properly installed")
         fi
     elif [[ "${GPU_VENDOR:-}" == "amd" ]]; then
@@ -778,7 +783,7 @@ apply_basic_gaming_optimizations() {
     log_message "INFO" "Applying basic gaming optimizations"
     
     # Set CPU governor to performance for gaming
-    if command -v cpupower &> /dev/null; then
+    if get_cached_command "cpupower"; then
         echo -e "  ${GEAR} Setting CPU governor to performance..."
         sudo cpupower frequency-set -g performance &> /dev/null || true
     fi
@@ -860,6 +865,11 @@ main() {
     # Initialize
     setup_logging
     
+    # Initialize command cache for performance
+    print_status "Initializing gaming environment cache..."
+    cache_gaming_tools
+    cache_system_tools
+    
     # Welcome
     print_header "${GAMING} xanadOS Gaming Setup Wizard ${GAMING}"
     echo -e "${BOLD}Welcome to the xanadOS Gaming Setup Wizard!${NC}"
@@ -869,6 +879,42 @@ main() {
     # System detection
     detect_hardware
     detect_existing_gaming_software
+    
+    # Display gaming environment analysis
+    log_message "INFO" "Analyzing gaming environment..."
+    echo
+    print_section_header "Gaming Environment Analysis"
+    generate_gaming_matrix "table"
+    echo
+    
+    local readiness_score
+    readiness_score=$(get_gaming_readiness_score)
+    
+    if [[ $readiness_score -ge 80 ]]; then
+        log_message "SUCCESS" "Excellent gaming readiness! Score: ${readiness_score}%"
+    elif [[ $readiness_score -ge 60 ]]; then
+        log_message "WARNING" "Good gaming setup with room for improvement. Score: ${readiness_score}%"
+    elif [[ $readiness_score -ge 40 ]]; then
+        log_message "WARNING" "Basic gaming capability detected. Score: ${readiness_score}%"
+    else
+        log_message "ERROR" "Limited gaming capability. Score: ${readiness_score}%"
+    fi
+    echo
+    
+    # Check compatibility with standard gaming profile
+    print_section_header "Gaming Profile Compatibility"
+    echo "Checking compatibility with standard gaming profile..."
+    echo
+    generate_compatibility_report "standard" "table"
+    echo
+    
+    # Show recommendations if compatibility is low
+    if [[ ${COMPATIBILITY_SCORE:-0} -lt 80 ]]; then
+        echo "Recommendations for improved gaming setup:"
+        get_compatibility_recommendations "standard"
+        echo
+    fi
+    
     generate_recommendations
     
     # Show setup options and get user choice
