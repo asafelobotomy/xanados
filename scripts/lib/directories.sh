@@ -43,36 +43,180 @@ readonly USER_DATA_DIRS=(
     "$HOME/.config/xanados"
 )
 
-# Get standard results directory
+# Get the project root directory
+get_project_root() {
+    # Try to find the project root by looking for characteristic files
+    local current_dir
+    local script_dir
+    
+    current_dir="$(pwd)"
+    script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+    
+    # Start from script directory and work up
+    local search_dir="$script_dir"
+    while [[ "$search_dir" != "/" ]]; do
+        # Look for project indicators
+        if [[ -d "$search_dir/scripts" && -d "$search_dir/docs" ]]; then
+            echo "$search_dir"
+            return 0
+        fi
+        search_dir="$(dirname "$search_dir")"
+    done
+    
+    # Fallback to current directory if in xanadOS structure
+    if [[ "$current_dir" == *"xanadOS"* ]]; then
+        # Extract the xanadOS root path
+        echo "${current_dir%%/xanadOS/*}/xanadOS"
+        return 0
+    fi
+    
+    # Last fallback
+    echo "$current_dir"
+}
+
+# Get standard results directory with optional timestamping
 get_results_dir() {
     local script_type="${1:-general}"
-    local base_dir="$HOME/.local/share/xanados"
+    local use_timestamp="${2:-false}"
+    
+    # Use docs/reports structure within the project
+    local project_root
+    project_root="$(get_project_root)"
+    local base_dir="$project_root/docs/reports"
+    local type_dir
     
     case "$script_type" in
         "benchmarks"|"performance")
-            echo "$base_dir/benchmarks"
+            type_dir="$base_dir/generated"
             ;;
         "gaming"|"validation")
-            echo "$base_dir/gaming-validation"
+            type_dir="$base_dir/generated"
             ;;
         "automated"|"monitoring")
-            echo "$base_dir/automated-benchmarks"
+            type_dir="$base_dir/generated"
             ;;
         "testing"|"suite")
-            echo "$base_dir/testing-results"
+            type_dir="$base_dir/generated"
             ;;
         "logs")
-            echo "$base_dir/logs"
+            type_dir="$base_dir/generated"
             ;;
         *)
-            echo "$base_dir/results"
+            type_dir="$base_dir/generated"
             ;;
     esac
+    
+    if [[ "$use_timestamp" == "true" ]]; then
+        echo "$type_dir/$(date +%Y-%m-%d_%H-%M-%S)"
+    else
+        echo "$type_dir"
+    fi
 }
 
-# Get standard log directory
+# Get timestamped benchmark directory
+get_benchmark_dir() {
+    local use_timestamp="${1:-true}"
+    
+    get_results_dir "benchmarks" "$use_timestamp"
+}
+
+# Get timestamped log directory  
 get_log_dir() {
-    echo "$HOME/.local/share/xanados/logs"
+    local use_timestamp="${1:-true}"
+    local project_root
+    project_root="$(get_project_root)"
+    local base_dir="$project_root/docs/reports/generated"
+    
+    if [[ "$use_timestamp" == "true" ]]; then
+        echo "$base_dir/$(date +%Y-%m-%d)"
+    else
+        echo "$base_dir"
+    fi
+}
+
+# Ensure complete results directory structure exists
+ensure_results_structure() {
+    local script_type="${1:-general}"
+    local use_timestamp="${2:-true}"
+    
+    print_debug "Creating results directory structure for: $script_type"
+    
+    # Get the appropriate results directory
+    local results_dir
+    results_dir="$(get_results_dir "$script_type" "$use_timestamp")"
+    
+    # Create the main results directory
+    if ! safe_mkdir "$results_dir"; then
+        print_error "Failed to create results directory: $results_dir"
+        return 1
+    fi
+    
+    # Create standard subdirectories
+    local subdirs=(
+        "data"
+        "reports" 
+        "logs"
+        "temp"
+        "archive"
+    )
+    
+    for subdir in "${subdirs[@]}"; do
+        if ! safe_mkdir "$results_dir/$subdir"; then
+            print_warning "Failed to create subdirectory: $results_dir/$subdir"
+        fi
+    done
+    
+    # Create logs directory with timestamp
+    local log_dir
+    log_dir="$(get_log_dir "$use_timestamp")"
+    if ! safe_mkdir "$log_dir"; then
+        print_warning "Failed to create log directory: $log_dir"
+    fi
+    
+    # Only return the directory path (no print statements for clean output)
+    echo "$results_dir"
+}
+
+# Get standardized filename with timestamp (returns full path to data directory)
+get_results_filename() {
+    local base_name="$1"
+    local extension="${2:-json}"
+    local script_type="${3:-general}"
+    
+    if [[ -z "$base_name" ]]; then
+        print_error "get_results_filename: base_name is required"
+        return 1
+    fi
+    
+    local project_root
+    project_root="$(get_project_root)"
+    local data_dir="$project_root/docs/reports/data"
+    
+    # Ensure data directory exists
+    safe_mkdir "$data_dir"
+    
+    local filename
+    filename="${script_type}-${base_name}-$(date +%Y%m%d-%H%M%S).${extension}"
+    echo "$data_dir/$filename"
+}
+
+# Get standardized log filename (returns full path to log directory)
+get_log_filename() {
+    local script_name="$1"
+    local extension="${2:-log}"
+    
+    if [[ -z "$script_name" ]]; then
+        print_error "get_log_filename: script_name is required" 
+        return 1
+    fi
+    
+    local log_dir
+    log_dir="$(get_log_dir false)"
+    safe_mkdir "$log_dir"
+    
+    local filename
+    filename="${script_name}-$(date +%Y%m%d-%H%M%S).${extension}"
+    echo "$log_dir/$filename"
 }
 
 # Get standard config directory
@@ -402,7 +546,8 @@ if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
     echo "This library should be sourced, not executed directly."
     echo ""
     echo "Available functions:"
-    echo "  - get_results_dir, get_log_dir, get_config_dir"
+    echo "  - get_results_dir, get_benchmark_dir, get_log_dir, get_config_dir"
+    echo "  - ensure_results_structure, get_results_filename, get_log_filename"
     echo "  - create_user_directories, create_project_directories"
     echo "  - ensure_directory, cleanup_old_files, archive_old_results"
     echo "  - get_directory_size, is_safe_directory, sync_directories"

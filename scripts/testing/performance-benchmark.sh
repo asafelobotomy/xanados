@@ -18,11 +18,16 @@ PURPLE='\033[0;35m'
 CYAN='\033[0;36m'
 NC='\033[0m'
 
+# Source shared libraries
+source "$(dirname "${BASH_SOURCE[0]}")/../lib/common.sh"
+source "$(dirname "${BASH_SOURCE[0]}")/../lib/validation.sh"
+source "$(dirname "${BASH_SOURCE[0]}")/../lib/directories.sh"
+
 # Configuration
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-RESULTS_DIR="$HOME/.local/share/xanados/benchmarks"
-LOG_FILE="$RESULTS_DIR/benchmark-$(date +%Y%m%d-%H%M%S).log"
-SYSTEM_INFO_FILE="$RESULTS_DIR/system-info.json"
+RESULTS_DIR="$(get_benchmark_dir false)"  # Use standardized function
+LOG_FILE="$(get_log_dir false)/$(get_log_filename "benchmark")"
+SYSTEM_INFO_FILE="$RESULTS_DIR/$(get_results_filename "system-info" "json" "benchmark")"
 
 # Benchmark configuration
 BENCHMARK_DURATION=300  # 5 minutes default

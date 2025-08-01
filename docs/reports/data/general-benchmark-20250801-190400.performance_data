@@ -1,0 +1,29 @@
+xanadOS Performance Benchmark Results
+====================================
+Timestamp: 2025-08-01T19:04:00+01:00
+System: Linux archlinux 6.15.8-zen1-2-zen #1 ZEN SMP PREEMPT_DYNAMIC Tue, 29 Jul 2025 15:32:49 +0000 x86_64 GNU/Linux
+Host: unknown
+
+CPU Performance:
+- Single-core score: 1247
+- Multi-core score: 4892
+- Gaming performance index: 95.3%
+
+Memory Performance:
+- Bandwidth: 23.4 GB/s
+- Latency: 67.2 ns
+- Gaming optimization: ENABLED
+
+Graphics Performance:
+- FPS (1080p): 87.3 avg
+- Frame time: 11.5ms
+- VSync compatibility: GOOD
+
+Gaming Optimizations Applied:
+- CPU governor: performance
+- Scheduler: gaming-optimized
+- I/O priority: real-time
+- Memory prefetch: enabled
+
+Overall Score: 92.7/100
+Status: OPTIMAL FOR GAMING
