@@ -15,6 +15,7 @@ readonly BLUE='\033[0;34m'
 readonly PURPLE='\033[0;35m'
 readonly CYAN='\033[0;36m'
 readonly WHITE='\033[1;37m'
+readonly GRAY='\033[0;90m'
 readonly NC='\033[0m'  # No Color
 
 # Global configuration

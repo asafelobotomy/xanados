@@ -32,7 +32,9 @@ readonly XANADOS_DIRECTORIES=(
 )
 
 # User data directories - DEPRECATED: Kept for backward compatibility only
+# DEPRECATION WARNING: These user data directories are deprecated as of v1.0.0
 # New projects should use docs/reports/ structure instead
+# These will be removed in v2.0.0 - update your scripts accordingly
 readonly USER_DATA_DIRS=(
     "$HOME/.local/share/xanados"
     "$HOME/.local/share/xanados/benchmarks"

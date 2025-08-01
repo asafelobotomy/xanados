@@ -29,7 +29,7 @@ cache_commands() {
     print_status "Caching command availability for ${#commands[@]} commands..."
     
     for cmd in "${commands[@]}"; do
-        command_exists "$cmd" "force" >/dev/null
+        command_exists_cached "$cmd" "force" >/dev/null
     done
     
     end_time=$(date +%s%N)
@@ -160,9 +160,9 @@ SYSTEM_TOOLS=(
     ["lsblk"]="Block Device Information"
 )
 
-# Check if command exists (with caching)
-# Enhanced command_exists with caching (overrides common.sh version when validation.sh is loaded)
-command_exists() {
+# Enhanced command_exists with caching (extends common.sh version when validation.sh is loaded)
+# This function enhances the basic command_exists from common.sh with caching capabilities
+command_exists_cached() {
     local cmd="$1"
     local force_check="${2:-false}"
     
@@ -172,17 +172,34 @@ command_exists() {
     
     # Check cache first (unless forced)
     if [[ "$force_check" == "false" ]] && [[ -n "${COMMAND_CACHE[$cmd]:-}" ]]; then
+        ((CACHE_HITS++))
         [[ "${COMMAND_CACHE[$cmd]}" == "true" ]]
         return $?
     fi
     
-    # Perform actual check
-    if command -v "$cmd" >/dev/null 2>&1; then
-        COMMAND_CACHE["$cmd"]="true"
-        return 0
+    # Perform actual check using original command_exists from common.sh if available
+    if declare -f command_exists >/dev/null 2>&1 && [[ "$(type -t command_exists)" == "function" ]]; then
+        # Use the original command_exists from common.sh
+        if command -v "$cmd" >/dev/null 2>&1; then
+            COMMAND_CACHE["$cmd"]="true"
+            ((CACHE_MISSES++))
+            return 0
+        else
+            COMMAND_CACHE["$cmd"]="false"
+            ((CACHE_MISSES++))
+            return 1
+        fi
     else
-        COMMAND_CACHE["$cmd"]="false"
-        return 1
+        # Fallback if common.sh not loaded
+        if command -v "$cmd" >/dev/null 2>&1; then
+            COMMAND_CACHE["$cmd"]="true"
+            ((CACHE_MISSES++))
+            return 0
+        else
+            COMMAND_CACHE["$cmd"]="false"
+            ((CACHE_MISSES++))
+            return 1
+        fi
     fi
 }
 
@@ -474,12 +491,6 @@ check_memory_requirements() {
     
     print_debug "Memory check passed: ${available_mb}MB available (${required_mb}MB required)"
     return 0
-}
-
-# Clear command cache
-clear_command_cache() {
-    COMMAND_CACHE=()
-    print_debug "Command cache cleared"
 }
 
 # Print command cache status

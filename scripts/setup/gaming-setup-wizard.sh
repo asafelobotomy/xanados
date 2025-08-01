@@ -19,21 +19,13 @@ source "$(dirname "${BASH_SOURCE[0]}")/../lib/gaming-env.sh"
 
 # Script directory and paths
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-XANADOS_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
+# XANADOS_ROOT is set in common.sh as readonly - no need to redefine
 LOG_FILE="/var/log/xanados/gaming-setup-wizard.log"
 CONFIG_DIR="$HOME/.config/xanados"
 TEMP_DIR="/tmp/xanados-wizard-$$"
 
-# Colors for output
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-BLUE='\033[0;34m'
-PURPLE='\033[0;35m'
-CYAN='\033[0;36m'
-WHITE='\033[1;37m'
-BOLD='\033[1m'
-NC='\033[0m' # No Color
+# Colors are defined in common.sh - no need to redefine here
+# Color variables: RED, GREEN, YELLOW, BLUE, PURPLE, CYAN, WHITE, BOLD, NC
 
 # Unicode symbols
 CHECKMARK="✓"
@@ -51,10 +43,14 @@ ROCKET="🚀"
 setup_logging() {
     local log_dir="/var/log/xanados"
     
-    # Create log directory if it doesn't exist
-    if [[ ! -d "$log_dir" ]]; then
-        sudo mkdir -p "$log_dir"
-        sudo chown "$USER:$USER" "$log_dir"
+    # Try to create log directory with fallback to user directory
+    if sudo mkdir -p "$log_dir" 2>/dev/null && sudo chown "$USER:$USER" "$log_dir" 2>/dev/null; then
+        LOG_FILE="$log_dir/gaming-setup-wizard.log"
+    else
+        # Fall back to user directory if system directory creation fails
+        log_dir="$HOME/.local/log/xanados"
+        mkdir -p "$log_dir"
+        LOG_FILE="$log_dir/gaming-setup-wizard.log"
     fi
     
     # Create log file
@@ -162,8 +158,8 @@ detect_gpu() {
     
     # NVIDIA Detection
     if get_cached_command "nvidia-smi"; then
-        local nvidia_gpu=$(nvidia-smi --query-gpu=name --format=csv,noheader,nounits | head -1)
-        local nvidia_driver=$(nvidia-smi --query-gpu=driver_version --format=csv,noheader,nounits | head -1)
+        local nvidia_gpu=$(nvidia-smi --query-gpu=name --format=csv,noheader,nounits 2>/dev/null | head -1 || echo "NVIDIA GPU")
+        local nvidia_driver=$(nvidia-smi --query-gpu=driver_version --format=csv,noheader,nounits 2>/dev/null | head -1 || echo "Unknown")
         echo -e "      ${GREEN}NVIDIA: $nvidia_gpu (Driver: $nvidia_driver)${NC}"
         GPU_VENDOR="nvidia"
         GPU_MODEL="$nvidia_gpu"
@@ -172,7 +168,7 @@ detect_gpu() {
     
     # AMD Detection
     if lspci | grep -i "VGA.*AMD\|VGA.*ATI" &> /dev/null; then
-        local amd_gpu=$(lspci | grep -i "VGA.*AMD\|VGA.*ATI" | cut -d: -f3 | xargs)
+        local amd_gpu=$(lspci | grep -i "VGA.*AMD\|VGA.*ATI" | cut -d: -f3 | xargs || echo "AMD GPU")
         echo -e "      ${RED}AMD: $amd_gpu${NC}"
         if [[ -z "${GPU_VENDOR:-}" ]]; then
             GPU_VENDOR="amd"
@@ -182,7 +178,7 @@ detect_gpu() {
     
     # Intel Detection
     if lspci | grep -i "VGA.*Intel" &> /dev/null; then
-        local intel_gpu=$(lspci | grep -i "VGA.*Intel" | cut -d: -f3 | xargs)
+        local intel_gpu=$(lspci | grep -i "VGA.*Intel" | cut -d: -f3 | xargs || echo "Intel GPU")
         echo -e "      ${BLUE}Intel: $intel_gpu${NC}"
         if [[ -z "${GPU_VENDOR:-}" ]]; then
             GPU_VENDOR="intel"
@@ -203,20 +199,28 @@ detect_gpu() {
 detect_storage() {
     echo -e "  ${GEAR} Storage:"
     
-    local storage_info=$(lsblk -d -o NAME,SIZE,MODEL,ROTA | grep -v "NAME")
+    local storage_info
+    storage_info=$(lsblk -d -o NAME,SIZE,MODEL,ROTA 2>/dev/null | grep -v "NAME" || echo "")
+    
+    if [[ -z "$storage_info" ]]; then
+        echo -e "      ${YELLOW}Storage information unavailable${NC}"
+        return
+    fi
     
     while IFS= read -r line; do
-        local device=$(echo "$line" | awk '{print $1}')
-        local size=$(echo "$line" | awk '{print $2}')
-        local model=$(echo "$line" | awk '{$1=$2=""; print $0}' | xargs)
-        local is_rotational=$(echo "$line" | awk '{print $NF}')
-        
-        if [[ "$is_rotational" == "0" ]]; then
-            echo -e "      ${GREEN}SSD: $device ($size) - $model${NC}"
-            HAS_SSD=true
-        else
-            echo -e "      ${YELLOW}HDD: $device ($size) - $model${NC}"
-            HAS_HDD=true
+        if [[ -n "$line" ]]; then
+            local device=$(echo "$line" | awk '{print $1}' || echo "unknown")
+            local size=$(echo "$line" | awk '{print $2}' || echo "unknown")
+            local model=$(echo "$line" | awk '{$1=$2=""; print $0}' | xargs || echo "Unknown Model")
+            local is_rotational=$(echo "$line" | awk '{print $NF}' || echo "1")
+            
+            if [[ "$is_rotational" == "0" ]]; then
+                echo -e "      ${GREEN}SSD: $device ($size) - $model${NC}"
+                HAS_SSD=true
+            else
+                echo -e "      ${YELLOW}HDD: $device ($size) - $model${NC}"
+                HAS_HDD=true
+            fi
         fi
     done <<< "$storage_info"
 }
@@ -237,7 +241,8 @@ detect_audio() {
     fi
     
     # Audio Devices
-    local audio_devices=$(aplay -l 2>/dev/null | grep "card" | wc -l)
+    local audio_devices
+    audio_devices=$(aplay -l 2>/dev/null | grep -c "card" || echo "0")
     echo -e "      Audio Devices: $audio_devices"
 }
 
@@ -268,7 +273,8 @@ detect_controllers() {
     fi
     
     # Generic Controllers
-    local js_devices=$(ls /dev/input/js* 2>/dev/null | wc -l)
+    local js_devices
+    js_devices=$(find /dev/input -name "js*" 2>/dev/null | wc -l || echo "0")
     if [[ $js_devices -gt 0 ]]; then
         echo -e "      Generic Controllers: $js_devices"
         ((controllers_found += js_devices))
@@ -785,23 +791,30 @@ apply_basic_gaming_optimizations() {
     # Set CPU governor to performance for gaming
     if get_cached_command "cpupower"; then
         echo -e "  ${GEAR} Setting CPU governor to performance..."
-        sudo cpupower frequency-set -g performance &> /dev/null || true
+        if ! sudo cpupower frequency-set -g performance &> /dev/null; then
+            log_message "WARNING" "Could not set CPU governor to performance"
+        fi
     fi
     
     # Optimize I/O scheduler for gaming
+    echo -e "  ${GEAR} Optimizing I/O schedulers..."
     for device in /sys/block/*/queue/scheduler; do
-        if [[ -w "$device" ]]; then
-            if grep -q "mq-deadline" "$device"; then
-                echo "mq-deadline" | sudo tee "$device" > /dev/null
-            elif grep -q "deadline" "$device"; then
-                echo "deadline" | sudo tee "$device" > /dev/null
+        if [[ -w "$device" ]] && [[ -f "$device" ]]; then
+            if grep -q "mq-deadline" "$device" 2>/dev/null; then
+                echo "mq-deadline" | sudo tee "$device" > /dev/null 2>&1 || true
+            elif grep -q "deadline" "$device" 2>/dev/null; then
+                echo "deadline" | sudo tee "$device" > /dev/null 2>&1 || true
             fi
         fi
     done
     
     # Set gaming-friendly swappiness
-    echo "vm.swappiness=10" | sudo tee /etc/sysctl.d/99-xanados-gaming.conf > /dev/null
-    sudo sysctl -p /etc/sysctl.d/99-xanados-gaming.conf &> /dev/null || true
+    echo -e "  ${GEAR} Setting gaming-friendly swappiness..."
+    if echo "vm.swappiness=10" | sudo tee /etc/sysctl.d/99-xanados-gaming.conf > /dev/null 2>&1; then
+        sudo sysctl -p /etc/sysctl.d/99-xanados-gaming.conf &> /dev/null || true
+    else
+        log_message "WARNING" "Could not set swappiness configuration"
+    fi
     
     log_message "SUCCESS" "Basic gaming optimizations applied"
 }
@@ -883,7 +896,7 @@ main() {
     # Display gaming environment analysis
     log_message "INFO" "Analyzing gaming environment..."
     echo
-    print_section_header "Gaming Environment Analysis"
+    print_section "Gaming Environment Analysis"
     generate_gaming_matrix "table"
     echo
     
@@ -902,7 +915,7 @@ main() {
     echo
     
     # Check compatibility with standard gaming profile
-    print_section_header "Gaming Profile Compatibility"
+    print_section "Gaming Profile Compatibility"
     echo "Checking compatibility with standard gaming profile..."
     echo
     generate_compatibility_report "standard" "table"

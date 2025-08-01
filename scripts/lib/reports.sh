@@ -475,58 +475,563 @@ _generate_markdown_generic_content() {
 # Performance-specific content generators
 _generate_html_performance_content() {
     local data_file="$1"
+    
+    echo "<div class=\"performance-metrics\">"
+    echo "<h3>Performance Metrics Overview</h3>"
+    
+    # Parse CPU, memory, and I/O metrics from data file
+    if [[ -f "$data_file" ]]; then
+        echo "<div class=\"metrics-grid\">"
+        
+        # CPU Metrics
+        echo "<div class=\"metric-card\">"
+        echo "<h4>CPU Performance</h4>"
+        if grep -q "CPU\|cpu\|processor" "$data_file"; then
+            grep -i "cpu\|processor\|cores\|frequency" "$data_file" | head -5 | while read -r line; do
+                echo "<p>$line</p>"
+            done
+        else
+            echo "<p>No CPU metrics found</p>"
+        fi
+        echo "</div>"
+        
+        # Memory Metrics
+        echo "<div class=\"metric-card\">"
+        echo "<h4>Memory Performance</h4>"
+        if grep -q -i "memory\|ram\|mem" "$data_file"; then
+            grep -i "memory\|ram\|mem\|swap" "$data_file" | head -5 | while read -r line; do
+                echo "<p>$line</p>"
+            done
+        else
+            echo "<p>No memory metrics found</p>"
+        fi
+        echo "</div>"
+        
+        # I/O Metrics
+        echo "<div class=\"metric-card\">"
+        echo "<h4>I/O Performance</h4>"
+        if grep -q -i "disk\|i/o\|read\|write\|iops" "$data_file"; then
+            grep -i "disk\|i/o\|read\|write\|iops\|throughput" "$data_file" | head -5 | while read -r line; do
+                echo "<p>$line</p>"
+            done
+        else
+            echo "<p>No I/O metrics found</p>"
+        fi
+        echo "</div>"
+        
+        echo "</div>"
+    fi
+    
+    echo "</div>"
+    echo "<hr>"
+    
+    # Include generic content for the rest
     _generate_html_generic_content "$data_file"
-    # TODO: Add performance-specific parsing and formatting
 }
 
 _generate_json_performance_content() {
     local data_file="$1"
-    _generate_json_generic_content "$data_file"
-    # TODO: Add performance-specific parsing and formatting
+    
+    # Create performance-specific JSON structure
+    local temp_json
+    temp_json=$(mktemp)
+    cat > "$temp_json" << 'EOF'
+{
+    "performance_metrics": {
+        "cpu": [],
+        "memory": [],
+        "io": [],
+        "summary": {}
+    },
+    "raw_data": []
+}
+EOF
+    
+    if [[ -f "$data_file" ]]; then
+        # Parse performance data and add to JSON
+        local cpu_data=""
+        local memory_data=""
+        local io_data=""
+        
+        while IFS= read -r line; do
+            # Categorize performance data
+            if echo "$line" | grep -q -i "cpu\|processor\|cores\|frequency"; then
+                cpu_data="${cpu_data}\"${line}\","
+            elif echo "$line" | grep -q -i "memory\|ram\|mem\|swap"; then
+                memory_data="${memory_data}\"${line}\","
+            elif echo "$line" | grep -q -i "disk\|i/o\|read\|write\|iops"; then
+                io_data="${io_data}\"${line}\","
+            fi
+        done < "$data_file"
+        
+        # Remove trailing commas and update JSON
+        cpu_data=${cpu_data%,}
+        memory_data=${memory_data%,}
+        io_data=${io_data%,}
+        
+        # Update temp JSON with performance data
+        jq --argjson cpu "[$cpu_data]" \
+           --argjson mem "[$memory_data]" \
+           --argjson io "[$io_data]" \
+           '.performance_metrics.cpu = $cpu | .performance_metrics.memory = $mem | .performance_metrics.io = $io' \
+           "$temp_json" > "${temp_json}.new" && mv "${temp_json}.new" "$temp_json"
+    fi
+    
+    # Output the JSON content
+    cat "$temp_json"
+    rm -f "$temp_json"
 }
 
 _generate_markdown_performance_content() {
     local data_file="$1"
+    
+    echo "## Performance Metrics Overview"
+    echo ""
+    
+    if [[ -f "$data_file" ]]; then
+        echo "### CPU Performance"
+        if grep -q -i "cpu\|processor\|cores" "$data_file"; then
+            grep -i "cpu\|processor\|cores\|frequency" "$data_file" | head -5 | sed 's/^/- /'
+        else
+            echo "- No CPU metrics found"
+        fi
+        echo ""
+        
+        echo "### Memory Performance"
+        if grep -q -i "memory\|ram\|mem" "$data_file"; then
+            grep -i "memory\|ram\|mem\|swap" "$data_file" | head -5 | sed 's/^/- /'
+        else
+            echo "- No memory metrics found"
+        fi
+        echo ""
+        
+        echo "### I/O Performance"
+        if grep -q -i "disk\|i/o\|read\|write" "$data_file"; then
+            grep -i "disk\|i/o\|read\|write\|iops\|throughput" "$data_file" | head -5 | sed 's/^/- /'
+        else
+            echo "- No I/O metrics found"
+        fi
+        echo ""
+    fi
+    
+    echo "---"
+    echo ""
+    
+    # Include generic content
     _generate_markdown_generic_content "$data_file"
-    # TODO: Add performance-specific parsing and formatting
 }
 
 # Gaming-specific content generators
 _generate_html_gaming_content() {
     local data_file="$1"
+    
+    echo "<div class=\"gaming-environment\">"
+    echo "<h3>Gaming Environment Analysis</h3>"
+    
+    if [[ -f "$data_file" ]]; then
+        echo "<div class=\"gaming-grid\">"
+        
+        # Gaming Platforms
+        echo "<div class=\"gaming-card\">"
+        echo "<h4>Gaming Platforms</h4>"
+        if grep -q -i "steam\|lutris\|heroic\|bottles" "$data_file"; then
+            grep -i "steam\|lutris\|heroic\|bottles\|epic\|gog" "$data_file" | while read -r line; do
+                echo "<p class=\"platform-status\">$line</p>"
+            done
+        else
+            echo "<p>No gaming platforms detected</p>"
+        fi
+        echo "</div>"
+        
+        # Performance Tools
+        echo "<div class=\"gaming-card\">"
+        echo "<h4>Performance Tools</h4>"
+        if grep -q -i "gamemode\|mangohud\|goverlay" "$data_file"; then
+            grep -i "gamemode\|mangohud\|goverlay\|performance" "$data_file" | while read -r line; do
+                echo "<p class=\"tool-status\">$line</p>"
+            done
+        else
+            echo "<p>No performance tools detected</p>"
+        fi
+        echo "</div>"
+        
+        # Graphics & Drivers
+        echo "<div class=\"gaming-card\">"
+        echo "<h4>Graphics & Drivers</h4>"
+        if grep -q -i "vulkan\|opengl\|nvidia\|amd" "$data_file"; then
+            grep -i "vulkan\|opengl\|nvidia\|amd\|mesa\|driver" "$data_file" | head -5 | while read -r line; do
+                echo "<p class=\"graphics-info\">$line</p>"
+            done
+        else
+            echo "<p>No graphics information found</p>"
+        fi
+        echo "</div>"
+        
+        # Wine & Compatibility
+        echo "<div class=\"gaming-card\">"
+        echo "<h4>Wine & Compatibility</h4>"
+        if grep -q -i "wine\|proton\|dxvk\|winetricks" "$data_file"; then
+            grep -i "wine\|proton\|dxvk\|winetricks\|compatibility" "$data_file" | while read -r line; do
+                echo "<p class=\"compat-info\">$line</p>"
+            done
+        else
+            echo "<p>No compatibility layer information found</p>"
+        fi
+        echo "</div>"
+        
+        echo "</div>"
+    fi
+    
+    echo "</div>"
+    echo "<hr>"
+    
+    # Include generic content
     _generate_html_generic_content "$data_file"
-    # TODO: Add gaming-specific parsing and formatting
 }
 
 _generate_json_gaming_content() {
     local data_file="$1"
-    _generate_json_generic_content "$data_file"
-    # TODO: Add gaming-specific parsing and formatting
+    
+    # Create gaming-specific JSON structure
+    local temp_json
+    temp_json=$(mktemp)
+    cat > "$temp_json" << 'EOF'
+{
+    "gaming_environment": {
+        "platforms": [],
+        "performance_tools": [],
+        "graphics": [],
+        "compatibility": [],
+        "summary": {
+            "total_platforms": 0,
+            "total_tools": 0,
+            "readiness_score": "unknown"
+        }
+    },
+    "raw_data": []
+}
+EOF
+    
+    if [[ -f "$data_file" ]]; then
+        # Parse gaming data
+        local platforms=""
+        local perf_tools=""
+        local graphics=""
+        local compat=""
+        local platform_count=0
+        local tool_count=0
+        
+        while IFS= read -r line; do
+            if echo "$line" | grep -q -i "steam\|lutris\|heroic\|bottles\|epic\|gog"; then
+                platforms="${platforms}\"${line}\","
+                ((platform_count++))
+            elif echo "$line" | grep -q -i "gamemode\|mangohud\|goverlay"; then
+                perf_tools="${perf_tools}\"${line}\","
+                ((tool_count++))
+            elif echo "$line" | grep -q -i "vulkan\|opengl\|nvidia\|amd\|mesa\|driver"; then
+                graphics="${graphics}\"${line}\","
+            elif echo "$line" | grep -q -i "wine\|proton\|dxvk\|winetricks"; then
+                compat="${compat}\"${line}\","
+            fi
+        done < "$data_file"
+        
+        # Remove trailing commas
+        platforms=${platforms%,}
+        perf_tools=${perf_tools%,}
+        graphics=${graphics%,}
+        compat=${compat%,}
+        
+        # Calculate readiness score
+        local readiness="basic"
+        if [[ $platform_count -ge 2 && $tool_count -ge 2 ]]; then
+            readiness="excellent"
+        elif [[ $platform_count -ge 1 && $tool_count -ge 1 ]]; then
+            readiness="good"
+        fi
+        
+        # Update JSON with gaming data
+        jq --argjson platforms "[$platforms]" \
+           --argjson tools "[$perf_tools]" \
+           --argjson graphics "[$graphics]" \
+           --argjson compat "[$compat]" \
+           --arg count_p "$platform_count" \
+           --arg count_t "$tool_count" \
+           --arg readiness "$readiness" \
+           '.gaming_environment.platforms = $platforms | 
+            .gaming_environment.performance_tools = $tools | 
+            .gaming_environment.graphics = $graphics | 
+            .gaming_environment.compatibility = $compat |
+            .gaming_environment.summary.total_platforms = ($count_p | tonumber) |
+            .gaming_environment.summary.total_tools = ($count_t | tonumber) |
+            .gaming_environment.summary.readiness_score = $readiness' \
+           "$temp_json" > "${temp_json}.new" && mv "${temp_json}.new" "$temp_json"
+    fi
+    
+    # Output the JSON content
+    cat "$temp_json"
+    rm -f "$temp_json"
 }
 
 _generate_markdown_gaming_content() {
     local data_file="$1"
+    
+    echo "## Gaming Environment Analysis"
+    echo ""
+    
+    if [[ -f "$data_file" ]]; then
+        echo "### 🎮 Gaming Platforms"
+        if grep -q -i "steam\|lutris\|heroic\|bottles" "$data_file"; then
+            grep -i "steam\|lutris\|heroic\|bottles\|epic\|gog" "$data_file" | sed 's/^/- /'
+        else
+            echo "- No gaming platforms detected"
+        fi
+        echo ""
+        
+        echo "### ⚡ Performance Tools"
+        if grep -q -i "gamemode\|mangohud\|goverlay" "$data_file"; then
+            grep -i "gamemode\|mangohud\|goverlay\|performance" "$data_file" | sed 's/^/- /'
+        else
+            echo "- No performance tools detected"
+        fi
+        echo ""
+        
+        echo "### 🖥️ Graphics & Drivers"
+        if grep -q -i "vulkan\|opengl\|nvidia\|amd" "$data_file"; then
+            grep -i "vulkan\|opengl\|nvidia\|amd\|mesa\|driver" "$data_file" | head -5 | sed 's/^/- /'
+        else
+            echo "- No graphics information found"
+        fi
+        echo ""
+        
+        echo "### 🍷 Wine & Compatibility"
+        if grep -q -i "wine\|proton\|dxvk\|winetricks" "$data_file"; then
+            grep -i "wine\|proton\|dxvk\|winetricks\|compatibility" "$data_file" | sed 's/^/- /'
+        else
+            echo "- No compatibility layer information found"
+        fi
+        echo ""
+    fi
+    
+    echo "---"
+    echo ""
+    
+    # Include generic content
     _generate_markdown_generic_content "$data_file"
-    # TODO: Add gaming-specific parsing and formatting
 }
 
 # System-specific content generators
 _generate_html_system_content() {
     local data_file="$1"
+    
+    echo "<div class=\"system-analysis\">"
+    echo "<h3>System Analysis Overview</h3>"
+    
+    if [[ -f "$data_file" ]]; then
+        echo "<div class=\"system-grid\">"
+        
+        # Hardware Information
+        echo "<div class=\"system-card\">"
+        echo "<h4>Hardware Information</h4>"
+        if grep -q -i "cpu\|processor\|memory\|disk" "$data_file"; then
+            echo "<div class=\"hardware-specs\">"
+            grep -i "cpu\|processor\|memory\|ram\|disk\|storage" "$data_file" | head -8 | while read -r line; do
+                echo "<p class=\"hw-spec\">$line</p>"
+            done
+            echo "</div>"
+        else
+            echo "<p>No hardware information found</p>"
+        fi
+        echo "</div>"
+        
+        # Operating System
+        echo "<div class=\"system-card\">"
+        echo "<h4>Operating System</h4>"
+        if grep -q -i "kernel\|distro\|version\|release" "$data_file"; then
+            grep -i "kernel\|distro\|version\|release\|ubuntu\|debian\|arch" "$data_file" | head -5 | while read -r line; do
+                echo "<p class=\"os-info\">$line</p>"
+            done
+        else
+            echo "<p>No OS information found</p>"
+        fi
+        echo "</div>"
+        
+        # Services & Processes
+        echo "<div class=\"system-card\">"
+        echo "<h4>System Services</h4>"
+        if grep -q -i "service\|daemon\|process\|systemd" "$data_file"; then
+            grep -i "service\|daemon\|process\|systemd\|active\|running" "$data_file" | head -6 | while read -r line; do
+                echo "<p class=\"service-status\">$line</p>"
+            done
+        else
+            echo "<p>No service information found</p>"
+        fi
+        echo "</div>"
+        
+        # Network & Security
+        echo "<div class=\"system-card\">"
+        echo "<h4>Network & Security</h4>"
+        if grep -q -i "network\|firewall\|security\|port" "$data_file"; then
+            grep -i "network\|firewall\|security\|port\|connection\|interface" "$data_file" | head -5 | while read -r line; do
+                echo "<p class=\"network-info\">$line</p>"
+            done
+        else
+            echo "<p>No network/security information found</p>"
+        fi
+        echo "</div>"
+        
+        echo "</div>"
+    fi
+    
+    echo "</div>"
+    echo "<hr>"
+    
+    # Include generic content
     _generate_html_generic_content "$data_file"
-    # TODO: Add system-specific parsing and formatting
 }
 
 _generate_json_system_content() {
     local data_file="$1"
-    _generate_json_generic_content "$data_file"
-    # TODO: Add system-specific parsing and formatting
+    
+    # Create system-specific JSON structure
+    local temp_json
+    temp_json=$(mktemp)
+    cat > "$temp_json" << 'EOF'
+{
+    "system_analysis": {
+        "hardware": {
+            "cpu": [],
+            "memory": [],
+            "storage": []
+        },
+        "operating_system": [],
+        "services": [],
+        "network_security": [],
+        "summary": {
+            "total_services": 0,
+            "system_health": "unknown"
+        }
+    },
+    "raw_data": []
+}
+EOF
+    
+    if [[ -f "$data_file" ]]; then
+        # Parse system data
+        local cpu_info=""
+        local memory_info=""
+        local storage_info=""
+        local os_info=""
+        local services=""
+        local network=""
+        local service_count=0
+        
+        while IFS= read -r line; do
+            if echo "$line" | grep -q -i "cpu\|processor"; then
+                cpu_info="${cpu_info}\"${line}\","
+            elif echo "$line" | grep -q -i "memory\|ram"; then
+                memory_info="${memory_info}\"${line}\","
+            elif echo "$line" | grep -q -i "disk\|storage"; then
+                storage_info="${storage_info}\"${line}\","
+            elif echo "$line" | grep -q -i "kernel\|distro\|version\|release"; then
+                os_info="${os_info}\"${line}\","
+            elif echo "$line" | grep -q -i "service\|daemon\|systemd"; then
+                services="${services}\"${line}\","
+                ((service_count++))
+            elif echo "$line" | grep -q -i "network\|firewall\|security"; then
+                network="${network}\"${line}\","
+            fi
+        done < "$data_file"
+        
+        # Remove trailing commas
+        cpu_info=${cpu_info%,}
+        memory_info=${memory_info%,}
+        storage_info=${storage_info%,}
+        os_info=${os_info%,}
+        services=${services%,}
+        network=${network%,}
+        
+        # Determine system health
+        local health="good"
+        if [[ $service_count -gt 10 ]]; then
+            health="excellent"
+        elif [[ $service_count -eq 0 ]]; then
+            health="unknown"
+        fi
+        
+        # Update JSON with system data
+        jq --argjson cpu "[$cpu_info]" \
+           --argjson mem "[$memory_info]" \
+           --argjson storage "[$storage_info]" \
+           --argjson os "[$os_info]" \
+           --argjson services "[$services]" \
+           --argjson network "[$network]" \
+           --arg count_s "$service_count" \
+           --arg health "$health" \
+           '.system_analysis.hardware.cpu = $cpu | 
+            .system_analysis.hardware.memory = $mem | 
+            .system_analysis.hardware.storage = $storage |
+            .system_analysis.operating_system = $os |
+            .system_analysis.services = $services |
+            .system_analysis.network_security = $network |
+            .system_analysis.summary.total_services = ($count_s | tonumber) |
+            .system_analysis.summary.system_health = $health' \
+           "$temp_json" > "${temp_json}.new" && mv "${temp_json}.new" "$temp_json"
+    fi
+    
+    # Output the JSON content
+    cat "$temp_json"
+    rm -f "$temp_json"
 }
 
 _generate_markdown_system_content() {
     local data_file="$1"
+    
+    echo "## System Analysis Overview"
+    echo ""
+    
+    if [[ -f "$data_file" ]]; then
+        echo "### 💻 Hardware Information"
+        if grep -q -i "cpu\|processor\|memory\|disk" "$data_file"; then
+            echo "#### CPU & Processing"
+            grep -i "cpu\|processor" "$data_file" | head -3 | sed 's/^/- /'
+            echo ""
+            echo "#### Memory & Storage"
+            grep -i "memory\|ram\|disk\|storage" "$data_file" | head -4 | sed 's/^/- /'
+        else
+            echo "- No hardware information found"
+        fi
+        echo ""
+        
+        echo "### 🐧 Operating System"
+        if grep -q -i "kernel\|distro\|version" "$data_file"; then
+            grep -i "kernel\|distro\|version\|release\|ubuntu\|debian\|arch" "$data_file" | head -4 | sed 's/^/- /'
+        else
+            echo "- No OS information found"
+        fi
+        echo ""
+        
+        echo "### ⚙️ System Services"
+        if grep -q -i "service\|daemon\|process" "$data_file"; then
+            grep -i "service\|daemon\|process\|systemd\|active\|running" "$data_file" | head -6 | sed 's/^/- /'
+        else
+            echo "- No service information found"
+        fi
+        echo ""
+        
+        echo "### 🌐 Network & Security"
+        if grep -q -i "network\|firewall\|security" "$data_file"; then
+            grep -i "network\|firewall\|security\|port\|connection\|interface" "$data_file" | head -5 | sed 's/^/- /'
+        else
+            echo "- No network/security information found"
+        fi
+        echo ""
+    fi
+    
+    echo "---"
+    echo ""
+    
+    # Include generic content
     _generate_markdown_generic_content "$data_file"
-    # TODO: Add system-specific parsing and formatting
 }
 
 # ============================================================================

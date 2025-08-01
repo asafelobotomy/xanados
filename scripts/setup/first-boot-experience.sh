@@ -19,22 +19,13 @@ source "$(dirname "${BASH_SOURCE[0]}")/../lib/gaming-env.sh"
 
 # Script directory and paths
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-XANADOS_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
+# XANADOS_ROOT is set in common.sh as readonly - no need to redefine
 LOG_FILE="/var/log/xanados/first-boot-experience.log"
 CONFIG_DIR="$HOME/.config/xanados"
 FIRST_BOOT_MARKER="/etc/xanados/first-boot-completed"
 TEMP_DIR="/tmp/xanados-firstboot-$$"
 
-# Colors for output
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-BLUE='\033[0;34m'
-PURPLE='\033[0;35m'
-CYAN='\033[0;36m'
-WHITE='\033[1;37m'
-BOLD='\033[1m'
-NC='\033[0m' # No Color
+# Colors are defined in common.sh - no need to redefine here
 
 # Unicode symbols
 CHECKMARK="✓"
@@ -54,12 +45,24 @@ HEART="♥"
 setup_logging() {
     local log_dir="/var/log/xanados"
     
+    # Try to create system log directory, fall back to user directory if failed
     if [[ ! -d "$log_dir" ]]; then
-        sudo mkdir -p "$log_dir"
-        sudo chown "$USER:$USER" "$log_dir"
+        if sudo mkdir -p "$log_dir" 2>/dev/null && sudo chown "$USER:$USER" "$log_dir" 2>/dev/null; then
+            LOG_FILE="$log_dir/first-boot-experience.log"
+        else
+            # Fall back to user directory if system directory creation fails
+            log_dir="$HOME/.local/log/xanados"
+            mkdir -p "$log_dir"
+            LOG_FILE="$log_dir/first-boot-experience.log"
+        fi
     fi
     
-    touch "$LOG_FILE"
+    touch "$LOG_FILE" 2>/dev/null || {
+        # Final fallback to temp directory
+        LOG_FILE="/tmp/xanados-first-boot-experience.log"
+        touch "$LOG_FILE"
+    }
+    
     echo "=== xanadOS First-Boot Experience Started: $(date) ===" >> "$LOG_FILE"
 }
 
@@ -119,7 +122,10 @@ trap cleanup_on_exit EXIT
 # ==============================================================================
 
 check_first_boot() {
-    if [[ -f "$FIRST_BOOT_MARKER" ]]; then
+    # Check both system and user completion markers
+    local user_marker="$CONFIG_DIR/first-boot-completed"
+    
+    if [[ -f "$FIRST_BOOT_MARKER" ]] || [[ -f "$user_marker" ]]; then
         log_message "INFO" "First-boot already completed"
         echo -e "${GREEN}xanadOS first-boot setup has already been completed.${NC}"
         echo -e "Run the gaming setup wizard directly if you want to reconfigure:"
@@ -302,12 +308,10 @@ EOF
 analyze_gpu() {
     # NVIDIA Detection
     if get_cached_command "nvidia-smi"; then
-        local nvidia_gpu
-        nvidia_gpu=$(nvidia-smi --query-gpu=name --format=csv,noheader,nounits | head -1)
-        local nvidia_driver
-        nvidia_driver=$(nvidia-smi --query-gpu=driver_version --format=csv,noheader,nounits | head -1)
-        local nvidia_memory
-        nvidia_memory=$(nvidia-smi --query-gpu=memory.total --format=csv,noheader,nounits | head -1)
+        local nvidia_gpu nvidia_driver nvidia_memory
+        nvidia_gpu=$(nvidia-smi --query-gpu=name --format=csv,noheader,nounits 2>/dev/null | head -1 || echo "NVIDIA GPU")
+        nvidia_driver=$(nvidia-smi --query-gpu=driver_version --format=csv,noheader,nounits 2>/dev/null | head -1 || echo "Unknown")
+        nvidia_memory=$(nvidia-smi --query-gpu=memory.total --format=csv,noheader,nounits 2>/dev/null | head -1 || echo "Unknown")
         
         echo -e "    ${GREEN}NVIDIA GPU: $nvidia_gpu${NC}"
         echo -e "    ${GREEN}Driver: $nvidia_driver${NC}"
@@ -320,7 +324,7 @@ analyze_gpu() {
         GPU_STATUS="excellent"
     elif lspci | grep -i "VGA.*AMD\|VGA.*ATI" &> /dev/null; then
         local amd_gpu
-        amd_gpu=$(lspci | grep -i "VGA.*AMD\|VGA.*ATI" | cut -d: -f3 | xargs)
+        amd_gpu=$(lspci | grep -i "VGA.*AMD\|VGA.*ATI" | cut -d: -f3 | xargs 2>/dev/null || echo "AMD GPU")
         echo -e "    ${GREEN}AMD GPU: $amd_gpu${NC}"
         
         # Check for AMDGPU driver
@@ -336,7 +340,7 @@ analyze_gpu() {
         GPU_MODEL="$amd_gpu"
     elif lspci | grep -i "VGA.*Intel" &> /dev/null; then
         local intel_gpu
-        intel_gpu=$(lspci | grep -i "VGA.*Intel" | cut -d: -f3 | xargs)
+        intel_gpu=$(lspci | grep -i "VGA.*Intel" | cut -d: -f3 | xargs 2>/dev/null || echo "Intel GPU")
         echo -e "    ${BLUE}Intel GPU: $intel_gpu${NC}"
         echo -e "    ${YELLOW}Note: Integrated graphics - consider dedicated GPU for demanding games${NC}"
         
@@ -409,23 +413,23 @@ establish_performance_baseline() {
     
     echo -e "  ${GEAR} Establishing baseline performance metrics..."
     
-    # Quick CPU test
+    # Quick CPU test (simplified)
     echo -e "  ${ARROW} Testing CPU performance..."
     local cpu_score
-    cpu_score=$(timeout 10s yes > /dev/null & local pid=$!; sleep 1; local start=$(cat /proc/loadavg | awk '{print $1}'); sleep 3; local end=$(cat /proc/loadavg | awk '{print $1}'); kill $pid 2>/dev/null; echo "$end" | awk '{printf "%.2f", $1}')
-    echo -e "    CPU Load Score: ${BOLD}$cpu_score${NC}"
+    cpu_score=$(cat /proc/loadavg | awk '{printf "%.2f", $1}' 2>/dev/null || echo "0.00")
+    echo -e "    Current CPU Load: ${BOLD}$cpu_score${NC}"
     
     # Memory test
     echo -e "  ${ARROW} Testing memory performance..."
     local mem_speed
-    mem_speed=$(timeout 5s dd if=/dev/zero of=/dev/null bs=1M count=1000 2>&1 | grep -o '[0-9.]* MB/s' || echo "Unknown")
+    mem_speed=$(timeout 5s dd if=/dev/zero of=/dev/null bs=1M count=100 2>&1 | grep -o '[0-9.]* MB/s' 2>/dev/null || echo "Unknown")
     echo -e "    Memory Speed: ${BOLD}$mem_speed${NC}"
     
     # Storage test (quick)
     echo -e "  ${ARROW} Testing storage performance..."
     local storage_speed
-    storage_speed=$(timeout 5s dd if=/dev/zero of="$TEMP_DIR/test" bs=1M count=100 2>&1 | grep -o '[0-9.]* MB/s' || echo "Unknown")
-    rm -f "$TEMP_DIR/test"
+    storage_speed=$(timeout 5s dd if=/dev/zero of="$TEMP_DIR/test" bs=1M count=50 2>&1 | grep -o '[0-9.]* MB/s' 2>/dev/null || echo "Unknown")
+    rm -f "$TEMP_DIR/test" 2>/dev/null
     echo -e "    Storage Speed: ${BOLD}$storage_speed${NC}"
     
     # Store baseline
@@ -795,8 +799,9 @@ finalize_setup() {
 create_completion_marker() {
     log_message "INFO" "Creating completion marker"
     
-    sudo mkdir -p "$(dirname "$FIRST_BOOT_MARKER")"
-    sudo tee "$FIRST_BOOT_MARKER" > /dev/null << EOF
+    # Try to create system completion marker, fall back to user directory if failed
+    if sudo mkdir -p "$(dirname "$FIRST_BOOT_MARKER")" 2>/dev/null; then
+        if sudo tee "$FIRST_BOOT_MARKER" > /dev/null 2>&1 << EOF
 # xanadOS First-Boot Completion Marker
 # This file indicates that the first-boot setup has been completed
 
@@ -806,8 +811,40 @@ Username=$USER
 GamingProfile=$CONFIG_DIR/gaming-profile.conf
 SystemReport=$CONFIG_DIR/system-report.txt
 EOF
-    
-    echo -e "  ${CHECKMARK} First-boot completion marker created"
+        then
+            echo -e "  ${CHECKMARK} First-boot completion marker created: $FIRST_BOOT_MARKER"
+        else
+            # Fall back to user directory
+            local user_marker="$CONFIG_DIR/first-boot-completed"
+            tee "$user_marker" > /dev/null << EOF
+# xanadOS First-Boot Completion Marker (User)
+# This file indicates that the first-boot setup has been completed
+
+CompletionDate=$(date)
+SetupVersion=1.0
+Username=$USER
+GamingProfile=$CONFIG_DIR/gaming-profile.conf
+SystemReport=$CONFIG_DIR/system-report.txt
+EOF
+            echo -e "  ${CHECKMARK} First-boot completion marker created: $user_marker"
+            log_message "WARNING" "Could not create system completion marker, using user directory"
+        fi
+    else
+        # Fall back to user directory
+        local user_marker="$CONFIG_DIR/first-boot-completed"
+        tee "$user_marker" > /dev/null << EOF
+# xanadOS First-Boot Completion Marker (User)
+# This file indicates that the first-boot setup has been completed
+
+CompletionDate=$(date)
+SetupVersion=1.0
+Username=$USER
+GamingProfile=$CONFIG_DIR/gaming-profile.conf
+SystemReport=$CONFIG_DIR/system-report.txt
+EOF
+        echo -e "  ${CHECKMARK} First-boot completion marker created: $user_marker"
+        log_message "WARNING" "Could not create system completion marker, using user directory"
+    fi
 }
 
 generate_system_report() {
@@ -952,7 +989,7 @@ show_completion_screen() {
         echo
     fi
     
-    echo -e "${BOLD}${YELLOW}Gaming Readiness: ${GAMING_READINESS^} (${readiness_percentage:-0}%)${NC}"
+    echo -e "${BOLD}${YELLOW}Gaming Readiness: ${GAMING_READINESS^} (${GAMING_READINESS_SCORE:-0}%)${NC}"
     echo
     
     echo -e "${GREEN}${BOLD}Welcome to the future of Linux gaming! 🚀${NC}"

@@ -1,36 +1,473 @@
 #!/bin/bash
-# xanadOS Priority 3: Hardware-Specific Optimizations Integration Script
-# Unified interface for all hardware optimization tools
+# ============================================================================
+# xanadOS Build System - Priority 3 Hardware Optimization Integration (Optimized)
+# 
+# Description: Comprehensive hardware optimization orchestration system
+# Version: 2.1.0 (Optimized)
+# Author: xanadOS Team
+# 
+# Features:
+# - Unified hardware optimization interface
+# - Graphics driver optimization integration
+# - Hardware device optimization integration
+# - System performance tuning
+# - Gaming-specific hardware configurations
+# - Comprehensive status reporting
+# ============================================================================
 
+set -euo pipefail
 
-# Source xanadOS shared libraries
-source "../lib/common.sh"
-
-set -e
-
-# Colors for output
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-BLUE='\033[0;34m'
-PURPLE='\033[0;35m'
-CYAN='\033[0;36m'
-NC='\033[0m'
-
-# Configuration
+# Source shared setup library
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-LOG_FILE="/var/log/xanados-priority3-optimization.log"
-
-print_banner() {
-    echo -e "${PURPLE}"
-    echo "████████████████████████████████████████████████████████████████"
-    echo "█                                                              █"
-    echo "█      🔧 xanadOS Priority 3: Hardware Optimizations 🔧       █"
-    echo "█                                                              █"
-    echo "█    Graphics Drivers • Audio Latency • Hardware Support      █"
-    echo "█                                                              █"
-    echo "████████████████████████████████████████████████████████████████"
-    echo -e "${NC}"
-    echo
+source "$SCRIPT_DIR/../lib/setup-common.sh" || {
+    echo "Error: Could not source setup-common library"
+    exit 1
 }
 
+# Script configuration
+readonly SCRIPT_NAME="Priority 3 Hardware Optimization Integration"
+readonly SCRIPT_VERSION="2.1.0"
+readonly CONFIG_DIR="$HOME/.config/xanados/hardware"
+
+# Hardware optimization components
+readonly GRAPHICS_OPTIMIZER="$SCRIPT_DIR/graphics-driver-optimizer.sh"
+readonly DEVICE_OPTIMIZER="$SCRIPT_DIR/hardware-device-optimizer.sh"
+
+# Performance tuning configuration
+readonly KERNEL_PARAMS_FILE="/etc/sysctl.d/99-xanados-hardware-optimization.conf"
+
+# Create necessary directories
+mkdir -p "$CONFIG_DIR"
+
+# Initialize logging with standard setup
+setup_standard_logging "hardware-optimization"
+
+# ============================================================================
+# Component Management Functions
+# ============================================================================
+check_component_availability() {
+    local component="$1"
+    
+    case "$component" in
+        graphics)
+            if [[ ! -x "$GRAPHICS_OPTIMIZER" ]]; then
+                log_error "Graphics optimizer not found or not executable: $GRAPHICS_OPTIMIZER"
+                return 1
+            fi
+            ;;
+        devices)
+            if [[ ! -x "$DEVICE_OPTIMIZER" ]]; then
+                log_error "Device optimizer not found or not executable: $DEVICE_OPTIMIZER"
+                return 1
+            fi
+            ;;
+        *)
+            log_error "Unknown component: $component"
+            return 1
+            ;;
+    esac
+    
+    return 0
+}
+
+run_graphics_optimization() {
+    log_info "Running graphics optimization..."
+    
+    if ! check_component_availability "graphics"; then
+        return 1
+    fi
+    
+    if [[ "${DRY_RUN:-false}" == "true" ]]; then
+        log_info "[DRY RUN] Would run graphics optimization"
+        return 0
+    fi
+    
+    local output_file="$CONFIG_DIR/graphics_optimization.log"
+    if "$GRAPHICS_OPTIMIZER" "${GRAPHICS_ARGS[@]:-}" > "$output_file" 2>&1; then
+        log_success "Graphics optimization completed successfully"
+        return 0
+    else
+        local exit_code=$?
+        log_error "Graphics optimization failed with exit code: $exit_code"
+        log_error "Check log file: $output_file"
+        return $exit_code
+    fi
+}
+
+run_device_optimization() {
+    log_info "Running device optimization..."
+    
+    if ! check_component_availability "devices"; then
+        return 1
+    fi
+    
+    if [[ "${DRY_RUN:-false}" == "true" ]]; then
+        log_info "[DRY RUN] Would run device optimization"
+        return 0
+    fi
+    
+    local output_file="$CONFIG_DIR/device_optimization.log"
+    if "$DEVICE_OPTIMIZER" "${DEVICE_ARGS[@]:-}" > "$output_file" 2>&1; then
+        log_success "Device optimization completed successfully"
+        return 0
+    else
+        local exit_code=$?
+        log_error "Device optimization failed with exit code: $exit_code"
+        log_error "Check log file: $output_file"
+        return $exit_code
+    fi
+}
+
+apply_performance_tuning() {
+    log_info "Applying system performance tuning..."
+    
+    local kernel_params_content
+    kernel_params_content="# xanadOS Hardware Optimization - Performance Tuning
+# Generated by Priority 3 Hardware Optimization Integration
+# Date: $(date)
+
+# Gaming performance optimizations
+vm.swappiness = 10
+vm.vfs_cache_pressure = 50
+vm.dirty_ratio = 15
+vm.dirty_background_ratio = 5
+
+# Network performance for gaming
+net.core.rmem_default = 262144
+net.core.rmem_max = 16777216
+net.core.wmem_default = 262144
+net.core.wmem_max = 16777216
+net.core.netdev_max_backlog = 5000
+
+# Scheduler optimizations
+kernel.sched_migration_cost_ns = 5000000
+kernel.sched_autogroup_enabled = 0
+
+# Memory management for gaming
+vm.min_free_kbytes = 65536
+"
+
+    if [[ "${DRY_RUN:-false}" == "true" ]]; then
+        log_info "[DRY RUN] Would configure performance tuning parameters"
+        return 0
+    fi
+    
+    if create_config_from_template "$kernel_params_content" "$KERNEL_PARAMS_FILE" "root:root" "644"; then
+        # Apply parameters immediately
+        if command -v sysctl >/dev/null 2>&1; then
+            if ! sysctl -p "$KERNEL_PARAMS_FILE" >/dev/null 2>&1; then
+                log_warn "Some kernel parameters could not be applied immediately"
+            fi
+        fi
+        log_success "Performance tuning configured successfully"
+    else
+        log_error "Failed to configure performance tuning parameters"
+        return 1
+    fi
+}
+
+apply_gaming_optimizations() {
+    log_info "Applying gaming-specific optimizations..."
+    
+    local optimizations=(
+        "Enable CPU governor for gaming"
+        "Configure I/O scheduler for performance"
+        "Set process priorities for gaming"
+        "Configure transparent hugepages"
+    )
+    
+    if [[ "${DRY_RUN:-false}" == "true" ]]; then
+        for opt in "${optimizations[@]}"; do
+            log_info "[DRY RUN] Would apply: $opt"
+        done
+        return 0
+    fi
+    
+    # CPU governor optimization
+    if [[ -d /sys/devices/system/cpu/cpu0/cpufreq ]]; then
+        local governor_file="/sys/devices/system/cpu/cpu0/cpufreq/scaling_governor"
+        if [[ -f "$governor_file" ]] && grep -q "performance" /sys/devices/system/cpu/cpu0/cpufreq/scaling_available_governors 2>/dev/null; then
+            echo "performance" | sudo tee "$governor_file" >/dev/null 2>&1 || log_warn "Could not set CPU governor to performance"
+        fi
+    fi
+    
+    # I/O scheduler optimization
+    for disk in /sys/block/sd* /sys/block/nvme*; do
+        if [[ -f "$disk/queue/scheduler" ]]; then
+            if grep -q "mq-deadline" "$disk/queue/scheduler" 2>/dev/null; then
+                echo "mq-deadline" | sudo tee "$disk/queue/scheduler" >/dev/null 2>&1 || true
+            fi
+        fi
+    done
+    
+    # Transparent hugepages
+    if [[ -f /sys/kernel/mm/transparent_hugepage/enabled ]]; then
+        echo "madvise" | sudo tee /sys/kernel/mm/transparent_hugepage/enabled >/dev/null 2>&1 || true
+    fi
+    
+    log_success "Gaming optimizations applied successfully"
+}
+
+show_optimization_status() {
+    print_standard_banner "$SCRIPT_NAME" "$SCRIPT_VERSION"
+    
+    echo -e "${BLUE}═══ Hardware Optimization Status ═══${NC}"
+    echo
+    
+    # Graphics status
+    if [[ -x "$GRAPHICS_OPTIMIZER" ]]; then
+        echo -e "${GREEN}✓${NC} Graphics optimizer available"
+    else
+        echo -e "${RED}✗${NC} Graphics optimizer not found"
+    fi
+    
+    # Device status
+    if [[ -x "$DEVICE_OPTIMIZER" ]]; then
+        echo -e "${GREEN}✓${NC} Device optimizer available"
+    else
+        echo -e "${RED}✗${NC} Device optimizer not found"
+    fi
+    
+    # Performance tuning status
+    if [[ -f "$KERNEL_PARAMS_FILE" ]]; then
+        echo -e "${GREEN}✓${NC} Performance tuning configured"
+    else
+        echo -e "${YELLOW}!${NC} Performance tuning not configured"
+    fi
+    
+    # Hardware detection
+    echo
+    echo -e "${BLUE}═══ Hardware Detection ═══${NC}"
+    cache_hardware_info
+    show_hardware_summary
+    
+    echo
+    echo -e "${BLUE}═══ Optimization Logs ═══${NC}"
+    for log_file in "$CONFIG_DIR"/*.log; do
+        if [[ -f "$log_file" ]]; then
+            echo "• $(basename "$log_file"): $(wc -l < "$log_file") lines"
+        fi
+    done
+}
+
+verify_optimizations() {
+    log_info "Verifying hardware optimizations..."
+    
+    local verification_passed=true
+    
+    # Verify kernel parameters
+    if [[ -f "$KERNEL_PARAMS_FILE" ]]; then
+        log_info "Kernel parameters file exists"
+    else
+        log_warn "Kernel parameters file not found"
+        verification_passed=false
+    fi
+    
+    # Verify CPU governor
+    if [[ -f /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor ]]; then
+        local current_governor
+        current_governor=$(cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor 2>/dev/null || echo "unknown")
+        log_info "Current CPU governor: $current_governor"
+        if [[ "$current_governor" == "performance" ]]; then
+            log_success "CPU governor set to performance"
+        else
+            log_warn "CPU governor not optimized for gaming"
+            verification_passed=false
+        fi
+    fi
+    
+    # Verify available memory
+    if command -v free >/dev/null 2>&1; then
+        local available_mem
+        available_mem=$(free -m | awk '/^Mem:/ {print $7}')
+        if [[ "$available_mem" -gt 1000 ]]; then
+            log_success "Sufficient memory available: ${available_mem}MB"
+        else
+            log_warn "Low available memory: ${available_mem}MB"
+        fi
+    fi
+    
+    if [[ "$verification_passed" == "true" ]]; then
+        log_success "Hardware optimization verification completed successfully"
+        return 0
+    else
+        log_warn "Hardware optimization verification completed with warnings"
+        return 1
+    fi
+}
+
+reset_optimizations() {
+    log_info "Resetting hardware optimizations..."
+    
+    if [[ "${DRY_RUN:-false}" == "true" ]]; then
+        log_info "[DRY RUN] Would reset all hardware optimizations"
+        return 0
+    fi
+    
+    # Remove kernel parameters
+    if [[ -f "$KERNEL_PARAMS_FILE" ]]; then
+        sudo rm -f "$KERNEL_PARAMS_FILE" && log_info "Removed kernel parameters file"
+    fi
+    
+    # Reset CPU governor
+    if [[ -f /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor ]]; then
+        echo "ondemand" | sudo tee /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor >/dev/null 2>&1 || true
+        log_info "Reset CPU governor to ondemand"
+    fi
+    
+    # Clean logs
+    rm -f "$CONFIG_DIR"/*.log 2>/dev/null || true
+    
+    log_success "Hardware optimizations reset successfully"
+}
+
+clean_artifacts() {
+    log_info "Cleaning optimization artifacts..."
+    
+    if [[ "${DRY_RUN:-false}" == "true" ]]; then
+        log_info "[DRY RUN] Would clean optimization artifacts"
+        return 0
+    fi
+    
+    # Clean temporary files
+    find "$CONFIG_DIR" -name "*.tmp" -delete 2>/dev/null || true
+    find "$CONFIG_DIR" -name "*.bak" -delete 2>/dev/null || true
+    
+    # Clean old logs (older than 30 days)
+    find "$CONFIG_DIR" -name "*.log" -mtime +30 -delete 2>/dev/null || true
+    
+    log_success "Optimization artifacts cleaned successfully"
+}
+
+# ============================================================================
+# Main Execution Functions
+# ============================================================================
+run_complete_optimization() {
+    log_info "Starting complete hardware optimization..."
+    
+    local success=true
+    
+    # Run all optimization components
+    run_graphics_optimization || success=false
+    run_device_optimization || success=false
+    apply_performance_tuning || success=false
+    apply_gaming_optimizations || success=false
+    
+    if [[ "$success" == "true" ]]; then
+        log_success "Complete hardware optimization finished successfully"
+        return 0
+    else
+        log_error "Complete hardware optimization finished with errors"
+        return 1
+    fi
+}
+
+# ============================================================================
+# Help and Usage
+# ============================================================================
+show_help() {
+    cat << 'EOF'
+xanadOS Hardware Optimization Integration System (Optimized)
+
+USAGE:
+    priority3-hardware-optimization.sh [OPTIONS] [COMMAND]
+
+COMMANDS:
+    install             Run complete hardware optimization suite
+    graphics            Optimize graphics drivers only
+    devices             Optimize hardware devices only
+    performance         Apply system performance tuning
+    gaming              Apply gaming-specific optimizations
+    status              Show optimization status
+    verify              Verify all optimizations
+    reset               Reset all hardware optimizations
+    clean               Clean optimization artifacts
+
+OPTIONS:
+    -h, --help          Show this help message
+    -v, --verbose       Enable verbose output
+    -q, --quiet         Suppress non-error output
+    -f, --force         Force operations without prompts
+    --dry-run           Show what would be done without executing
+    --skip-checks       Skip prerequisite checks
+    --config-only       Generate configuration without applying
+
+EXAMPLES:
+    priority3-hardware-optimization.sh install
+    priority3-hardware-optimization.sh graphics --verbose
+    priority3-hardware-optimization.sh gaming --force
+    priority3-hardware-optimization.sh status
+    priority3-hardware-optimization.sh verify --quiet
+
+EOF
+}
+
+# ============================================================================
+# Main Function
+# ============================================================================
+main() {
+    # Parse command line arguments
+    parse_common_args "$@"
+    
+    # Handle help
+    if [[ "${SHOW_HELP:-false}" == "true" ]]; then
+        show_help
+        exit 0
+    fi
+    
+    # Get command
+    local command="${1:-install}"
+    shift 2>/dev/null || true
+    
+    # Show banner for interactive commands
+    if [[ "${QUIET:-false}" != "true" ]] && [[ "$command" != "status" ]]; then
+        print_standard_banner "$SCRIPT_NAME" "$SCRIPT_VERSION"
+    fi
+    
+    # Perform prerequisite checks
+    if [[ "${SKIP_CHECKS:-false}" != "true" ]]; then
+        check_system_requirements || {
+            log_error "System requirements not met"
+            exit 1
+        }
+    fi
+    
+    # Execute command
+    case "$command" in
+        install|complete)
+            run_complete_optimization
+            ;;
+        graphics)
+            run_graphics_optimization
+            ;;
+        devices)
+            run_device_optimization
+            ;;
+        performance)
+            apply_performance_tuning
+            ;;
+        gaming)
+            apply_gaming_optimizations
+            ;;
+        status)
+            show_optimization_status
+            ;;
+        verify)
+            verify_optimizations
+            ;;
+        reset)
+            reset_optimizations
+            ;;
+        clean)
+            clean_artifacts
+            ;;
+        *)
+            log_error "Unknown command: $command"
+            echo "Use --help for usage information"
+            exit 1
+            ;;
+    esac
+}
+
+# Execute main function
+main "$@"

@@ -15,27 +15,19 @@ set -euo pipefail
 # Source xanadOS shared libraries
 source "$(dirname "${BASH_SOURCE[0]}")/../lib/common.sh"
 source "$(dirname "${BASH_SOURCE[0]}")/../lib/validation.sh"
+source "$(dirname "${BASH_SOURCE[0]}")/../lib/gaming-env.sh"
 
 # Script directory and paths
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-XANADOS_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
-LOG_FILE="/var/log/xanados/kde-gaming-customization.log"
+LOG_FILE=""  # Will be set by setup_logging
 CONFIG_DIR="$HOME/.config"
 KDE_CONFIG_DIR="$HOME/.config"
 TEMP_DIR="/tmp/xanados-kde-$$"
 
-# Colors for output
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-BLUE='\033[0;34m'
-PURPLE='\033[0;35m'
-CYAN='\033[0;36m'
-WHITE='\033[1;37m'
+# Additional color variables not in common.sh
 BOLD='\033[1m'
-NC='\033[0m' # No Color
 
-# Unicode symbols
+# Unicode symbols (colors are defined in common.sh)
 CHECKMARK="✓"
 CROSSMARK="✗"
 ARROW="→"
@@ -49,15 +41,39 @@ BRUSH="🎨"
 # Logging and Utility Functions
 # ==============================================================================
 
+# Print banner
+print_banner() {
+    echo -e "${PURPLE}"
+    echo "████████████████████████████████████████████████████████████████"
+    echo "█                                                              █"
+    echo "█        🎮 xanadOS KDE Gaming Customization 🎮               █"
+    echo "█                                                              █"
+    echo "█        Desktop Environment Optimization for Gaming          █"
+    echo "█                                                              █"
+    echo "████████████████████████████████████████████████████████████████"
+    echo -e "${NC}"
+    echo
+}
+
 setup_logging() {
     local log_dir="/var/log/xanados"
     
-    if [[ ! -d "$log_dir" ]]; then
-        sudo mkdir -p "$log_dir"
-        sudo chown "$USER:$USER" "$log_dir"
+    # Try to create log directory with fallback to user directory
+    if sudo mkdir -p "$log_dir" 2>/dev/null && sudo chown "$USER:$USER" "$log_dir" 2>/dev/null; then
+        LOG_FILE="$log_dir/kde-gaming-customization.log"
+    else
+        # Fall back to user directory if system directory creation fails
+        log_dir="$HOME/.local/log/xanados"
+        mkdir -p "$log_dir"
+        LOG_FILE="$log_dir/kde-gaming-customization.log"
     fi
     
-    touch "$LOG_FILE"
+    # Ensure log file exists and is writable
+    touch "$LOG_FILE" 2>/dev/null || {
+        LOG_FILE="/tmp/xanados-kde-gaming-customization.log"
+        touch "$LOG_FILE"
+    }
+    
     echo "=== xanadOS KDE Gaming Customization Started: $(date) ===" >> "$LOG_FILE"
 }
 
@@ -491,7 +507,7 @@ configure_gaming_window_rules() {
     # Steam window rules
     kwriteconfig5 --file "$rules_file" --group "Steam" --key "Description" "Steam Gaming Rules"
     kwriteconfig5 --file "$rules_file" --group "Steam" --key "wmclass" "steam"
-    kwriteconfig5 --file "$rules_file" --group "Steam" --group "Steam" --key "wmclassmatch" "1"
+    kwriteconfig5 --file "$rules_file" --group "Steam" --key "wmclassmatch" "1"
     kwriteconfig5 --file "$rules_file" --group "Steam" --key "noborder" "true"
     kwriteconfig5 --file "$rules_file" --group "Steam" --key "noborderrule" "2"
     kwriteconfig5 --file "$rules_file" --group "Steam" --key "fullscreen" "true"
@@ -650,8 +666,11 @@ set -euo pipefail
 GAMING_MODE_FILE="/tmp/xanados-gaming-mode"
 LOG_FILE="/var/log/xanados/gaming-mode.log"
 
+# Ensure log directory exists
+mkdir -p "$(dirname "$LOG_FILE")" 2>/dev/null || LOG_FILE="/tmp/xanados-gaming-mode.log"
+
 log_message() {
-    echo "[$(date '+%Y-%m-%d %H:%M:%S')] $1" >> "$LOG_FILE"
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] $1" >> "$LOG_FILE" 2>/dev/null || true
 }
 
 enable_gaming_mode() {
@@ -664,11 +683,13 @@ enable_gaming_mode() {
     qdbus org.kde.plasmashell /PlasmaShell org.kde.PlasmaShell.setDashboardShown false 2>/dev/null || true
     
     # Disable desktop effects temporarily
-    kwriteconfig5 --file "$HOME/.config/kwinrc" --group "Compositing" --key "Enabled" "false"
+    kwriteconfig5 --file "$HOME/.config/kwinrc" --group "Compositing" --key "Enabled" "false" 2>/dev/null || true
     qdbus org.kde.KWin /Compositor org.kde.kwin.Compositing.suspend 2>/dev/null || true
     
     # Set performance CPU governor
-    echo "performance" | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor > /dev/null 2>&1 || true
+    if [[ -w /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor ]]; then
+        echo "performance" | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor > /dev/null 2>&1 || true
+    fi
     
     # Disable unnecessary services
     systemctl --user stop baloo-file 2>/dev/null || true
@@ -685,11 +706,13 @@ disable_gaming_mode() {
     rm -f "$GAMING_MODE_FILE"
     
     # Re-enable desktop effects
-    kwriteconfig5 --file "$HOME/.config/kwinrc" --group "Compositing" --key "Enabled" "true"
+    kwriteconfig5 --file "$HOME/.config/kwinrc" --group "Compositing" --key "Enabled" "true" 2>/dev/null || true
     qdbus org.kde.KWin /Compositor org.kde.kwin.Compositing.resume 2>/dev/null || true
     
     # Restore CPU governor
-    echo "powersave" | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor > /dev/null 2>&1 || true
+    if [[ -w /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor ]]; then
+        echo "powersave" | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor > /dev/null 2>&1 || true
+    fi
     
     # Re-enable services
     systemctl --user start baloo-file 2>/dev/null || true
@@ -771,13 +794,16 @@ set -euo pipefail
 LOG_FILE="/var/log/xanados/gaming-detector.log"
 GAMING_PROCESSES=("steam" "lutris" "wine" "proton" "gamemode")
 
+# Ensure log directory exists
+mkdir -p "$(dirname "$LOG_FILE")" 2>/dev/null || LOG_FILE="/tmp/xanados-gaming-detector.log"
+
 log_message() {
-    echo "[$(date '+%Y-%m-%d %H:%M:%S')] $1" >> "$LOG_FILE"
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] $1" >> "$LOG_FILE" 2>/dev/null || true
 }
 
 check_gaming_processes() {
     for process in "${GAMING_PROCESSES[@]}"; do
-        if pgrep -x "$process" > /dev/null; then
+        if pgrep -x "$process" > /dev/null 2>&1; then
             return 0
         fi
     done
@@ -793,13 +819,13 @@ main() {
         if check_gaming_processes; then
             if [[ "$gaming_active" == "false" ]]; then
                 log_message "Gaming processes detected, enabling gaming mode"
-                /usr/local/bin/xanados-gaming-mode enable
+                /usr/local/bin/xanados-gaming-mode enable 2>/dev/null || true
                 gaming_active=true
             fi
         else
             if [[ "$gaming_active" == "true" ]]; then
                 log_message "No gaming processes detected, disabling gaming mode"
-                /usr/local/bin/xanados-gaming-mode disable
+                /usr/local/bin/xanados-gaming-mode disable 2>/dev/null || true
                 gaming_active=false
             fi
         fi
@@ -814,10 +840,13 @@ EOF
     sudo chmod +x "$detector_script"
     
     # Enable the service
-    systemctl --user daemon-reload
-    systemctl --user enable xanados-gaming-detector.service
-    
-    echo -e "  ${CHECKMARK} Gaming mode service created and enabled"
+    systemctl --user daemon-reload 2>/dev/null || true
+    if systemctl --user enable xanados-gaming-detector.service 2>/dev/null; then
+        echo -e "  ${CHECKMARK} Gaming mode service created and enabled"
+    else
+        echo -e "  ${CROSSMARK} Failed to enable gaming mode service"
+        log_message "WARNING" "Failed to enable gaming mode service"
+    fi
 }
 
 configure_gaming_mode_detection() {
@@ -949,6 +978,108 @@ show_post_configuration_instructions() {
 }
 
 # ==============================================================================
+# Usage Information
+# ==============================================================================
+
+show_usage() {
+    echo "Usage: $0 [install|remove|status|help]"
+    echo
+    echo "Commands:"
+    echo "  install  - Install and configure KDE gaming customizations (default)"
+    echo "  remove   - Remove KDE gaming customizations"
+    echo "  status   - Check current gaming customization status"
+    echo "  help     - Show this help message"
+    echo
+    echo "This script customizes KDE Plasma desktop for optimal gaming experience."
+    echo "Includes gaming themes, performance optimizations, and gaming mode."
+}
+
+# Check current gaming customization status
+check_customization_status() {
+    print_section "Gaming Customization Status"
+    
+    # Check if gaming color scheme exists
+    if [[ -f "$HOME/.local/share/color-schemes/xanadOSGaming.colors" ]]; then
+        log_message "SUCCESS" "Gaming color scheme: Installed"
+        echo -e "  ${CHECKMARK} Gaming color scheme: Installed"
+    else
+        log_message "INFO" "Gaming color scheme: Not installed"
+        echo -e "  ${CROSSMARK} Gaming color scheme: Not installed"
+    fi
+    
+    # Check if gaming mode script exists
+    if [[ -f "/usr/local/bin/xanados-gaming-mode" ]]; then
+        log_message "SUCCESS" "Gaming mode script: Installed"
+        echo -e "  ${CHECKMARK} Gaming mode script: Installed"
+    else
+        log_message "INFO" "Gaming mode script: Not installed"
+        echo -e "  ${CROSSMARK} Gaming mode script: Not installed"
+    fi
+    
+    # Check if gaming mode service is enabled
+    if systemctl --user is-enabled xanados-gaming-detector.service &>/dev/null; then
+        log_message "SUCCESS" "Gaming mode service: Enabled"
+        echo -e "  ${CHECKMARK} Gaming mode service: Enabled"
+    else
+        log_message "INFO" "Gaming mode service: Not enabled"
+        echo -e "  ${CROSSMARK} Gaming mode service: Not enabled"
+    fi
+    
+    # Check current KDE color scheme
+    local current_scheme
+    current_scheme=$(kreadconfig5 --file "$KDE_CONFIG_DIR/kdeglobals" --group "General" --key "ColorScheme" 2>/dev/null || echo "Default")
+    echo -e "  ${ARROW} Current color scheme: $current_scheme"
+    
+    # Check gaming mode status
+    if [[ -f "/tmp/xanados-gaming-mode" ]]; then
+        echo -e "  ${CHECKMARK} Gaming mode: ${GREEN}ACTIVE${NC}"
+    else
+        echo -e "  ${ARROW} Gaming mode: Inactive"
+    fi
+}
+
+# Remove gaming customizations
+remove_gaming_customizations() {
+    print_section "Removing Gaming Customizations"
+    log_message "INFO" "Starting removal of gaming customizations"
+    
+    # Stop gaming mode service
+    systemctl --user stop xanados-gaming-detector.service 2>/dev/null || true
+    systemctl --user disable xanados-gaming-detector.service 2>/dev/null || true
+    
+    # Remove gaming mode scripts
+    sudo rm -f "/usr/local/bin/xanados-gaming-mode" 2>/dev/null || true
+    sudo rm -f "/usr/local/bin/xanados-gaming-detector" 2>/dev/null || true
+    
+    # Remove gaming mode service
+    rm -f "$HOME/.config/systemd/user/xanados-gaming-detector.service" 2>/dev/null || true
+    
+    # Remove gaming color scheme
+    rm -f "$HOME/.local/share/color-schemes/xanadOSGaming.colors" 2>/dev/null || true
+    
+    # Remove gaming plasma theme
+    rm -rf "$HOME/.local/share/plasma/desktoptheme/xanadOS-Gaming" 2>/dev/null || true
+    
+    # Remove gaming configuration
+    rm -rf "$HOME/.config/xanados" 2>/dev/null || true
+    
+    # Remove gaming mode indicator
+    rm -f "/tmp/xanados-gaming-mode" 2>/dev/null || true
+    
+    # Reset to default KDE settings
+    echo -e "  ${ARROW} Resetting to default KDE settings..."
+    kwriteconfig5 --file "$KDE_CONFIG_DIR/kdeglobals" --group "General" --key "ColorScheme" "BreezeLight"
+    kwriteconfig5 --file "$KDE_CONFIG_DIR/plasmarc" --group "Theme" --key "name" "default"
+    kwriteconfig5 --file "$KDE_CONFIG_DIR/kwinrc" --group "Compositing" --key "Enabled" "true"
+    
+    # Restart plasma shell
+    restart_plasma_shell
+    
+    echo -e "${GREEN}${CHECKMARK} Gaming customizations removed successfully${NC}"
+    log_message "SUCCESS" "Gaming customizations removed"
+}
+
+# ==============================================================================
 # Main Function
 # ==============================================================================
 
@@ -963,39 +1094,63 @@ main() {
     # Initialize
     setup_logging
     
-    # Initialize command cache for performance
-    print_status "Initializing KDE gaming cache..."
-    cache_gaming_tools
-    cache_system_tools
+    # Handle command line arguments
+    local action="${1:-install}"
     
-    # Welcome
-    print_header "${DESKTOP} xanadOS KDE Gaming Customization ${BRUSH}"
-    echo -e "${BOLD}Welcome to the xanadOS KDE Gaming Customization!${NC}"
-    echo -e "This will customize your KDE Plasma desktop for optimal gaming experience."
-    echo
-    
-    # Check KDE environment
-    check_kde_environment
-    
-    # Install gaming themes
-    install_gaming_themes
-    
-    # Configure desktop layout
-    configure_gaming_desktop_layout
-    
-    # Install gaming widgets
-    install_gaming_widgets
-    
-    # Create gaming mode
-    create_gaming_mode
-    
-    # Apply gaming theme
-    apply_gaming_theme
-    
-    # Show post-configuration instructions
-    show_post_configuration_instructions
-    
-    log_message "SUCCESS" "KDE gaming customization completed"
+    case "$action" in
+        install)
+            # Initialize command cache for performance
+            print_status "Initializing KDE gaming cache..."
+            cache_gaming_tools &>/dev/null || true
+            cache_system_tools &>/dev/null || true
+            
+            # Welcome
+            print_banner
+            echo -e "${BOLD}Welcome to the xanadOS KDE Gaming Customization!${NC}"
+            echo -e "This will customize your KDE Plasma desktop for optimal gaming experience."
+            echo
+            
+            # Check KDE environment
+            check_kde_environment
+            
+            # Install gaming themes
+            install_gaming_themes
+            
+            # Configure desktop layout
+            configure_gaming_desktop_layout
+            
+            # Install gaming widgets
+            install_gaming_widgets
+            
+            # Create gaming mode
+            create_gaming_mode
+            
+            # Apply gaming theme
+            apply_gaming_theme
+            
+            # Show post-configuration instructions
+            show_post_configuration_instructions
+            
+            log_message "SUCCESS" "KDE gaming customization completed"
+            ;;
+        remove)
+            print_banner
+            remove_gaming_customizations
+            ;;
+        status)
+            print_banner
+            check_customization_status
+            ;;
+        help|--help|-h)
+            show_usage
+            ;;
+        *)
+            echo -e "${RED}Error: Unknown option '$action'${NC}"
+            echo
+            show_usage
+            exit 1
+            ;;
+    esac
 }
 
 # Run main function

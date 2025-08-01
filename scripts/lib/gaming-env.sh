@@ -136,7 +136,7 @@ detect_gaming_environment() {
     detect_gpu_type
     
     # Detect audio system
-    detect_audio_system
+    detect_gaming_audio_system
     
     # Mark detection as complete
     GAMING_ENV_CACHE["detected"]="true"
@@ -169,8 +169,8 @@ detect_gpu_type() {
     GAMING_ENV_CACHE["gpu_driver"]="$driver"
 }
 
-# Detect audio system
-detect_audio_system() {
+# Detect audio system and cache result
+detect_gaming_audio_system() {
     local audio_system="unknown"
     
     if systemctl --user is-active pipewire >/dev/null 2>&1; then

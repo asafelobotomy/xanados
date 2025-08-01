@@ -113,7 +113,7 @@ demo_priority4_integration() {
     fi
     echo
     
-    echo -e "${GREEN}✓ Gaming matrix successfully integrated into priority4-user-experience.sh${NC}"
+    echo -e "${GREEN}✓ Gaming matrix successfully integrated into priority4-user-experience.sh (optimized)${NC}"
     echo
 }
 
@@ -142,7 +142,7 @@ main() {
     echo -e "The gaming tool availability matrix is now integrated into:"
     echo -e "  ✓ gaming-setup-wizard.sh - Full gaming environment analysis with scoring"
     echo -e "  ✓ first-boot-experience.sh - Comprehensive gaming readiness assessment"  
-    echo -e "  ✓ priority4-user-experience.sh - Quick gaming environment overview"
+    echo -e "  ✓ priority4-user-experience.sh (optimized) - Quick gaming environment overview"
     echo
     echo -e "Benefits:"
     echo -e "  → Immediate gaming environment feedback to users"

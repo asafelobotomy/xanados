@@ -30,7 +30,7 @@ demo_integration_overview() {
     echo "   → Replaces basic scoring with comprehensive 21-tool evaluation"
     echo "   → Provides detailed recommendations based on matrix results"
     echo
-    echo "3. priority4-user-experience.sh:"
+    echo "3. priority4-user-experience.sh (optimized):"
     echo "   → Quick gaming environment overview before setup options"
     echo "   → Shows gaming readiness percentage for immediate feedback"
     echo "   → Helps users understand their current gaming capability"
@@ -120,7 +120,7 @@ echo -e "  ${GEAR} Overall Gaming Readiness: ${BOLD}${readiness_score}%${NC}"
 EOF
     echo
     
-    echo "priority4-user-experience.sh integration:"
+    echo "priority4-user-experience.sh integration (optimized):"
     echo "-----------------------------------------"
     cat << 'EOF'
 # Quick gaming environment overview
