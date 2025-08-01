@@ -5,6 +5,7 @@
 
 # Source xanadOS shared libraries
 source "../lib/common.sh"
+source "../lib/validation.sh"
 
 set -e
 
@@ -98,7 +99,7 @@ benchmark_gaming() {
     echo "    \"tests\": {" >> "$results_file"
     
     # GameMode test
-    if command -v gamemoderun >/dev/null 2>&1; then
+    if get_cached_command "gamemoderun"; then
         print_status "Testing GameMode functionality..."
         
         # Test GameMode activation
@@ -119,7 +120,7 @@ benchmark_gaming() {
     fi
     
     # MangoHud test
-    if command -v mangohud >/dev/null 2>&1; then
+    if get_cached_command "mangohud"; then
         print_status "Testing MangoHud functionality..."
         
         echo "        \"mangohud\": {" >> "$results_file"
@@ -146,7 +147,7 @@ benchmark_gaming() {
     echo "            \"vulkan_available\": $(vulkaninfo >/dev/null 2>&1 && echo "true" || echo "false")," >> "$results_file"
     echo "            \"opengl_available\": $(glxinfo >/dev/null 2>&1 && echo "true" || echo "false")," >> "$results_file"
     echo "            \"steam_runtime\": $([ -d "$HOME/.steam" ] && echo "true" || echo "false")," >> "$results_file"
-    echo "            \"wine_available\": $(command -v wine >/dev/null 2>&1 && echo "true" || echo "false")" >> "$results_file"
+    echo "            \"wine_available\": $(get_cached_command "wine" && echo "true" || echo "false")" >> "$results_file"
     echo "        }" >> "$results_file"
     
     echo "    }" >> "$results_file"
@@ -374,7 +375,7 @@ EOF
     print_success "Summary report generated: $summary_file"
     
     # Open report if GUI available
-    if command -v xdg-open >/dev/null 2>&1 && [ -n "$DISPLAY" ]; then
+    if get_cached_command "xdg-open" && [ -n "$DISPLAY" ]; then
         xdg-open "$summary_file" 2>/dev/null &
     fi
 }
@@ -463,6 +464,12 @@ view_previous_results() {
 # Main function
 main() {
     print_banner
+    
+    # Initialize command cache for performance
+    print_status "Initializing command cache..."
+    cache_gaming_tools
+    cache_system_tools
+    
     check_dependencies
     
     while true; do

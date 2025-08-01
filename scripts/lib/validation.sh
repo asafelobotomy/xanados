@@ -13,6 +13,115 @@ source "$(dirname "${BASH_SOURCE[0]}")/common.sh"
 # Command availability cache (associative array)
 declare -A COMMAND_CACHE
 
+# Cache statistics
+declare -i CACHE_HITS=0
+declare -i CACHE_MISSES=0
+
+# Cache management functions
+cache_commands() {
+    local commands=("$@")
+    local start_time
+    local end_time
+    local duration
+    
+    start_time=$(date +%s%N)
+    
+    print_status "Caching command availability for ${#commands[@]} commands..."
+    
+    for cmd in "${commands[@]}"; do
+        command_exists "$cmd" "force" >/dev/null
+    done
+    
+    end_time=$(date +%s%N)
+    duration=$((($end_time - $start_time) / 1000000))  # Convert to milliseconds
+    
+    print_success "Command cache populated in ${duration}ms"
+}
+
+# Cache all gaming tools
+cache_gaming_tools() {
+    local tools=("${!GAMING_TOOLS[@]}")
+    cache_commands "${tools[@]}"
+}
+
+# Cache all development tools  
+cache_dev_tools() {
+    local tools=("${!DEV_TOOLS[@]}")
+    cache_commands "${tools[@]}"
+}
+
+# Cache all system tools
+cache_system_tools() {
+    local tools=("${!SYSTEM_TOOLS[@]}")
+    cache_commands "${tools[@]}"
+}
+
+# Cache all known tools
+cache_all_tools() {
+    local all_tools=()
+    all_tools+=("${!GAMING_TOOLS[@]}")
+    all_tools+=("${!DEV_TOOLS[@]}")
+    all_tools+=("${!SYSTEM_TOOLS[@]}")
+    
+    cache_commands "${all_tools[@]}"
+}
+
+# Get cached command result (fast lookup)
+get_cached_command() {
+    local cmd="$1"
+    
+    if [[ -z "$cmd" ]]; then
+        return 1
+    fi
+    
+    # Check if command is cached
+    if [[ -n "${COMMAND_CACHE[$cmd]:-}" ]]; then
+        ((CACHE_HITS++))
+        [[ "${COMMAND_CACHE[$cmd]}" == "true" ]]
+        return $?
+    else
+        # Not cached - perform check and cache result
+        ((CACHE_MISSES++))
+        command_exists "$cmd" "force"
+        return $?
+    fi
+}
+
+# Clear command cache
+clear_command_cache() {
+    COMMAND_CACHE=()
+    CACHE_HITS=0
+    CACHE_MISSES=0
+    print_status "Command cache cleared"
+}
+
+# Show cache statistics
+show_cache_stats() {
+    local total=$((CACHE_HITS + CACHE_MISSES))
+    local hit_rate=0
+    
+    if [[ $total -gt 0 ]]; then
+        hit_rate=$((CACHE_HITS * 100 / total))
+    fi
+    
+    echo "Command Cache Statistics:"
+    echo "  Cached Commands: ${#COMMAND_CACHE[@]}"
+    echo "  Cache Hits: $CACHE_HITS"
+    echo "  Cache Misses: $CACHE_MISSES"
+    echo "  Hit Rate: ${hit_rate}%"
+    
+    if [[ ${#COMMAND_CACHE[@]} -gt 0 ]]; then
+        echo ""
+        echo "Cached Commands:"
+        for cmd in "${!COMMAND_CACHE[@]}"; do
+            local status="${COMMAND_CACHE[$cmd]}"
+            local symbol="✗"
+            [[ "$status" == "true" ]] && symbol="✓"
+            echo "  $symbol $cmd"
+        done
+    fi
+}
+
 # Gaming tools detection
 declare -A GAMING_TOOLS
 GAMING_TOOLS=(
