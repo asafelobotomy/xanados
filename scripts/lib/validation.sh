@@ -40,8 +40,15 @@ cache_commands() {
 
 # Cache all gaming tools
 cache_gaming_tools() {
-    local tools=("${!GAMING_TOOLS[@]}")
-    cache_commands "${tools[@]}"
+    # Source gaming-env.sh to access unified gaming tool arrays
+    source "$(dirname "${BASH_SOURCE[0]}")/gaming-env.sh"
+    
+    # Combine all gaming tools from both arrays
+    local all_gaming_tools=()
+    all_gaming_tools+=("${!GAMING_PLATFORMS[@]}")
+    all_gaming_tools+=("${!GAMING_UTILITIES[@]}")
+    
+    cache_commands "${all_gaming_tools[@]}"
 }
 
 # Cache all development tools  
@@ -121,19 +128,6 @@ show_cache_stats() {
         done
     fi
 }
-
-# Gaming tools detection
-declare -A GAMING_TOOLS
-GAMING_TOOLS=(
-    ["steam"]="Steam Gaming Platform"
-    ["lutris"]="Lutris Gaming Manager"
-    ["wine"]="Windows Compatibility Layer"
-    ["gamemoderun"]="GameMode Performance Optimization"
-    ["mangohud"]="MangoHud Performance Overlay"
-    ["protonup-qt"]="Proton Version Manager"
-    ["bottles"]="Windows Software Manager"
-    ["heroic"]="Epic Games Store Client"
-)
 
 # Development tools
 declare -A DEV_TOOLS

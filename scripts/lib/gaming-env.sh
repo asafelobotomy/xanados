@@ -907,7 +907,7 @@ check_gaming_compatibility() {
     
     # Check each required tool
     for tool in "${profile_tools[@]}"; do
-        if check_command "$tool" >/dev/null 2>&1; then
+        if get_cached_command "$tool"; then
             available_tools+=("$tool")
             ((compatibility_score++))
         else
@@ -1190,7 +1190,7 @@ EOF
             printf "%-20s %-10s\n" "----" "------"
             
             for tool in "${profile_tools[@]}"; do
-                if check_command "$tool" >/dev/null 2>&1; then
+                if get_cached_command "$tool"; then
                     printf "%-20s %-10s\n" "$tool" "✅"
                 else
                     printf "%-20s %-10s\n" "$tool" "❌"
