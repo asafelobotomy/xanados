@@ -77,72 +77,113 @@ get_project_root() {
     echo "$current_dir"
 }
 
-# Get standard results directory with optional timestamping
+# Task 3.2.1: Unified Results Directory Schema
+# Standardized result directory functions that ensure consistency across all xanadOS scripts
+
+# Get standard results directory with consistent timestamping format
+# Usage: get_results_dir [script_type] [use_timestamp]
+# Returns: results/YYYY-MM-DD_HH-MM-SS/ (timestamped) or results/ (non-timestamped)
 get_results_dir() {
     local script_type="${1:-general}"
-    local use_timestamp="${2:-false}"
+    local use_timestamp="${2:-true}"
     
-    # Use docs/reports structure within the project
     local project_root
     project_root="$(get_project_root)"
-    local base_dir="$project_root/docs/reports"
-    local type_dir
     
+    # Use standardized results directory structure
+    local base_results_dir="$project_root/results"
+    
+    # Create type-specific subdirectory if specified
+    local results_dir
     case "$script_type" in
         "benchmarks"|"performance")
-            type_dir="$base_dir/generated"
+            results_dir="$base_results_dir/benchmarks"
             ;;
         "gaming"|"validation")
-            type_dir="$base_dir/generated"
-            ;;
-        "automated"|"monitoring")
-            type_dir="$base_dir/generated"
+            results_dir="$base_results_dir/gaming"
             ;;
         "testing"|"suite")
-            type_dir="$base_dir/generated"
+            results_dir="$base_results_dir/testing"
             ;;
         "logs")
-            type_dir="$base_dir/generated"
+            results_dir="$base_results_dir/logs"
+            ;;
+        "reports")
+            results_dir="$base_results_dir/reports"
             ;;
         *)
-            type_dir="$base_dir/generated"
+            results_dir="$base_results_dir/general"
             ;;
     esac
     
+    # Add timestamp if requested
     if [[ "$use_timestamp" == "true" ]]; then
-        echo "$type_dir/$(date +%Y-%m-%d_%H-%M-%S)"
+        echo "$results_dir/$(date +%Y-%m-%d_%H-%M-%S)"
     else
-        echo "$type_dir"
+        echo "$results_dir"
     fi
 }
 
-# Get timestamped benchmark directory
+# Get benchmark-specific directory with date-based organization
+# Usage: get_benchmark_dir [use_timestamp]  
+# Returns: results/benchmarks/YYYY-MM-DD/ or results/benchmarks/YYYY-MM-DD_HH-MM-SS/
 get_benchmark_dir() {
     local use_timestamp="${1:-true}"
     
-    get_results_dir "benchmarks" "$use_timestamp"
-}
-
-# Get timestamped log directory  
-get_log_dir() {
-    local use_timestamp="${1:-true}"
     local project_root
     project_root="$(get_project_root)"
-    local base_dir="$project_root/docs/reports/generated"
+    local base_dir="$project_root/results/benchmarks"
     
     if [[ "$use_timestamp" == "true" ]]; then
-        echo "$base_dir/$(date +%Y-%m-%d)"
+        echo "$base_dir/$(date +%Y-%m-%d_%H-%M-%S)"
     else
-        echo "$base_dir"
+        echo "$base_dir/$(date +%Y-%m-%d)"
     fi
 }
 
-# Ensure complete results directory structure exists
+# Get log directory with date-based organization
+# Usage: get_log_dir [use_timestamp]
+# Returns: results/logs/YYYY-MM-DD/ or results/logs/YYYY-MM-DD_HH-MM-SS/
+get_log_dir() {
+    local use_timestamp="${1:-true}"
+    
+    local project_root
+    project_root="$(get_project_root)"
+    local base_dir="$project_root/results/logs"
+    
+    if [[ "$use_timestamp" == "true" ]]; then
+        echo "$base_dir/$(date +%Y-%m-%d_%H-%M-%S)"
+    else
+        echo "$base_dir/$(date +%Y-%m-%d)"
+    fi
+}
+
+# Get gaming results directory for gaming-specific outputs
+# Usage: get_gaming_results_dir [use_timestamp]
+# Returns: results/gaming/YYYY-MM-DD_HH-MM-SS/ or results/gaming/
+get_gaming_results_dir() {
+    local use_timestamp="${1:-true}"
+    
+    get_results_dir "gaming" "$use_timestamp"
+}
+
+# Get testing results directory for test outputs
+# Usage: get_testing_results_dir [use_timestamp]
+# Returns: results/testing/YYYY-MM-DD_HH-MM-SS/ or results/testing/
+get_testing_results_dir() {
+    local use_timestamp="${1:-true}"
+    
+    get_results_dir "testing" "$use_timestamp"
+}
+
+# Ensure complete standardized results directory structure exists
+# Usage: ensure_results_structure [script_type] [use_timestamp]
+# Creates: Complete directory tree for the specified result type
 ensure_results_structure() {
     local script_type="${1:-general}"
     local use_timestamp="${2:-true}"
     
-    print_debug "Creating results directory structure for: $script_type"
+    print_debug "Creating standardized results directory structure for: $script_type"
     
     # Get the appropriate results directory
     local results_dir
@@ -154,13 +195,15 @@ ensure_results_structure() {
         return 1
     fi
     
-    # Create standard subdirectories
+    # Create standard subdirectories for organized result storage
     local subdirs=(
-        "data"
-        "reports" 
-        "logs"
-        "temp"
-        "archive"
+        "data"          # Raw data files and measurements
+        "reports"       # Generated reports (HTML, JSON, MD)
+        "logs"          # Execution logs and debug information
+        "temp"          # Temporary files (cleaned automatically)
+        "archive"       # Archived results for historical reference
+        "screenshots"   # Screenshots and visual evidence (if applicable)
+        "configs"       # Configuration snapshots used for this run
     )
     
     for subdir in "${subdirs[@]}"; do
@@ -169,18 +212,99 @@ ensure_results_structure() {
         fi
     done
     
-    # Create logs directory with timestamp
-    local log_dir
-    log_dir="$(get_log_dir "$use_timestamp")"
-    if ! safe_mkdir "$log_dir"; then
-        print_warning "Failed to create log directory: $log_dir"
+    # Create corresponding log directory if different from results
+    if [[ "$script_type" != "logs" ]]; then
+        local log_dir
+        log_dir="$(get_log_dir "$use_timestamp")"
+        if ! safe_mkdir "$log_dir"; then
+            print_warning "Failed to create log directory: $log_dir"
+        fi
     fi
     
-    # Only return the directory path (no print statements for clean output)
+    # Return the main results directory path for use by calling scripts
     echo "$results_dir"
 }
 
+# Create all standard result directories (used during initialization)
+# Usage: create_standard_results_dirs
+# Creates: Complete base directory structure for all result types
+create_standard_results_dirs() {
+    local project_root
+    project_root="$(get_project_root)"
+    
+    print_info "Creating standardized results directory structure"
+    
+    # Base results directory
+    local base_results="$project_root/results"
+    safe_mkdir "$base_results"
+    
+    # Standard result type directories
+    local result_types=(
+        "benchmarks"
+        "gaming" 
+        "testing"
+        "logs"
+        "reports"
+        "general"
+    )
+    
+    for result_type in "${result_types[@]}"; do
+        local type_dir="$base_results/$result_type"
+        if safe_mkdir "$type_dir"; then
+            print_debug "Created results directory: $type_dir"
+            
+            # Create standard subdirectories for each type
+            local subdirs=("data" "reports" "logs" "temp" "archive")
+            for subdir in "${subdirs[@]}"; do
+                safe_mkdir "$type_dir/$subdir"
+            done
+        else
+            print_warning "Failed to create results directory: $type_dir"
+        fi
+    done
+    
+    # Create .gitkeep files to preserve directory structure
+    find "$base_results" -type d -empty -exec touch {}/.gitkeep \;
+    
+    print_success "Standardized results directory structure created"
+}
+
+# Clean old results (optional - for result management)
+# Usage: clean_old_results [days_to_keep] [result_type]
+# Purpose: Manage result directory size by archiving/removing old results
+clean_old_results() {
+    local days_to_keep="${1:-30}"
+    local result_type="${2:-all}"
+    
+    local project_root
+    project_root="$(get_project_root)"
+    local base_results="$project_root/results"
+    
+    if [[ ! -d "$base_results" ]]; then
+        print_warning "Results directory does not exist: $base_results"
+        return 0
+    fi
+    
+    print_info "Cleaning results older than $days_to_keep days (type: $result_type)"
+    
+    # Find and archive old timestamped directories
+    local search_path
+    if [[ "$result_type" == "all" ]]; then
+        search_path="$base_results"
+    else
+        search_path="$base_results/$result_type"
+    fi
+    
+    # Find directories matching timestamp pattern older than specified days
+    find "$search_path" -type d -name "*[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]_*" \
+        -mtime +${days_to_keep} -exec rm -rf {} + 2>/dev/null
+    
+    print_success "Results cleanup completed"
+}
+
 # Get standardized filename with timestamp (returns full path to data directory)
+# Usage: get_results_filename <base_name> [extension] [script_type]
+# Returns: Full path to data file in standardized results structure
 get_results_filename() {
     local base_name="$1"
     local extension="${2:-json}"
@@ -191,9 +315,10 @@ get_results_filename() {
         return 1
     fi
     
-    local project_root
-    project_root="$(get_project_root)"
-    local data_dir="$project_root/docs/reports/data"
+    # Use the new standardized results directory structure
+    local results_dir
+    results_dir="$(get_results_dir "$script_type" false)"
+    local data_dir="$results_dir/data"
     
     # Ensure data directory exists
     safe_mkdir "$data_dir"
@@ -204,6 +329,8 @@ get_results_filename() {
 }
 
 # Get standardized log filename (returns full path to log directory)
+# Usage: get_log_filename <script_name> [extension]
+# Returns: Full path to log file in standardized log structure
 get_log_filename() {
     local script_name="$1"
     local extension="${2:-log}"
@@ -213,6 +340,7 @@ get_log_filename() {
         return 1
     fi
     
+    # Use the standardized log directory structure
     local log_dir
     log_dir="$(get_log_dir false)"
     safe_mkdir "$log_dir"
