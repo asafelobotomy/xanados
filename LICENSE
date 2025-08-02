@@ -1,0 +1,55 @@
+# License
+
+## Personal Use License
+
+**Copyright (c) 2025 xanadOS Project**
+
+This project is developed for personal use and educational purposes.
+
+### Permissions
+
+✅ **Allowed:**
+- View and study the source code
+- Use concepts, techniques, and code snippets in your own personal projects
+- Fork the repository for learning purposes
+- Report issues and suggest improvements
+- Create derivative works for personal use
+
+### Restrictions
+
+❌ **Not Allowed:**
+- Commercial use or monetization
+- Redistribution as a competing product or distribution
+- Selling or licensing any part of this work
+- Using the xanadOS name or branding for other projects
+- Mass distribution without explicit permission
+
+### Educational Use
+
+This project is made available publicly to share knowledge and techniques with the Linux gaming community. The code serves as an educational resource for:
+
+- Bash scripting best practices
+- Linux gaming environment setup
+- AI-assisted development workflows
+- Modular script architecture
+- Automated testing and validation
+
+### Contributions
+
+By contributing to this project, you agree that your contributions will be licensed under the same terms as this license.
+
+### Third-Party Components
+
+This project may include or reference third-party software components, each of which may be subject to their own license terms. Users are responsible for complying with the license terms of any third-party components they use.
+
+### Disclaimer
+
+This software is provided "as is", without warranty of any kind, express or implied, including but not limited to the warranties of merchantability, fitness for a particular purpose and noninfringement. In no event shall the authors or copyright holders be liable for any claim, damages or other liability, whether in an action of contract, tort or otherwise, arising from, out of or in connection with the software or the use or other dealings in the software.
+
+### Contact
+
+For questions about this license or permission requests, please open an issue in the GitHub repository.
+
+---
+
+*This license is designed to encourage learning and personal use while protecting the personal nature of the project.*

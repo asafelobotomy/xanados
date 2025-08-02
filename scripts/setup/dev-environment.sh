@@ -316,7 +316,7 @@ get_xanados_root() {
 # Build shortcuts
 alias xbuild='cd \$(get_xanados_root) && ./scripts/build/create-iso.sh'
 alias xclean='cd \$(get_xanados_root) && ./scripts/utilities/cleanup-build.sh'
-alias xtest='cd \$(get_xanados_root) && ./scripts/testing/testing-suite.sh'
+alias xtest='cd \$(get_xanados_root) && ./testing/automated/testing-suite.sh'
 
 # Development shortcuts  
 alias xroot='cd \$(get_xanados_root)'

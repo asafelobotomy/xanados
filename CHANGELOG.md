@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Professional documentation structure following open-source standards
 - Shellcheck validation and automated fixing for all shell scripts
 - Comprehensive script quality improvement tools
-- Project organization documentation (`docs/user/project_structure.md`)
+- Project organization documentation (`docs/development/project_structure.md`)
 - Structured archive system for backups and reports
 - Consolidated project structure documentation
 
