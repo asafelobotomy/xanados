@@ -80,7 +80,7 @@ detect_gaming_environment() {
         return 0
     fi
     
-    log_debug "Detecting gaming environment..."
+    print_debug "Detecting gaming environment..."
     
     # Clear cache if forcing refresh
     if [[ "$force_refresh" == "true" ]]; then
@@ -142,7 +142,7 @@ detect_gaming_environment() {
     GAMING_ENV_CACHE["detected"]="true"
     GAMING_ENV_CACHE["detection_time"]="$(date +%s)"
     
-    log_debug "Gaming environment detection completed"
+    print_debug "Gaming environment detection completed"
 }
 
 # Detect GPU type and driver
@@ -416,7 +416,7 @@ get_gaming_readiness_score() {
 # Clear gaming environment cache
 clear_gaming_cache() {
     GAMING_ENV_CACHE=()
-    log_debug "Gaming environment cache cleared"
+    print_debug "Gaming environment cache cleared"
 }
 
 # Get missing gaming tools
@@ -713,13 +713,13 @@ generate_gaming_matrix_detailed() {
     
     # Assessment
     if [[ $readiness_score -ge 90 ]]; then
-        log_success "Excellent! Your system is ready for high-performance gaming."
+        print_success "Excellent! Your system is ready for high-performance gaming."
     elif [[ $readiness_score -ge 70 ]]; then
-        log_warning "Good gaming setup. Consider installing missing tools for optimal experience."
+        print_warning "Good gaming setup. Consider installing missing tools for optimal experience."
     elif [[ $readiness_score -ge 50 ]]; then
-        log_warning "Basic gaming capability. Several important tools are missing."
+        print_warning "Basic gaming capability. Several important tools are missing."
     else
-        log_error "Limited gaming capability. Significant setup required."
+        print_error "Limited gaming capability. Significant setup required."
     fi
     
     echo ""

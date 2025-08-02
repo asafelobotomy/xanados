@@ -93,3 +93,24 @@ venv/
 env/
 .venv/
 .env/
+
+# xanadOS specific ignores
+results/logs/*
+results/temp/*
+build/cache/*
+build/work/*
+*.tmp
+*.temp
+*~
+*.bak
+*.old
+*.orig
+.DS_Store
+Thumbs.db
+core.*
+
+# But keep structure
+!results/logs/.gitkeep
+!results/temp/.gitkeep
+!build/cache/.gitkeep
+!build/work/.gitkeep

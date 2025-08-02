@@ -6,10 +6,6 @@
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/../lib/common.sh"
 source "$SCRIPT_DIR/../lib/directories.sh"
-source "$SCRIPT_DIR/../lib/logging.sh"
-
-# Auto-initialize advanced logging for this test
-auto_init_logging "$(basename "$0")" "INFO" "testing"
 
 print_header "Task 3.2.1: Unified Results Directory Schema - Validation"
 
@@ -27,7 +23,7 @@ run_test() {
     
     ((TOTAL_TESTS++))
     
-    log_info "Testing: $test_name"
+    print_info "Testing: $test_name"
     
     local result
     result=$(eval "$test_command" 2>&1)
@@ -36,30 +32,30 @@ run_test() {
     # For error tests, we expect the command to fail
     if [[ "$should_fail" == "true" ]]; then
         if [[ $exit_code -ne 0 && "$result" =~ $expected_pattern ]]; then
-            log_success "✅ PASS: $test_name"
-            log_debug "   Result: $result"
+            print_success "✅ PASS: $test_name"
+            print_debug "   Result: $result"
             ((TESTS_PASSED++))
             return 0
         else
-            log_error "❌ FAIL: $test_name"
-            log_error "   Expected pattern: $expected_pattern (should fail)"
-            log_error "   Actual result: $result"
-            log_error "   Exit code: $exit_code"
+            print_error "❌ FAIL: $test_name"
+            print_error "   Expected pattern: $expected_pattern (should fail)"
+            print_error "   Actual result: $result"
+            print_error "   Exit code: $exit_code"
             ((TESTS_FAILED++))
             return 1
         fi
     else
         # Normal tests expect success
         if [[ $exit_code -eq 0 && "$result" =~ $expected_pattern ]]; then
-            log_success "✅ PASS: $test_name"
-            log_debug "   Result: $result"
+            print_success "✅ PASS: $test_name"
+            print_debug "   Result: $result"
             ((TESTS_PASSED++))
             return 0
         else
-            log_error "❌ FAIL: $test_name"
-            log_error "   Expected pattern: $expected_pattern"
-            log_error "   Actual result: $result"
-            log_error "   Exit code: $exit_code"
+            print_error "❌ FAIL: $test_name"
+            print_error "   Expected pattern: $expected_pattern"
+            print_error "   Actual result: $result"
+            print_error "   Exit code: $exit_code"
             ((TESTS_FAILED++))
             return 1
         fi
@@ -200,27 +196,27 @@ run_test "get_log_filename requires script_name" \
 print_section "Test Summary"
 
 echo
-log_info "Task 3.2.1 Validation Results:"
-log_info "  Total Tests: $TOTAL_TESTS"
-log_info "  Passed: $TESTS_PASSED"
-log_info "  Failed: $TESTS_FAILED"
-log_info "  Success Rate: $((TESTS_PASSED * 100 / TOTAL_TESTS))%"
+print_info "Task 3.2.1 Validation Results:"
+print_info "  Total Tests: $TOTAL_TESTS"
+print_info "  Passed: $TESTS_PASSED"
+print_info "  Failed: $TESTS_FAILED"
+print_info "  Success Rate: $((TESTS_PASSED * 100 / TOTAL_TESTS))%"
 
 if [[ $TESTS_FAILED -eq 0 ]]; then
-    log_success "🎉 All tests passed! Task 3.2.1 implementation is successful."
+    print_success "🎉 All tests passed! Task 3.2.1 implementation is successful."
     echo
-    log_info "Standardized Results Directory Schema Features Validated:"
-    log_info "✅ Consistent directory structure across all result types"
-    log_info "✅ Timestamp-based organization (YYYY-MM-DD_HH-MM-SS format)"
-    log_info "✅ Type-specific result directories (benchmarks, gaming, testing, etc.)"
-    log_info "✅ Standard subdirectories (data, reports, logs, temp, archive, etc.)"
-    log_info "✅ Filename generation with consistent naming patterns"
-    log_info "✅ Error handling and input validation"
-    log_info "✅ Performance optimization for directory operations"
+    print_info "Standardized Results Directory Schema Features Validated:"
+    print_info "✅ Consistent directory structure across all result types"
+    print_info "✅ Timestamp-based organization (YYYY-MM-DD_HH-MM-SS format)"
+    print_info "✅ Type-specific result directories (benchmarks, gaming, testing, etc.)"
+    print_info "✅ Standard subdirectories (data, reports, logs, temp, archive, etc.)"
+    print_info "✅ Filename generation with consistent naming patterns"
+    print_info "✅ Error handling and input validation"
+    print_info "✅ Performance optimization for directory operations"
     echo
-    log_info "The unified results directory schema is ready for use across all xanadOS scripts!"
+    print_info "The unified results directory schema is ready for use across all xanadOS scripts!"
     exit 0
 else
-    log_error "Some tests failed. Please review the implementation."
+    print_error "Some tests failed. Please review the implementation."
     exit 1
 fi

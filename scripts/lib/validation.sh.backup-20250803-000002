@@ -35,7 +35,7 @@ cache_commands() {
     end_time=$(date +%s%N)
     duration=$((($end_time - $start_time) / 1000000))  # Convert to milliseconds
     
-    log_success "Command cache populated in ${duration}ms"
+    print_success "Command cache populated in ${duration}ms"
 }
 
 # Cache all gaming tools
@@ -312,7 +312,7 @@ validate_input() {
     
     # Check if input is required but empty
     if [[ "$required" == "true" ]] && [[ -z "$input" ]]; then
-        log_error "Required parameter is empty"
+        print_error "Required parameter is empty"
         return 1
     fi
     
@@ -324,54 +324,54 @@ validate_input() {
     case "$type" in
         "file")
             if [[ ! -f "$input" ]]; then
-                log_error "File does not exist: $input"
+                print_error "File does not exist: $input"
                 return 1
             fi
             ;;
         "directory")
             if [[ ! -d "$input" ]]; then
-                log_error "Directory does not exist: $input"
+                print_error "Directory does not exist: $input"
                 return 1
             fi
             ;;
         "executable")
             if [[ ! -x "$input" ]]; then
-                log_error "File is not executable: $input"
+                print_error "File is not executable: $input"
                 return 1
             fi
             ;;
         "path")
             if [[ ! -e "$input" ]]; then
-                log_error "Path does not exist: $input"
+                print_error "Path does not exist: $input"
                 return 1
             fi
             ;;
         "url")
             if ! [[ "$input" =~ ^https?:// ]]; then
-                log_error "Invalid URL format: $input"
+                print_error "Invalid URL format: $input"
                 return 1
             fi
             ;;
         "email")
             if ! [[ "$input" =~ ^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$ ]]; then
-                log_error "Invalid email format: $input"
+                print_error "Invalid email format: $input"
                 return 1
             fi
             ;;
         "number")
             if ! [[ "$input" =~ ^[0-9]+$ ]]; then
-                log_error "Input is not a valid number: $input"
+                print_error "Input is not a valid number: $input"
                 return 1
             fi
             ;;
         "port")
             if ! [[ "$input" =~ ^[0-9]+$ ]] || [[ "$input" -lt 1 ]] || [[ "$input" -gt 65535 ]]; then
-                log_error "Invalid port number: $input (must be 1-65535)"
+                print_error "Invalid port number: $input (must be 1-65535)"
                 return 1
             fi
             ;;
         *)
-            log_warning "Unknown validation type: $type"
+            print_warning "Unknown validation type: $type"
             ;;
     esac
     
@@ -393,14 +393,14 @@ validate_safe_path() {
         
         # Check if path is within base directory
         if [[ "$abs_path" != "$abs_base"* ]]; then
-            log_error "Path traversal detected: $path is outside $base_dir"
+            print_error "Path traversal detected: $path is outside $base_dir"
             return 1
         fi
     fi
     
     # Check for dangerous patterns
     if [[ "$abs_path" =~ \.\./|/\.\./|/\.\.$ ]]; then
-        log_error "Unsafe path pattern detected: $path"
+        print_error "Unsafe path pattern detected: $path"
         return 1
     fi
     
@@ -448,9 +448,9 @@ check_system_requirements() {
     done
     
     if [[ ${#failed[@]} -gt 0 ]]; then
-        log_error "System requirements not met:"
+        print_error "System requirements not met:"
         for fail in "${failed[@]}"; do
-            log_error "  - $fail"
+            print_error "  - $fail"
         done
         return 1
     fi
@@ -468,11 +468,11 @@ check_disk_space() {
     local available_mb=$((available_kb / 1024))
     
     if [[ $available_mb -lt $required_mb ]]; then
-        log_error "Insufficient disk space: ${available_mb}MB available, ${required_mb}MB required"
+        print_error "Insufficient disk space: ${available_mb}MB available, ${required_mb}MB required"
         return 1
     fi
     
-    log_debug "Disk space check passed: ${available_mb}MB available (${required_mb}MB required)"
+    print_debug "Disk space check passed: ${available_mb}MB available (${required_mb}MB required)"
     return 0
 }
 
@@ -485,11 +485,11 @@ check_memory_requirements() {
     local available_mb=$((available_kb / 1024))
     
     if [[ $available_mb -lt $required_mb ]]; then
-        log_error "Insufficient memory: ${available_mb}MB available, ${required_mb}MB required"
+        print_error "Insufficient memory: ${available_mb}MB available, ${required_mb}MB required"
         return 1
     fi
     
-    log_debug "Memory check passed: ${available_mb}MB available (${required_mb}MB required)"
+    print_debug "Memory check passed: ${available_mb}MB available (${required_mb}MB required)"
     return 0
 }
 
@@ -505,7 +505,7 @@ print_command_cache() {
 validate_script_environment() {
     local script_name="${1:-${0##*/}}"
     
-    log_debug "Validating environment for: $script_name"
+    print_debug "Validating environment for: $script_name"
     
     # Basic checks
     if ! check_system_requirements "user"; then
@@ -514,7 +514,7 @@ validate_script_environment() {
     
     # Check if we're in a reasonable location
     if [[ ! -w "$(pwd)" ]]; then
-        log_warning "Current directory is not writable: $(pwd)"
+        print_warning "Current directory is not writable: $(pwd)"
     fi
     
     # Check for common tools
@@ -523,7 +523,7 @@ validate_script_environment() {
         return 1
     fi
     
-    log_debug "Script environment validation passed"
+    print_debug "Script environment validation passed"
     return 0
 }
 

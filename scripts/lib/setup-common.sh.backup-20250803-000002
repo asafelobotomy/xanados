@@ -50,7 +50,7 @@ setup_standard_logging() {
     export LOG_FILE
     readonly LOG_FILE
     
-    log_info "Logging to: $LOG_FILE"
+    print_info "Logging to: $LOG_FILE"
 }
 
 # ============================================================================
@@ -146,7 +146,7 @@ print_standard_banner() {
 install_packages_with_fallback() {
     local packages=("$@")
     
-    log_info "Installing packages: ${packages[*]}"
+    print_info "Installing packages: ${packages[*]}"
     
     if command -v apt >/dev/null 2>&1; then
         sudo apt update -qq || print_warn "Failed to update package lists"
@@ -158,11 +158,11 @@ install_packages_with_fallback() {
     elif command -v zypper >/dev/null 2>&1; then
         sudo zypper install -y "${packages[@]}" || return 1
     else
-        log_error "Unsupported package manager"
+        print_error "Unsupported package manager"
         return 1
     fi
     
-    log_success "Packages installed successfully"
+    print_success "Packages installed successfully"
 }
 
 # ============================================================================
@@ -181,7 +181,7 @@ get_cached_hardware_info() {
 }
 
 detect_all_hardware() {
-    log_info "Detecting hardware configuration..."
+    print_info "Detecting hardware configuration..."
     
     # CPU Information
     echo "cpu_model=$(lscpu 2>/dev/null | awk -F: '/Model name/ {gsub(/^[ \t]+/, "", $2); print $2}' | head -1)"
@@ -287,7 +287,7 @@ create_backup() {
     fi
     
     echo "$backup_dir"
-    log_info "Backup created: $backup_dir"
+    print_info "Backup created: $backup_dir"
 }
 
 # ============================================================================
@@ -335,7 +335,7 @@ Categories=Game;
 EOF
     fi
     
-    log_success "Launcher created: $name"
+    print_success "Launcher created: $name"
 }
 
 # ============================================================================
@@ -362,7 +362,7 @@ generate_config() {
     
     mkdir -p "$(dirname "$output")"
     echo "$content" > "$output"
-    log_info "Configuration generated: $output"
+    print_info "Configuration generated: $output"
 }
 
 # ============================================================================
@@ -377,14 +377,14 @@ check_installation_status() {
         shift 2
     done
     
-    log_info "Checking installation status..."
+    print_info "Checking installation status..."
     
     local all_installed=true
     for component in "${!components[@]}"; do
         if eval "${components[$component]}" &>/dev/null; then
-            log_success "$component: Installed"
+            print_success "$component: Installed"
         else
-            log_warning "$component: Not installed"
+            print_warning "$component: Not installed"
             all_installed=false
         fi
     done
@@ -423,7 +423,7 @@ process_menu_choice() {
     local component_count=$#
     
     if [[ "$choice" == "0" ]]; then
-        log_info "Exiting..."
+        print_info "Exiting..."
         exit 0
     elif [[ "$choice" =~ ^[0-9]+$ ]] && [[ $choice -le $component_count ]] && [[ $choice -gt 0 ]]; then
         local component_array=("$@")
@@ -432,7 +432,7 @@ process_menu_choice() {
         echo "$name"
         return 0
     else
-        log_error "Invalid choice: $choice"
+        print_error "Invalid choice: $choice"
         return 1
     fi
 }
@@ -442,17 +442,17 @@ process_menu_choice() {
 # ============================================================================
 validate_root_check() {
     if [[ $EUID -eq 0 ]]; then
-        log_error "This script should not be run as root"
-        log_info "Please run as a regular user with sudo privileges"
+        print_error "This script should not be run as root"
+        print_info "Please run as a regular user with sudo privileges"
         exit 1
     fi
 }
 
 validate_sudo_access() {
     if ! sudo -n true 2>/dev/null; then
-        log_info "This script requires sudo access for system modifications"
+        print_info "This script requires sudo access for system modifications"
         sudo -v || {
-            log_error "Could not obtain sudo access"
+            print_error "Could not obtain sudo access"
             exit 1
         }
     fi

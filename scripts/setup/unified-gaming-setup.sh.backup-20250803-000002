@@ -36,7 +36,7 @@ readonly ESSENTIAL_COMPONENTS=("steam" "gamemode" "audio")
 # Steam Installation Functions
 # ============================================================================
 install_steam() {
-    log_info "Installing Steam and Proton-GE..."
+    print_info "Installing Steam and Proton-GE..."
     
     # Install Steam package
     install_packages_with_fallback steam
@@ -47,7 +47,7 @@ install_steam() {
     # Create optimized launchers
     create_steam_launchers
     
-    log_success "Steam installation completed"
+    print_success "Steam installation completed"
 }
 
 setup_proton_ge() {
@@ -59,11 +59,11 @@ setup_proton_ge() {
     
     # Check if Proton-GE is already installed
     if ls "$proton_dir"/GE-Proton* &>/dev/null; then
-        log_info "Proton-GE already installed"
+        print_info "Proton-GE already installed"
         return 0
     fi
     
-    log_info "Installing latest Proton-GE..."
+    print_info "Installing latest Proton-GE..."
     
     # Get latest release info
     local latest_url
@@ -80,7 +80,7 @@ setup_proton_ge() {
         
         if curl -L "$latest_url" | tar -xz -C "$temp_dir"; then
             mv "$temp_dir"/GE-Proton* "$proton_dir/"
-            log_success "Proton-GE installed successfully"
+            print_success "Proton-GE installed successfully"
         else
             print_warn "Failed to download/extract Proton-GE"
         fi
@@ -101,7 +101,7 @@ create_steam_launchers() {
 # Lutris Installation Functions
 # ============================================================================
 install_lutris() {
-    log_info "Installing Lutris and Wine..."
+    print_info "Installing Lutris and Wine..."
     
     # Install packages
     install_packages_with_fallback lutris wine winetricks
@@ -112,7 +112,7 @@ install_lutris() {
     # Configure Lutris
     configure_lutris
     
-    log_success "Lutris installation completed"
+    print_success "Lutris installation completed"
 }
 
 setup_wine_optimizations() {
@@ -120,7 +120,7 @@ setup_wine_optimizations() {
     mkdir -p "$wine_prefix_dir"
     
     # Create default Wine prefix with optimizations
-    log_info "Creating optimized Wine prefix..."
+    print_info "Creating optimized Wine prefix..."
     
     export WINEPREFIX="$wine_prefix_dir/default"
     export WINEARCH=win64
@@ -158,7 +158,7 @@ EOF
 # GameMode Installation Functions
 # ============================================================================
 install_gamemode() {
-    log_info "Installing GameMode and MangoHud..."
+    print_info "Installing GameMode and MangoHud..."
     
     # Install packages
     install_packages_with_fallback gamemode mangohud
@@ -169,7 +169,7 @@ install_gamemode() {
     # Configure MangoHud
     configure_mangohud
     
-    log_success "GameMode and MangoHud installation completed"
+    print_success "GameMode and MangoHud installation completed"
 }
 
 configure_gamemode() {
@@ -199,7 +199,7 @@ EOF
     # Enable GameMode service
     if ! systemctl --user is-enabled gamemoded &>/dev/null; then
         systemctl --user enable gamemoded
-        log_info "GameMode service enabled"
+        print_info "GameMode service enabled"
     fi
 }
 
@@ -228,7 +228,7 @@ EOF
 # Audio Optimization Functions
 # ============================================================================
 install_audio() {
-    log_info "Optimizing audio for low-latency gaming..."
+    print_info "Optimizing audio for low-latency gaming..."
     
     # Use the audio latency optimizer
     if [[ -x "$SCRIPT_DIR/audio-latency-optimizer.sh" ]]; then
@@ -238,14 +238,14 @@ install_audio() {
         install_packages_with_fallback pipewire-audio pipewire-alsa pipewire-pulse wireplumber
     fi
     
-    log_success "Audio optimization completed"
+    print_success "Audio optimization completed"
 }
 
 # ============================================================================
 # Graphics Optimization Functions  
 # ============================================================================
 install_graphics() {
-    log_info "Optimizing graphics drivers..."
+    print_info "Optimizing graphics drivers..."
     
     # Use the graphics driver optimizer
     if [[ -x "$SCRIPT_DIR/graphics-driver-optimizer.sh" ]]; then
@@ -263,19 +263,19 @@ install_graphics() {
                 install_packages_with_fallback mesa-vulkan-drivers vulkan-tools
                 ;;
             *)
-                log_info "Using default graphics drivers"
+                print_info "Using default graphics drivers"
                 ;;
         esac
     fi
     
-    log_success "Graphics optimization completed"
+    print_success "Graphics optimization completed"
 }
 
 # ============================================================================
 # Hardware Optimization Functions
 # ============================================================================
 install_hardware() {
-    log_info "Optimizing gaming hardware..."
+    print_info "Optimizing gaming hardware..."
     
     # Use the hardware device optimizer
     if [[ -x "$SCRIPT_DIR/hardware-device-optimizer.sh" ]]; then
@@ -286,14 +286,14 @@ install_hardware() {
         install_packages_with_fallback joystick jstest-gtk
     fi
     
-    log_success "Hardware optimization completed"
+    print_success "Hardware optimization completed"
 }
 
 # ============================================================================
 # KDE Customization Functions
 # ============================================================================
 install_kde() {
-    log_info "Applying KDE gaming customizations..."
+    print_info "Applying KDE gaming customizations..."
     
     # Check if running KDE
     if [[ "$XDG_CURRENT_DESKTOP" != *"KDE"* ]]; then
@@ -310,7 +310,7 @@ install_kde() {
         create_launcher "gaming-mode" "systemctl --user start gamemoded" "" "Gaming Mode"
     fi
     
-    log_success "KDE customization completed"
+    print_success "KDE customization completed"
 }
 
 # ============================================================================
@@ -323,18 +323,18 @@ install_component() {
         local name="${comp%%:*}"
         if [[ "$name" == "$component" ]]; then
             local func="${comp#*:*:}"; func="${func%%:*}"
-            log_info "Installing component: $component"
+            print_info "Installing component: $component"
             if "$func"; then
-                log_success "Component '$component' installed successfully"
+                print_success "Component '$component' installed successfully"
                 return 0
             else
-                log_error "Component '$component' installation failed"
+                print_error "Component '$component' installation failed"
                 return 1
             fi
         fi
     done
     
-    log_error "Unknown component: $component"
+    print_error "Unknown component: $component"
     return 1
 }
 
@@ -357,7 +357,7 @@ install_multiple_components() {
 }
 
 install_all_components() {
-    log_info "Installing all gaming components..."
+    print_info "Installing all gaming components..."
     
     local component_names=()
     for comp in "${COMPONENTS[@]}"; do
@@ -368,7 +368,7 @@ install_all_components() {
 }
 
 install_essential_components() {
-    log_info "Installing essential gaming components..."
+    print_info "Installing essential gaming components..."
     install_multiple_components "${ESSENTIAL_COMPONENTS[@]}"
 }
 
@@ -389,7 +389,7 @@ show_interactive_menu() {
         
         case "$choice" in
             [0])
-                log_info "Exiting..."
+                print_info "Exiting..."
                 exit 0
                 ;;
             [1-7])
@@ -410,7 +410,7 @@ show_interactive_menu() {
                 show_installation_status
                 ;;
             *)
-                log_error "Invalid choice: $choice"
+                print_error "Invalid choice: $choice"
                 ;;
         esac
         
@@ -420,7 +420,7 @@ show_interactive_menu() {
 }
 
 show_installation_status() {
-    log_info "Checking gaming setup status..."
+    print_info "Checking gaming setup status..."
     
     check_installation_status \
         "Steam" "command -v steam" \
@@ -494,7 +494,7 @@ main() {
         "install")
             shift
             if [[ $# -eq 0 ]]; then
-                log_error "No components specified for installation"
+                print_error "No components specified for installation"
                 show_usage
                 exit 1
             fi

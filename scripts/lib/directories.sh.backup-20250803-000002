@@ -183,7 +183,7 @@ ensure_results_structure() {
     local script_type="${1:-general}"
     local use_timestamp="${2:-true}"
     
-    log_debug "Creating standardized results directory structure for: $script_type"
+    print_debug "Creating standardized results directory structure for: $script_type"
     
     # Get the appropriate results directory
     local results_dir
@@ -191,7 +191,7 @@ ensure_results_structure() {
     
     # Create the main results directory
     if ! safe_mkdir "$results_dir"; then
-        log_error "Failed to create results directory: $results_dir"
+        print_error "Failed to create results directory: $results_dir"
         return 1
     fi
     
@@ -208,7 +208,7 @@ ensure_results_structure() {
     
     for subdir in "${subdirs[@]}"; do
         if ! safe_mkdir "$results_dir/$subdir"; then
-            log_warning "Failed to create subdirectory: $results_dir/$subdir"
+            print_warning "Failed to create subdirectory: $results_dir/$subdir"
         fi
     done
     
@@ -217,7 +217,7 @@ ensure_results_structure() {
         local log_dir
         log_dir="$(get_log_dir "$use_timestamp")"
         if ! safe_mkdir "$log_dir"; then
-            log_warning "Failed to create log directory: $log_dir"
+            print_warning "Failed to create log directory: $log_dir"
         fi
     fi
     
@@ -232,7 +232,7 @@ create_standard_results_dirs() {
     local project_root
     project_root="$(get_project_root)"
     
-    log_info "Creating standardized results directory structure"
+    print_info "Creating standardized results directory structure"
     
     # Base results directory
     local base_results="$project_root/results"
@@ -251,7 +251,7 @@ create_standard_results_dirs() {
     for result_type in "${result_types[@]}"; do
         local type_dir="$base_results/$result_type"
         if safe_mkdir "$type_dir"; then
-            log_debug "Created results directory: $type_dir"
+            print_debug "Created results directory: $type_dir"
             
             # Create standard subdirectories for each type
             local subdirs=("data" "reports" "logs" "temp" "archive")
@@ -259,14 +259,14 @@ create_standard_results_dirs() {
                 safe_mkdir "$type_dir/$subdir"
             done
         else
-            log_warning "Failed to create results directory: $type_dir"
+            print_warning "Failed to create results directory: $type_dir"
         fi
     done
     
     # Create .gitkeep files to preserve directory structure
     find "$base_results" -type d -empty -exec touch {}/.gitkeep \;
     
-    log_success "Standardized results directory structure created"
+    print_success "Standardized results directory structure created"
 }
 
 # Clean old results (optional - for result management)
@@ -281,11 +281,11 @@ clean_old_results() {
     local base_results="$project_root/results"
     
     if [[ ! -d "$base_results" ]]; then
-        log_warning "Results directory does not exist: $base_results"
+        print_warning "Results directory does not exist: $base_results"
         return 0
     fi
     
-    log_info "Cleaning results older than $days_to_keep days (type: $result_type)"
+    print_info "Cleaning results older than $days_to_keep days (type: $result_type)"
     
     # Find and archive old timestamped directories
     local search_path
@@ -299,7 +299,7 @@ clean_old_results() {
     find "$search_path" -type d -name "*[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]_*" \
         -mtime +${days_to_keep} -exec rm -rf {} + 2>/dev/null
     
-    log_success "Results cleanup completed"
+    print_success "Results cleanup completed"
 }
 
 # Get standardized filename with timestamp (returns full path to data directory)
@@ -311,7 +311,7 @@ get_results_filename() {
     local script_type="${3:-general}"
     
     if [[ -z "$base_name" ]]; then
-        log_error "get_results_filename: base_name is required"
+        print_error "get_results_filename: base_name is required"
         return 1
     fi
     
@@ -336,7 +336,7 @@ get_log_filename() {
     local extension="${2:-log}"
     
     if [[ -z "$script_name" ]]; then
-        log_error "get_log_filename: script_name is required" 
+        print_error "get_log_filename: script_name is required" 
         return 1
     fi
     
@@ -372,19 +372,19 @@ create_user_directories() {
     
     for dir in "${USER_DATA_DIRS[@]}"; do
         if safe_mkdir "$dir"; then
-            log_debug "Created: $dir"
+            print_debug "Created: $dir"
         else
             failed+=("$dir")
         fi
     done
     
     if [[ ${#failed[@]} -gt 0 ]]; then
-        log_error "Failed to create directories:"
+        print_error "Failed to create directories:"
         printf '  - %s\n' "${failed[@]}"
         return 1
     fi
     
-    log_success "All user directories created successfully"
+    print_success "All user directories created successfully"
     return 0
 }
 
@@ -398,19 +398,19 @@ create_project_directories() {
     for dir in "${XANADOS_DIRECTORIES[@]}"; do
         local full_path="$project_root/$dir"
         if safe_mkdir "$full_path"; then
-            log_debug "Created: $full_path"
+            print_debug "Created: $full_path"
         else
             failed+=("$full_path")
         fi
     done
     
     if [[ ${#failed[@]} -gt 0 ]]; then
-        log_error "Failed to create project directories:"
+        print_error "Failed to create project directories:"
         printf '  - %s\n' "${failed[@]}"
         return 1
     fi
     
-    log_success "All project directories created successfully"
+    print_success "All project directories created successfully"
     return 0
 }
 
@@ -421,7 +421,7 @@ ensure_directory() {
     local owner="${3:-}"
     
     if [[ -z "$dir" ]]; then
-        log_error "ensure_directory: No directory specified"
+        print_error "ensure_directory: No directory specified"
         return 1
     fi
     
@@ -433,7 +433,7 @@ ensure_directory() {
     # Set ownership if specified
     if [[ -n "$owner" ]] && [[ "$EUID" -eq 0 ]]; then
         if ! chown "$owner" "$dir" 2>/dev/null; then
-            log_warning "Failed to set ownership of $dir to $owner"
+            print_warning "Failed to set ownership of $dir to $owner"
         fi
     fi
     
@@ -448,7 +448,7 @@ cleanup_old_files() {
     local dry_run="${4:-false}"
     
     if [[ ! -d "$dir" ]]; then
-        log_error "Directory does not exist: $dir"
+        print_error "Directory does not exist: $dir"
         return 1
     fi
     
@@ -465,13 +465,13 @@ cleanup_old_files() {
         local deleted_count=0
         eval "$find_cmd" | while read -r file; do
             if rm -f "$file" 2>/dev/null; then
-                log_debug "Deleted: $file"
+                print_debug "Deleted: $file"
                 ((deleted_count++))
             else
-                log_warning "Failed to delete: $file"
+                print_warning "Failed to delete: $file"
             fi
         done
-        log_success "Cleanup completed: $deleted_count files deleted"
+        print_success "Cleanup completed: $deleted_count files deleted"
     fi
 }
 
@@ -482,7 +482,7 @@ archive_old_results() {
     local days_old="${3:-30}"
     
     if [[ ! -d "$results_dir" ]]; then
-        log_warning "Results directory does not exist: $results_dir"
+        print_warning "Results directory does not exist: $results_dir"
         return 0
     fi
     
@@ -500,13 +500,13 @@ archive_old_results() {
         ensure_directory "$target_dir"
         
         if mv "$file" "$target_dir/" 2>/dev/null; then
-            log_debug "Archived: $file"
+            print_debug "Archived: $file"
         else
-            log_warning "Failed to archive: $file"
+            print_warning "Failed to archive: $file"
         fi
     done
     
-    log_success "Archival completed"
+    print_success "Archival completed"
 }
 
 # Get directory size in MB
@@ -550,7 +550,7 @@ is_safe_directory() {
     
     for protected_dir in "${protected[@]}"; do
         if [[ "$abs_dir" == "$protected_dir" ]]; then
-            log_error "Cannot operate on protected directory: $abs_dir"
+            print_error "Cannot operate on protected directory: $abs_dir"
             return 1
         fi
     done
@@ -577,7 +577,7 @@ create_dir_with_gitkeep() {
     
     if ensure_directory "$dir"; then
         touch "$dir/.gitkeep"
-        log_debug "Created directory with .gitkeep: $dir"
+        print_debug "Created directory with .gitkeep: $dir"
         return 0
     fi
     
@@ -591,7 +591,7 @@ sync_directories() {
     local delete_extra="${3:-false}"
     
     if [[ ! -d "$source" ]]; then
-        log_error "Source directory does not exist: $source"
+        print_error "Source directory does not exist: $source"
         return 1
     fi
     
@@ -616,7 +616,7 @@ list_directory_contents() {
     local show_hidden="${2:-false}"
     
     if [[ ! -d "$dir" ]]; then
-        log_error "Directory does not exist: $dir"
+        print_error "Directory does not exist: $dir"
         return 1
     fi
     
@@ -629,7 +629,7 @@ list_directory_contents() {
         ls_opts="-l"
     fi
     
-    ls $ls_opts "$dir" 2>/dev/null || log_error "Failed to list directory contents"
+    ls $ls_opts "$dir" 2>/dev/null || print_error "Failed to list directory contents"
 }
 
 # Check if directory is empty
@@ -645,7 +645,7 @@ remove_empty_directories() {
     local dry_run="${2:-false}"
     
     if [[ ! -d "$base_dir" ]]; then
-        log_error "Base directory does not exist: $base_dir"
+        print_error "Base directory does not exist: $base_dir"
         return 1
     fi
     
@@ -664,12 +664,12 @@ remove_empty_directories() {
             # Fallback for systems where find -delete doesn't work
             find "$base_dir" -type d -empty | while read -r dir; do
                 if rmdir "$dir" 2>/dev/null; then
-                    log_debug "Removed empty directory: $dir"
+                    print_debug "Removed empty directory: $dir"
                     ((removed_count++))
                 fi
             done
         }
-        log_success "Removed $removed_count empty directories"
+        print_success "Removed $removed_count empty directories"
     fi
 }
 
