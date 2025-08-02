@@ -1,0 +1,19 @@
+# ShellCheck configuration for xanadOS
+# Excludes archive directory and other non-active code
+
+# Disable specific checks globally
+disable=SC1091,SC2034,SC2155
+
+# Exclude patterns
+exclude-dir=archive
+exclude-dir=build/work
+exclude-dir=build/cache
+exclude-dir=results/temp
+exclude-dir=.git
+
+# File patterns to exclude
+exclude=*.backup
+exclude=*.bak
+exclude=*.old
+exclude=*.orig
+exclude=*~

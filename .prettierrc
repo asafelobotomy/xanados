@@ -1,0 +1,22 @@
+{
+  "semi": true,
+  "singleQuote": false,
+  "tabWidth": 2,
+  "trailingComma": "es5",
+  "printWidth": 80,
+  "endOfLine": "lf",
+  "ignorePatterns": [
+    "archive/**/*",
+    "build/work/**/*",
+    "build/cache/**/*",
+    "build/out/**/*",
+    "results/temp/**/*",
+    "**/*.backup",
+    "**/*.bak",
+    "**/*.old",
+    "**/*.orig",
+    "**/*~",
+    "**/*.tmp",
+    "**/*.temp"
+  ]
+}

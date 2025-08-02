@@ -33,9 +33,13 @@ docs/reports/data/*
 *.swp
 *.swo
 
-# Archive and backup files
+# Archive and backup files - completely excluded from version control
 archive/backups/*
 archive/reports/*
+archive/deprecated/*
+!archive/backups/.gitkeep
+!archive/reports/.gitkeep
+!archive/deprecated/.gitkeep
 testing/results/*
 *.backup
 *.bak
