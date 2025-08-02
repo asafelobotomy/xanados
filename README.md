@@ -240,10 +240,12 @@ See [Project Structure](docs/development/project_structure.md) for detailed dire
 - [User Experience Guide](docs/user/priority4-user-experience-guide.md) - Complete user setup guide
 
 ### Development Documentation
-- [Project Plan](docs/development/xanadOS_plan.md) - Overall project roadmap and goals
-- [Project Structure](docs/development/project_structure.md) - Detailed directory organization
-- [Performance Testing Suite](docs/development/performance-testing-suite.md) - Testing framework guide
-- [Library Review](docs/development/library-review-2025-08-02.md) - Code architecture analysis
+- [Development Overview](docs/development/README.md) - Complete development documentation index
+- [Project Plan](docs/development/planning/xanadOS_plan.md) - Overall project roadmap and goals
+- [Project Structure](docs/development/architecture/project_structure.md) - Detailed directory organization
+- [Performance Testing Suite](docs/development/architecture/performance-testing-suite.md) - Testing framework guide
+- [Library Review](docs/development/reviews/library-review-2025-08-02.md) - Code architecture analysis
+- [Latest Reports](docs/development/reports/) - Development progress and phase completion
 
 ### API Documentation
 - [Library Functions](scripts/lib/) - Core library documentation
