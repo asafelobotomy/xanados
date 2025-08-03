@@ -1,0 +1,139 @@
+# Intel Hardware-Specific Packages for xanadOS
+# Optimized packages for Intel CPU and GPU systems
+
+# Intel GPU Drivers & Tools
+mesa                       # Open source Intel drivers
+lib32-mesa                 # 32-bit Mesa libraries
+vulkan-intel               # Vulkan driver for Intel
+lib32-vulkan-intel         # 32-bit Vulkan for Intel
+xf86-video-intel           # X.Org Intel driver
+intel-media-driver         # Intel media driver (Gen8+)
+libva-intel-driver         # VA-API driver for Intel
+intel-gpu-tools            # Intel GPU utilities
+
+# Intel Compute & Development
+intel-oneapi-basekit       # Intel oneAPI Base Toolkit
+intel-oneapi-hpckit        # Intel oneAPI HPC Toolkit
+intel-oneapi-aikit         # Intel oneAPI AI Analytics Toolkit
+intel-mkl                  # Intel Math Kernel Library
+intel-tbb                  # Intel Threading Building Blocks
+intel-ipp                  # Intel Integrated Performance Primitives
+intel-dal                  # Intel Dynamic Application Loader
+
+# Intel CPU Optimizations
+intel-ucode                # Intel CPU microcode
+thermald                   # Intel thermal daemon
+intel-undervolt            # Intel CPU undervolting
+turbostat                  # Intel CPU frequency monitor
+intel-cstate               # Intel C-state control
+intel-pstate               # Intel P-state driver
+
+# Intel Monitoring & Control
+intel-gpu-top              # Intel GPU monitor
+igt-gpu-tools              # Intel graphics testing
+intel-gputop               # Intel GPU profiler
+powertop                   # Intel power analysis
+intel-pcm                  # Intel Performance Counter Monitor
+vtune                      # Intel VTune profiler
+
+# Intel Graphics Development
+intel-graphics-compiler    # Intel graphics compiler
+intel-level-zero           # Intel Level Zero API
+intel-compute-runtime      # Intel OpenCL runtime
+intel-opencl-clang         # Intel OpenCL compiler
+intel-gmmlib               # Intel graphics memory management
+intel-media-sdk            # Intel Media SDK
+
+# Intel Machine Learning
+intel-extension-for-pytorch # PyTorch Intel extension
+intel-extension-for-tensorflow # TensorFlow Intel extension
+openvino                   # Intel OpenVINO toolkit
+openvino-dev               # OpenVINO development
+dnnl                       # Intel Deep Neural Network Library
+mkl-dnn                    # Intel MKL-DNN
+
+# Intel Video Acceleration
+libva-intel-driver         # VA-API driver
+intel-media-driver         # Modern media driver
+libmfx                     # Intel Media SDK
+intel-vaapi-driver         # VA-API driver
+gstreamer-vaapi            # GStreamer VA-API support
+
+# Intel Networking
+intel-ethernet-drivers     # Intel Ethernet drivers
+iwlwifi-firmware          # Intel WiFi firmware
+iwd                        # Intel WiFi daemon
+intel-wireless-regdb       # Intel wireless regulatory database
+
+# Intel Security Features
+intel-sgx-sdk              # Intel SGX SDK
+intel-sgx-psw              # Intel SGX Platform Software
+tpm2-tools                 # TPM 2.0 tools
+intel-cet                  # Intel Control-flow Enforcement
+intel-mpx                  # Intel Memory Protection Extensions
+
+# Intel Power Management
+intel-pstate               # Intel P-state scaling
+intel-rapl                 # Intel Running Average Power Limit
+intel-powerclamp           # Intel thermal management
+s-tui                      # Stress Terminal UI
+cpupower                   # CPU frequency utilities
+
+# Intel Virtualization
+intel-haxm                 # Intel HAXM (Android emulator)
+kvm-intel                  # Intel KVM support
+intel-iommu                # Intel IOMMU support
+intel-gvt                  # Intel Graphics Virtualization
+
+# Intel Audio
+sof-firmware               # Sound Open Firmware
+alsa-ucm-conf              # ALSA Use Case Manager
+pulseaudio-alsa            # PulseAudio ALSA support
+intel-sound                # Intel sound drivers
+
+# Intel Development Tools
+intel-inspector            # Intel Inspector (memory/thread checker)
+intel-advisor              # Intel Advisor (vectorization)
+intel-compiler             # Intel C++ Compiler
+intel-fortran              # Intel Fortran Compiler
+intel-debugger             # Intel Debugger
+
+# Intel System Utilities
+intel-microcode            # Intel microcode updates
+msr-tools                  # Model Specific Register tools
+intel-cstate               # Intel C-state utilities
+turbostat                  # Intel turbo statistics
+intel-speed-select         # Intel Speed Select Technology
+
+# Intel Graphics Libraries
+intel-gmmlib               # Graphics Memory Management
+intel-ocloc                # Intel OpenCL offline compiler
+level-zero                 # Intel Level Zero
+intel-metrics-library      # Intel Metrics Library
+intel-metrics-discovery    # Intel Metrics Discovery
+
+# Intel Gaming Optimizations
+mesa-amber                 # Intel legacy driver support
+intel-vaapi-driver         # Video acceleration
+prime-run                  # PRIME GPU switching
+bumblebee                  # Dual GPU support (legacy)
+
+# Intel Laptop Specific
+laptop-mode-tools          # Laptop power management
+acpi-call-dkms             # ACPI call interface
+intel-thermal-tools        # Intel thermal management
+intel-speed-select         # Intel Speed Select
+intel-p-state              # Intel P-state management
+
+# Intel Server/Workstation
+intel-rdt                  # Intel Resource Director Technology
+intel-cqm                  # Intel Cache Quality Monitoring
+intel-cat                  # Intel Cache Allocation Technology
+intel-mba                  # Intel Memory Bandwidth Allocation
+intel-ras                  # Intel Reliability, Availability, Serviceability
+
+# Intel Firmware & Updates
+fwupd                      # Firmware update daemon
+intel-microcode            # CPU microcode
+linux-firmware-intel       # Intel hardware firmware
+intel-bluetooth-firmware   # Intel Bluetooth firmware

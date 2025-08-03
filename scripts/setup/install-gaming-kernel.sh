@@ -18,7 +18,7 @@ install_linux_zen() {
 
 install_linux_cachyos() {
     print_status "Installing CachyOS kernel (BORE scheduler)..."
-    
+
     # Add CachyOS repository
     if ! grep -q "cachyos" /etc/pacman.conf; then
         print_status "Adding CachyOS repository..."
@@ -28,13 +28,13 @@ install_linux_cachyos() {
 SigLevel = Required DatabaseOptional
 Server = https://mirror.cachyos.org/repo/$arch/$repo
 REPO
-        
+
         # Import GPG key
         sudo pacman-key --recv-keys F3B607488DB35A47
         sudo pacman-key --lsign-key F3B607488DB35A47
         sudo pacman -Sy
     fi
-    
+
     # Install CachyOS kernel
     sudo pacman -S --noconfirm linux-cachyos linux-cachyos-headers
     print_success "CachyOS kernel with BORE scheduler installed"
@@ -42,7 +42,7 @@ REPO
 
 configure_gaming_parameters() {
     print_status "Configuring gaming kernel parameters..."
-    
+
     # Create gaming-optimized sysctl configuration
     sudo tee /etc/sysctl.d/99-gaming-optimization.conf << 'SYSCTL'
 # Gaming optimization parameters
@@ -62,13 +62,13 @@ net.core.netdev_max_backlog=5000
 kernel.sched_autogroup_enabled=0
 kernel.sched_child_runs_first=1
 SYSCTL
-    
+
     print_success "Gaming kernel parameters configured"
 }
 
 main() {
     local kernel_type="${1:-zen}"
-    
+
     case "$kernel_type" in
         zen)
             install_linux_zen
@@ -85,9 +85,9 @@ main() {
             exit 1
             ;;
     esac
-    
+
     configure_gaming_parameters
-    
+
     print_status "Gaming kernel installation completed"
     print_warning "Reboot required to use new kernel"
 }

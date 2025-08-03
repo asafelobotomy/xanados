@@ -1,0 +1,116 @@
+# Gaming AUR Packages for xanadOS
+# High-priority gaming packages from the AUR
+
+# Gaming Launchers & Stores
+heroic-games-launcher-bin    # Epic Games Store launcher
+lutris                       # Universal gaming launcher
+steam-native-runtime         # Steam with native runtime
+legendary                    # Epic Games Store CLI
+rare                         # Epic Games Store GUI
+gogdl                        # GOG.com downloader
+itch-setup                   # Itch.io launcher
+minigalaxy                   # GOG.com client
+
+# Game Engines & Development
+godot-bin                    # Godot game engine
+unity-editor                 # Unity game engine
+unreal-engine                # Unreal Engine
+love                         # LÖVE 2D game engine
+construct3                   # Construct 3 game engine
+
+# Gaming Performance Tools
+gamemode                    # Game performance optimization
+cpu-x                       # CPU information tool
+corectrl                    # GPU/CPU overclocking
+nvtop                       # NVIDIA GPU monitoring
+radeontop                   # AMD GPU monitoring
+intel-gpu-tools             # Intel GPU tools
+mangohud                    # Performance overlay
+goverlay                    # MangoHud configurator
+
+# Gaming Audio
+pipewire-pulse              # PipeWire PulseAudio replacement
+easyeffects                 # Audio effects for gaming
+carla                       # Audio plugin host
+jamulus                     # Online music jamming
+soundux                     # Soundboard application
+
+# Game Streaming & Recording
+obs-studio-git              # Latest OBS Studio
+obs-streamfx                # OBS effects plugins
+obs-websocket               # OBS remote control
+streamlink-twitch-gui       # Twitch streaming GUI
+simple-screen-recorder      # Screen recording
+peek                        # GIF recorder
+gpu-screen-recorder         # GPU-accelerated recording
+
+# Gaming Communication
+discord-canary              # Discord Canary
+element-desktop             # Matrix client
+teamspeak3                  # TeamSpeak client
+mumble                      # Voice chat client
+slack-desktop               # Slack desktop
+signal-desktop              # Signal messenger
+
+# Gaming Utilities
+antimicrox                  # Gamepad to keyboard mapping
+sc-controller               # Steam Controller support
+ds4drv                      # DualShock 4 driver
+dualsensectl                # DualSense controller support
+xboxdrv                     # Xbox controller driver
+joycond-git                 # Joy-Con controller support
+oversteer                   # Steering wheel configuration
+piper                       # Gaming mouse configuration
+
+# Game Compatibility
+dxvk-bin                    # DirectX to Vulkan translation
+vkd3d-proton-bin           # Direct3D 12 to Vulkan
+wine-staging                # Wine staging with latest patches
+wine-tkg-git               # Custom Wine builds
+bottles                     # Wine prefix manager
+q4wine                      # Wine GUI
+winetricks-git             # Wine helper scripts
+
+# Gaming File Management
+steam-rom-manager          # ROM management for Steam
+lutris-wine-fshack         # Wine builds for Lutris
+gameconqueror              # Game cheating tool
+scanmem                    # Memory scanner
+cheat-engine               # Game cheating framework
+
+# Retro Gaming
+retroarch                  # Multi-emulator frontend
+emulationstation           # Retro gaming frontend
+attract                    # Retro gaming frontend
+lakka                      # Retro gaming OS components
+batocera-linux             # Gaming OS components
+
+# Gaming Social
+playnite                   # Game library manager
+gamemode-git               # Latest gamemode
+gcdemu                     # CD/DVD emulation
+cdemu-daemon               # CD/DVD daemon
+
+# Performance Monitoring
+nohang                     # OOM prevention
+ananicy                    # Process priority optimization
+irqbalance                 # IRQ balancing
+zramswap                   # Compressed swap
+preload                    # Application preloading
+
+# Gaming Network
+zerotier-one               # Gaming VPN
+tailscale                  # Mesh VPN
+parsec-bin                 # Game streaming
+moonlight-qt               # NVIDIA GameStream client
+sunshine                   # Self-hosted game streaming
+
+# Additional Gaming Tools
+protontricks               # Proton prefix management
+protonup-qt                # Proton version manager
+steam-tinker-launch        # Steam game tweaking
+boilr                      # Game launcher integration
+legendary-gl               # Epic Games launcher
+grapejuice                 # Roblox compatibility
+minecraft-launcher         # Minecraft launcher
+prismlauncher              # Minecraft modded launcher

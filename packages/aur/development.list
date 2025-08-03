@@ -1,0 +1,147 @@
+# Development AUR Packages for xanadOS
+# Development tools and environments from AUR
+
+# IDEs & Editors
+visual-studio-code-bin      # VS Code binary
+visual-studio-code-insiders # VS Code Insiders
+jetbrains-toolbox          # JetBrains IDE manager
+android-studio             # Android development
+unity-editor               # Unity game development
+unreal-engine              # Unreal Engine development
+godot-bin                  # Godot game engine
+blender-git                # Latest Blender builds
+
+# Programming Languages & Runtimes
+nodejs-lts-gallium         # Node.js LTS
+nodejs-nightly             # Node.js nightly
+deno-bin                   # Deno runtime
+bun-bin                    # Bun runtime
+golang-git                 # Go language git
+rust-analyzer-git          # Rust language server
+zig-dev-bin               # Zig language
+nim-git                    # Nim language
+crystal-bin                # Crystal language
+julia-bin                  # Julia language
+
+# Version Control & DevOps
+gitlab-runner              # GitLab CI runner
+github-cli                 # GitHub CLI
+git-lfs                    # Git Large File Storage
+git-flow-avh               # Git Flow extensions
+lazygit                    # Git TUI
+gitui                      # Git TUI alternative
+docker-desktop             # Docker Desktop
+docker-compose-v2          # Docker Compose v2
+kubectl-bin                # Kubernetes CLI
+helm-bin                   # Kubernetes Helm
+terraform-bin              # Infrastructure as Code
+ansible-core               # Configuration management
+
+# Database Tools
+mongodb-bin                # MongoDB database
+mongodb-compass            # MongoDB GUI
+redis-desktop-manager      # Redis GUI
+dbeaver                    # Universal database tool
+mysql-workbench            # MySQL GUI
+postgresql-old-upgrade     # PostgreSQL migration
+pgadmin4                   # PostgreSQL admin
+influxdb                   # Time series database
+
+# Web Development
+postman-bin                # API testing
+insomnia-bin               # API client
+httpie-desktop             # HTTP client GUI
+paw                        # API tool
+responsively               # Responsive web design
+figma-linux                # Figma design tool
+adobe-source-code-pro-fonts # Adobe fonts
+fira-code                  # Programming font
+
+# Game Development Specific
+aseprite                   # Pixel art editor
+tiled                      # Tile map editor
+ldtk                       # Level editor
+twine                      # Interactive fiction
+yarn                       # Dialogue editor
+audacity-git               # Audio editing
+tenacity                   # Audacity fork
+reaper                     # Digital audio workstation
+
+# 3D & Graphics Development
+blender-addons-contrib     # Blender community addons
+meshlab                    # 3D mesh processing
+openvdb                    # Volumetric data
+embree                     # Ray tracing kernels
+oidn                       # AI denoising
+materialmaker              # Material authoring
+quixel-mixer               # Material creation
+substance-painter          # Texture painting
+
+# Performance & Profiling
+hotspot                    # Performance profiler
+heaptrack                  # Memory profiler
+massif-visualizer          # Memory usage visualizer
+kcachegrind                # Call graph viewer
+gprof2dot                  # Profiling visualization
+valgrind-git               # Memory debugging
+perf-tools-git             # Performance analysis
+
+# Build Systems & Tools
+cmake-git                  # Latest CMake
+ninja-git                  # Fast build system
+meson-git                  # Build system
+bazel-bin                  # Google build system
+buck2                      # Meta build system
+gradle                     # Java build system
+sbt                        # Scala build tool
+leiningen                  # Clojure build tool
+
+# Documentation & Writing
+gitbook                    # Documentation platform
+docsify-cli                # Documentation generator
+mkdocs-material            # Material theme for MkDocs
+sphinx-git                 # Python documentation
+hugo-git                   # Static site generator
+zola-bin                   # Fast static site generator
+mdbook                     # Rust documentation
+obsidian                   # Knowledge management
+
+# Networking & Security
+wireshark-git              # Network analysis
+nmap-git                   # Network scanning
+burpsuite                  # Security testing
+owasp-zap                  # Security testing
+john-git                   # Password cracking
+hashcat                    # Password recovery
+metasploit                 # Penetration testing
+nikto                      # Web vulnerability scanner
+
+# Virtualization & Containers
+virtualbox-ext-oracle      # VirtualBox extensions
+vmware-workstation         # VMware Workstation
+qemu-git                   # Latest QEMU
+libvirt-git                # Virtualization API
+virt-manager-git           # VM management
+podman-desktop             # Container management
+buildah                    # Container builder
+skopeo                     # Container image operations
+
+# Cloud Development
+aws-cli-v2                 # Amazon Web Services CLI
+azure-cli                  # Microsoft Azure CLI
+google-cloud-sdk           # Google Cloud SDK
+digitalocean-cli           # DigitalOcean CLI
+vultr-cli                  # Vultr CLI
+linode-cli                 # Linode CLI
+scaleway-cli               # Scaleway CLI
+
+# AI & Machine Learning Development
+jupyter-notebook           # Interactive computing
+jupyterlab                 # Advanced Jupyter
+anaconda                   # Python data science
+miniconda3                 # Minimal conda
+pytorch-git                # PyTorch ML framework
+tensorflow-git             # TensorFlow ML framework
+cuda-toolkit               # NVIDIA CUDA
+cudnn                      # CUDA Deep Neural Network
+ollama                     # Local LLM runner

@@ -1,0 +1,156 @@
+# Optional AUR Packages for xanadOS
+# User-selectable enhancement packages
+
+# System Utilities
+timeshift                  # System restore
+bleachbit                  # System cleaner
+stacer                     # System optimizer
+system-monitoring-center   # System monitor
+hardinfo                   # Hardware information
+cpu-x                      # CPU information
+hw-probe                   # Hardware detection
+inxi                       # System information
+
+# File Management
+nemo-fileroller           # Archive support for Nemo
+nemo-preview              # Quick preview for Nemo
+thunar-archive-plugin     # Archive plugin for Thunar
+thunar-volman             # Volume management
+spacefm                   # Advanced file manager
+pcmanfm-qt                # Lightweight file manager
+ranger                    # Terminal file manager
+nnn                       # Terminal file manager
+
+# Media & Entertainment
+spotify                   # Music streaming
+youtube-dl-git           # Video downloader
+yt-dlp                   # YouTube downloader
+vlc-git                  # Latest VLC media player
+mpv-git                  # Latest MPV player
+kodi                     # Media center
+plex-media-server        # Media server
+jellyfin-server          # Open source media server
+emby-server              # Media server
+
+# Communication
+telegram-desktop         # Telegram messaging
+whatsapp-nativefier     # WhatsApp desktop
+skype                   # Skype calling
+zoom                    # Video conferencing
+teams                   # Microsoft Teams
+slack-desktop           # Team communication
+discord-ptb             # Discord Public Test Build
+
+# Productivity
+notion-app              # Productivity workspace
+obsidian                # Knowledge management
+logseq                  # Knowledge graph
+roam-research           # Note-taking
+standardnotes           # Secure notes
+joplin                  # Note-taking with sync
+typora                  # Markdown editor
+mark-text               # Markdown editor
+
+# Creative Tools
+gimp-git                # Latest GIMP
+krita-git               # Latest Krita
+inkscape-git            # Latest Inkscape
+darktable               # Photo editing
+rawtherapee             # RAW photo processor
+luminance-hdr           # HDR imaging
+hugin                   # Panorama creator
+openshot                # Video editor
+
+# Web Browsers
+google-chrome           # Google Chrome
+microsoft-edge-stable   # Microsoft Edge
+brave-bin               # Brave browser
+vivaldi                 # Vivaldi browser
+opera                   # Opera browser
+firefox-developer-edition # Firefox Developer
+librewolf-bin           # Privacy-focused Firefox
+
+# Gaming Enhancements
+steam-fonts             # Steam fonts
+ttf-liberation          # Liberation fonts
+ttf-roboto              # Google Roboto fonts
+noto-fonts-emoji        # Emoji fonts
+ttf-twemoji             # Twitter emoji
+otf-font-awesome        # Font Awesome icons
+
+# Network Tools
+networkmanager-l2tp     # L2TP VPN support
+networkmanager-openconnect # OpenConnect VPN
+networkmanager-openvpn  # OpenVPN support
+networkmanager-pptp     # PPTP VPN support
+wireguard-tools         # WireGuard VPN
+tor-browser             # Tor browser
+proxychains-ng          # Proxy chains
+
+# Development Extras
+postman-bin             # API testing
+insomnia-bin            # REST client
+mongodb-compass         # MongoDB GUI
+redis-desktop-manager   # Redis GUI
+dbeaver                 # Database tool
+android-studio          # Android development
+flutter                 # Flutter development
+dart                    # Dart language
+
+# System Theming
+adapta-gtk-theme        # Adapta theme
+arc-gtk-theme           # Arc theme
+materia-gtk-theme       # Material theme
+numix-gtk-theme         # Numix theme
+papirus-icon-theme      # Papirus icons
+tela-icon-theme         # Tela icons
+whitesur-gtk-theme      # macOS-like theme
+layan-gtk-theme         # Modern theme
+
+# Audio Production
+reaper                  # Digital Audio Workstation
+ardour                  # Professional DAW
+hydrogen                # Drum machine
+lmms                    # Music production
+audacity-git            # Audio editor
+tenacity                # Audacity fork
+carla                   # Audio plugin host
+calf                    # Audio plugins
+
+# Video Production
+kdenlive-git            # Video editor
+blender-git             # 3D creation suite
+natron                  # Compositing software
+olive-editor            # Video editor
+flowblade               # Video editor
+pitivi                  # Simple video editor
+handbrake               # Video transcoder
+
+# Educational & Research
+anki                    # Flashcard learning
+zotero                  # Reference manager
+mendeley-reference-manager # Reference manager
+jabref                  # Bibliography manager
+stellarium              # Planetarium software
+celestia                # Space simulation
+geogebra                # Mathematics software
+scilab                  # Scientific computation
+
+# Backup & Sync
+dropbox                 # Cloud storage
+google-drive-ocamlfuse  # Google Drive mounting
+onedrive-abraunegg      # OneDrive sync
+nextcloud-client        # Nextcloud sync
+syncthing               # File synchronization
+rclone                  # Cloud storage CLI
+duplicati               # Backup software
+borgbackup              # Deduplicating backup
+
+# Virtualization Extras
+virtualbox-guest-iso    # VirtualBox guest additions
+vmware-horizon-client   # VMware Horizon
+anydesk-bin             # Remote desktop
+teamviewer              # Remote desktop
+parsec-bin              # Low-latency remote desktop
+nomachine               # Remote desktop
+remmina-git             # Remote desktop client

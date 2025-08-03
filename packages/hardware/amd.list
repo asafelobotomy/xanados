@@ -1,0 +1,128 @@
+# AMD Hardware-Specific Packages for xanadOS
+# Optimized packages for AMD GPU and CPU systems
+
+# AMD GPU Drivers & Tools
+mesa                       # Open source AMD drivers
+lib32-mesa                 # 32-bit Mesa libraries
+vulkan-radeon              # Vulkan driver for AMD
+lib32-vulkan-radeon        # 32-bit Vulkan for AMD
+xf86-video-amdgpu          # X.Org AMD GPU driver
+xf86-video-ati             # X.Org ATI/AMD driver
+amdvlk                     # AMD official Vulkan driver
+lib32-amdvlk               # 32-bit AMD Vulkan driver
+
+# AMD Control & Monitoring
+radeontop                  # AMD GPU monitor
+corectrl                   # AMD GPU/CPU overclocking
+amdgpu-top                 # AMD GPU monitoring
+amd-ucode                  # AMD CPU microcode
+radeon-profile             # Radeon GPU profiler
+radeon-profile-daemon      # Radeon profile daemon
+
+# AMD ROCm (GPU Computing)
+rocm-dkms                  # ROCm kernel driver
+rocm-dev                   # ROCm development
+rocblas                    # ROCm BLAS library
+rocfft                     # ROCm FFT library
+rocsparse                  # ROCm sparse library
+rocsolver                  # ROCm linear algebra
+rocrand                    # ROCm random number generation
+hipify-clang               # CUDA to HIP converter
+
+# AMD Machine Learning
+pytorch-rocm               # PyTorch with ROCm
+tensorflow-rocm            # TensorFlow with ROCm
+miopen-hip                 # Deep learning primitives
+rocal                      # ROCm augmentation library
+migraphx                   # AMD inference engine
+
+# AMD Video Acceleration
+libva-mesa-driver          # VA-API driver for AMD
+lib32-libva-mesa-driver    # 32-bit VA-API for AMD
+mesa-vdpau                 # VDPAU driver for AMD
+lib32-mesa-vdpau           # 32-bit VDPAU for AMD
+libamf                     # AMD Media Framework
+
+# AMD Gaming Optimizations
+dxvk                       # DirectX to Vulkan (AMD optimized)
+vkd3d-proton              # Direct3D 12 to Vulkan
+gallium-nine               # Direct3D 9 state tracker
+radv-mesa-git             # RADV Vulkan driver (latest)
+aco-mesa-git              # ACO shader compiler
+
+# AMD CPU Optimizations
+zenpower-dkms              # AMD Zen CPU power monitoring
+k10temp                    # AMD temperature monitoring
+amd-pstate                 # AMD P-State driver
+ryzen-stabilizr            # Ryzen stability tool
+amd-overdrive              # AMD CPU overclocking
+
+# AMD Development Tools
+rocm-cmake                 # ROCm CMake modules
+rocm-device-libs           # ROCm device libraries
+rocm-runtime               # ROCm runtime
+hip-runtime-amd            # HIP runtime for AMD
+rocprofiler                # ROCm profiler
+roctracer                  # ROCm tracing
+
+# AMD Media & Streaming
+ffmpeg-amd                 # FFmpeg with AMD encoding
+obs-amd-encoder            # OBS AMD encoder plugin
+amdenc                     # AMD hardware encoder
+vainfo                     # VA-API information tool
+vdpauinfo                  # VDPAU information tool
+
+# AMD Motherboard Support
+it87-dkms-git             # IT87xx sensor support
+nct6775-dkms              # NCT6775 sensor support
+zenmonitor                # AMD Zen CPU monitor
+ryzen-controller          # Ryzen TDP controller
+
+# AMD Virtualization
+amdgpu-pro-libgl          # AMD Pro OpenGL
+amdgpu-dkms               # AMD GPU kernel module
+firmware-amd-ucode        # AMD firmware updates
+linux-firmware-amd       # AMD hardware firmware
+
+# AMD Audio (integrated)
+snd-hda-intel             # HD Audio support
+alsa-firmware             # ALSA firmware
+pulseaudio-alsa           # PulseAudio ALSA support
+pipewire-pulse            # PipeWire with AMD audio
+
+# AMD Network (integrated)
+r8168-dkms                # Realtek Ethernet
+rtl8821cu-dkms-git        # Realtek WiFi
+broadcom-wl-dkms          # Broadcom WiFi
+
+# AMD Power Management
+tlp                       # Power management
+powertop                  # Power consumption analyzer
+thermald                  # Thermal daemon
+laptop-mode-tools         # Laptop power management
+cpupower                  # CPU frequency scaling
+
+# AMD Security Features
+tpm2-tools                # TPM 2.0 tools (AMD fTPM)
+fwupd                     # Firmware updates
+amd-sev                   # AMD Secure Encrypted Virtualization
+
+# AMD Compute Libraries
+rocprim                   # ROCm parallel primitives
+hipcub                    # HIP version of CUB
+rocthrust                 # ROCm Thrust library
+rocsparse                 # ROCm sparse BLAS
+hipsparse                 # HIP sparse library
+
+# AMD Graphics Development
+mesa-git                  # Latest Mesa development
+llvm-amdgpu               # LLVM AMDGPU backend
+spirv-tools               # SPIR-V tools
+shaderc                   # Shader compiler
+glslang                   # GLSL reference compiler
+
+# AMD System Utilities
+amdctl                    # AMD CPU control
+amdmsrtweaker            # AMD memory timing tweaker
+clockgen-amd             # AMD clock generation
+corecurve                # AMD curve optimizer

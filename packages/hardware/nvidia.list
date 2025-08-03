@@ -1,0 +1,95 @@
+# NVIDIA Hardware-Specific Packages for xanadOS
+# Optimized packages for NVIDIA GPU systems
+
+# NVIDIA Drivers & Tools
+nvidia-dkms                # NVIDIA kernel module
+nvidia-utils               # NVIDIA utilities
+nvidia-settings            # NVIDIA control panel
+lib32-nvidia-utils         # 32-bit NVIDIA libraries
+nvidia-prime               # NVIDIA Optimus support
+optimus-manager            # GPU switching
+optimus-manager-qt         # Optimus manager GUI
+envycontrol                # GPU switching tool
+
+# NVIDIA Development
+cuda                       # CUDA toolkit
+cudnn                      # CUDA Deep Neural Network library
+tensorrt                   # TensorRT inference library
+nvidia-nsight-compute       # GPU profiler
+nvidia-nsight-systems      # System profiler
+cutlass                    # CUDA templates
+thrust                     # CUDA parallel algorithms
+cub                        # CUDA utilities
+
+# NVIDIA Gaming Optimizations
+dxvk-nvapi                 # NVIDIA API for DXVK
+nvtop                      # NVIDIA GPU monitor
+nvidia-ml-py               # NVIDIA ML Python bindings
+pynvml                     # NVIDIA management library
+py-spy                     # Python profiler with CUDA support
+
+# NVIDIA Streaming & Recording
+nvidia-vaapi-driver        # VA-API driver for NVIDIA
+ffmpeg-nvenc               # Hardware encoding support
+obs-nvfbc                  # NVIDIA capture plugin
+looking-glass              # GPU passthrough
+sunshine-nvidia            # GPU-accelerated streaming
+
+# NVIDIA Container Support
+nvidia-container-toolkit   # Container GPU support
+libnvidia-container        # NVIDIA container library
+nvidia-docker              # Docker GPU support
+
+# NVIDIA Video Acceleration
+libva-nvidia-driver        # VA-API support
+vdpau-nvidia               # VDPAU support
+nvenc-nvidia               # Hardware encoding
+nvdec-nvidia               # Hardware decoding
+
+# NVIDIA AI & Machine Learning
+pytorch-cuda               # PyTorch with CUDA
+tensorflow-cuda            # TensorFlow with CUDA
+jax-cuda                   # JAX with CUDA
+cupy                       # NumPy-like library for CUDA
+rapids                     # GPU-accelerated data science
+numba-cuda                 # GPU acceleration for Python
+
+# NVIDIA Professional Tools
+nvidia-texture-tools       # Texture processing
+physx                      # Physics simulation
+optix                      # Ray tracing API
+omniverse-launcher         # NVIDIA Omniverse
+
+# NVIDIA Monitoring & Utilities
+nvmlpowertop               # Power monitoring
+nvidia-smi-exporter        # Prometheus exporter
+gpu-burn                   # GPU stress testing
+cuda-gdb                   # CUDA debugger
+nsight-compute             # GPU kernel profiler
+
+# NVIDIA Gaming Specific
+nvidia-cg-toolkit          # CG shader language
+glew                       # OpenGL extension loader
+freeglut                   # OpenGL utility toolkit
+glu                        # OpenGL utility library
+mesa-demos                 # OpenGL demos for testing
+
+# NVIDIA Compute Libraries
+cublas                     # CUDA Basic Linear Algebra
+cufft                      # CUDA Fast Fourier Transform
+curand                     # CUDA Random Number Generation
+cusparse                   # CUDA Sparse Matrix
+cusolver                   # CUDA Dense and Sparse Direct Solvers
+npp                        # NVIDIA Performance Primitives
+
+# NVIDIA Video Processing
+nv-codec-headers           # Video codec headers
+nvidia-video-codec-sdk     # Video codec SDK
+libnvcuvid                 # CUDA video decode library
+libnvidia-encode           # Hardware video encoding
+
+# NVIDIA System Integration
+nvidia-persistenced        # Persistence daemon
+nvidia-modprobe            # Kernel module loading
+nvidia-xconfig             # X.Org configuration
+bbswitch                   # GPU power management (Optimus)

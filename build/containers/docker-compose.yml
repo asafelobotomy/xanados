@@ -1,0 +1,135 @@
+version: '3.8'
+
+services:
+  xanados-build:
+    build:
+      context: .
+      dockerfile: Dockerfile.build
+      args:
+        BUILD_USER: builder
+        BUILD_UID: 1000
+        BUILD_GID: 1000
+    image: xanados-build:latest
+    container_name: xanados-builder
+    hostname: xanados-build
+
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          cpus: '0.0'  # No CPU limit (use all available)
+          memory: 8G   # Adjust based on system RAM
+        reservations:
+          cpus: '2.0'  # Reserve at least 2 CPUs
+          memory: 4G   # Reserve at least 4GB RAM
+
+    # Volumes
+    volumes:
+      - type: bind
+        source: ../..
+        target: /build/source
+        read_only: false
+      - type: bind
+        source: ./output
+        target: /build/output
+        read_only: false
+      - type: volume
+        source: build-cache
+        target: /build/cache
+      - type: volume
+        source: build-logs
+        target: /build/logs
+      - type: bind
+        source: /var/run/docker.sock
+        target: /var/run/docker.sock
+        read_only: true
+
+    # Environment variables
+    environment:
+      - XANADOS_BUILD_ENV=container
+      - BUILD_PARALLEL_JOBS=auto
+      - BUILD_COMPRESSION_LEVEL=6
+      - BUILD_CACHE_ENABLED=true
+      - LANG=en_US.UTF-8
+      - LC_ALL=en_US.UTF-8
+      - TERM=xterm-256color
+
+    # Network configuration
+    networks:
+      - xanados-build-net
+
+    # Enable privileged mode for ISO building
+    privileged: true
+
+    # Keep container running
+    tty: true
+    stdin_open: true
+
+    # Working directory
+    working_dir: /build/source
+
+  # Development container for testing
+  xanados-dev:
+    extends: xanados-build
+    container_name: xanados-dev
+    hostname: xanados-dev
+
+    # Additional development tools
+    volumes:
+      - type: bind
+        source: ../..
+        target: /build/source
+        read_only: false
+      - type: bind
+        source: ./dev-output
+        target: /build/output
+        read_only: false
+      - type: volume
+        source: dev-cache
+        target: /build/cache
+      - type: volume
+        source: dev-logs
+        target: /build/logs
+
+    environment:
+      - XANADOS_BUILD_ENV=development
+      - BUILD_DEBUG=true
+      - BUILD_VERBOSE=true
+
+# Named volumes for persistent data
+volumes:
+  build-cache:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${PWD}/cache
+
+  build-logs:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${PWD}/logs
+
+  dev-cache:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${PWD}/dev-cache
+
+  dev-logs:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${PWD}/dev-logs
+
+# Custom network
+networks:
+  xanados-build-net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16

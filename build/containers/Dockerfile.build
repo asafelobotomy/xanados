@@ -1,0 +1,279 @@
+# xanadOS Build Environment Dockerfile
+# Containerized build environment for reproducible ISO builds
+
+FROM archlinux:latest
+
+# Metadata
+LABEL maintainer="xanadOS Team"
+LABEL description="xanadOS Build Environment - Multi-target ISO builder"
+LABEL version="1.0.0"
+
+# Build arguments
+ARG BUILD_USER=builder
+ARG BUILD_UID=1000
+ARG BUILD_GID=1000
+
+# Environment variables
+ENV LANG=en_US.UTF-8
+ENV LC_ALL=en_US.UTF-8
+ENV TERM=xterm-256color
+
+# Update system and install base development tools
+RUN pacman -Syu --noconfirm && \
+    pacman -S --noconfirm \
+        base-devel \
+        git \
+        wget \
+        curl \
+        archiso \
+        qemu-desktop \
+        p7zip \
+        cdrtools \
+        pigz \
+        pbzip2 \
+        xz \
+        lrzip \
+        lzop \
+        lz4 \
+        lzip \
+        zstd \
+        docker \
+        sudo \
+        vim \
+        nano \
+        htop \
+        tree \
+        rsync \
+        jq \
+        bc \
+        && pacman -Scc --noconfirm
+
+# Create build user with sudo privileges
+RUN groupadd -g ${BUILD_GID} ${BUILD_USER} && \
+    useradd -u ${BUILD_UID} -g ${BUILD_GID} -m -s /bin/bash ${BUILD_USER} && \
+    echo "${BUILD_USER} ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/${BUILD_USER} && \
+    chmod 0440 /etc/sudoers.d/${BUILD_USER}
+
+# Install additional gaming-related tools for validation
+RUN pacman -S --noconfirm \
+        vulkan-tools \
+        mesa-utils \
+        alsa-utils \
+        pipewire \
+        wireplumber \
+        && pacman -Scc --noconfirm
+
+# Create build directories
+RUN mkdir -p /build/{source,output,cache,logs} && \
+    chown -R ${BUILD_USER}:${BUILD_USER} /build
+
+# Switch to build user
+USER ${BUILD_USER}
+WORKDIR /home/${BUILD_USER}
+
+# Install yay for AUR access (optional, for future enhancements)
+RUN git clone https://aur.archlinux.org/yay.git /tmp/yay && \
+    cd /tmp/yay && \
+    makepkg -si --noconfirm && \
+    cd ~ && \
+    rm -rf /tmp/yay
+
+# Create build environment setup script
+RUN cat > /home/${BUILD_USER}/setup-build-env.sh << 'EOF'
+#!/bin/bash
+# Build environment setup script
+
+set -euo pipefail
+
+echo "🔧 Setting up xanadOS build environment..."
+
+# Verify tools
+echo "📋 Verifying build tools..."
+for tool in mkarchiso git docker qemu-system-x86_64 7z isoinfo; do
+    if command -v "$tool" &>/dev/null; then
+        echo "  ✓ $tool"
+    else
+        echo "  ✗ $tool (missing)"
+        exit 1
+    fi
+done
+
+# Check disk space
+echo "💾 Checking disk space..."
+df -h /build
+
+# Verify permissions
+echo "🔐 Verifying permissions..."
+if [[ -w /build ]]; then
+    echo "  ✓ Build directory writable"
+else
+    echo "  ✗ Build directory not writable"
+    exit 1
+fi
+
+echo "✅ Build environment ready!"
+echo ""
+echo "📚 Usage:"
+echo "  Mount your source: -v /path/to/xanadOS:/build/source"
+echo "  Mount output dir:  -v /path/to/output:/build/output"
+echo "  Run build:         cd /build/source && ./build/automation/build-pipeline.sh --all"
+echo ""
+EOF
+
+RUN chmod +x /home/${BUILD_USER}/setup-build-env.sh
+
+# Create optimized build script for container
+RUN cat > /home/${BUILD_USER}/container-build.sh << 'EOF'
+#!/bin/bash
+# Container-optimized build script for xanadOS
+
+set -euo pipefail
+
+# Configuration
+readonly SOURCE_DIR="/build/source"
+readonly OUTPUT_DIR="/build/output"
+readonly CACHE_DIR="/build/cache"
+readonly LOG_DIR="/build/logs"
+
+print_status() {
+    echo -e "\033[0;32m✓\033[0m $1"
+}
+
+print_error() {
+    echo -e "\033[0;31m✗\033[0m $1"
+}
+
+print_info() {
+    echo -e "\033[0;34mℹ\033[0m $1"
+}
+
+main() {
+    print_info "xanadOS Container Build System"
+
+    # Verify source directory
+    if [[ ! -d "$SOURCE_DIR" ]]; then
+        print_error "Source directory not found: $SOURCE_DIR"
+        print_info "Mount your xanadOS source with: -v /path/to/xanadOS:/build/source"
+        exit 1
+    fi
+
+    # Verify build pipeline exists
+    local build_pipeline="$SOURCE_DIR/build/automation/build-pipeline.sh"
+    if [[ ! -x "$build_pipeline" ]]; then
+        print_error "Build pipeline not found or not executable: $build_pipeline"
+        exit 1
+    fi
+
+    # Create output directories
+    mkdir -p "$OUTPUT_DIR" "$CACHE_DIR" "$LOG_DIR"
+
+    # Set up build environment variables
+    export XANADOS_ROOT="$SOURCE_DIR"
+    export BUILD_OUTPUT_DIR="$OUTPUT_DIR"
+    export BUILD_CACHE_DIR="$CACHE_DIR"
+    export BUILD_LOG_DIR="$LOG_DIR"
+
+    print_status "Source directory: $SOURCE_DIR"
+    print_status "Output directory: $OUTPUT_DIR"
+    print_status "Cache directory: $CACHE_DIR"
+
+    # Change to source directory
+    cd "$SOURCE_DIR"
+
+    # Run build pipeline with arguments
+    print_info "Starting build pipeline..."
+    exec "$build_pipeline" "$@"
+}
+
+main "$@"
+EOF
+
+RUN chmod +x /home/${BUILD_USER}/container-build.sh
+
+# Create container entry point
+RUN cat > /home/${BUILD_USER}/entrypoint.sh << 'EOF'
+#!/bin/bash
+# Container entry point
+
+set -euo pipefail
+
+# Run setup if requested
+if [[ "${1:-}" == "setup" ]]; then
+    exec /home/builder/setup-build-env.sh
+fi
+
+# Run build if requested
+if [[ "${1:-}" == "build" ]]; then
+    shift
+    exec /home/builder/container-build.sh "$@"
+fi
+
+# Default: show help
+cat << 'HELP'
+xanadOS Build Container
+
+Usage:
+  docker run -it xanados-build setup                    # Verify build environment
+  docker run -v /src:/build/source -v /out:/build/output \
+             xanados-build build --all                   # Build all targets
+  docker run -v /src:/build/source -v /out:/build/output \
+             xanados-build build --target x86-64-v3     # Build specific target
+
+Environment:
+  /build/source  - Mount your xanadOS source code here
+  /build/output  - Build outputs will be written here
+  /build/cache   - Build cache (optional mount for persistence)
+  /build/logs    - Build logs
+
+Examples:
+  # Build all targets
+  docker run --rm -it \
+    -v $(pwd):/build/source \
+    -v $(pwd)/output:/build/output \
+    xanados-build build --all
+
+  # Build specific target
+  docker run --rm -it \
+    -v $(pwd):/build/source \
+    -v $(pwd)/output:/build/output \
+    xanados-build build --target x86-64-v3
+
+  # Interactive shell for debugging
+  docker run --rm -it \
+    -v $(pwd):/build/source \
+    xanados-build bash
+
+Build Targets:
+  x86-64-v3      Modern CPU optimization (2017+)
+  x86-64-v4      Latest CPU optimization (2020+)
+  compatibility  Maximum compatibility (2010+)
+HELP
+
+# If no command specified, start bash
+if [[ $# -eq 0 ]]; then
+    exec bash
+else
+    exec "$@"
+fi
+EOF
+
+RUN chmod +x /home/${BUILD_USER}/entrypoint.sh
+
+# Set working directory for builds
+WORKDIR /build
+
+# Set entry point
+ENTRYPOINT ["/home/builder/entrypoint.sh"]
+
+# Default command
+CMD ["setup"]
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD /home/builder/setup-build-env.sh >/dev/null 2>&1 || exit 1
+
+# Labels for build information
+LABEL org.opencontainers.image.title="xanadOS Build Environment"
+LABEL org.opencontainers.image.description="Containerized build environment for xanadOS multi-target ISO builds"
+LABEL org.opencontainers.image.source="https://github.com/asafelobotomy/xanadOS"
+LABEL org.opencontainers.image.documentation="https://github.com/asafelobotomy/xanadOS/blob/master/docs/"
