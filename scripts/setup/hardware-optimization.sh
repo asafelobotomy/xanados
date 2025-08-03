@@ -1,5 +1,5 @@
 #!/bin/bash
-# xanadOS Hardware Detection and Optimization Script
+# xanadOS Hardware Detection and Optimization Script - 2025 Security Update
 # Automatically applies CPU and GPU specific optimizations
 # Personal Use License - see LICENSE file
 
@@ -12,8 +12,15 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
-# Logging
+# Logging with rotation
 LOGFILE="/var/log/xanados-hardware-optimization.log"
+LOGSIZE_MAX=10485760  # 10MB
+
+# Rotate log if too large
+if [[ -f "$LOGFILE" ]] && [[ $(stat -f%z "$LOGFILE" 2>/dev/null || stat -c%s "$LOGFILE") -gt $LOGSIZE_MAX ]]; then
+    mv "$LOGFILE" "${LOGFILE}.old"
+fi
+
 exec 1> >(tee -a "$LOGFILE")
 exec 2> >(tee -a "$LOGFILE" >&2)
 
@@ -243,7 +250,7 @@ apply_memory_optimizations() {
     fi
 }
 
-# zram optimization based on system memory
+# Setup optimized zram
 setup_zram_optimization() {
     local memory_gb
     memory_gb=$(get_memory_gb)
@@ -254,7 +261,7 @@ setup_zram_optimization() {
         rmmod zram 2>/dev/null || true
     fi
 
-    # Calculate optimal zram size
+    # Calculate optimal zram size (2025 update with zstd)
     local zram_size
     if [[ $memory_gb -ge 32 ]]; then
         zram_size="8G"
@@ -266,19 +273,17 @@ setup_zram_optimization() {
         zram_size="1G"
     fi
 
-    log_info "Setting up zram with ${zram_size} for ${memory_gb}GB system"
+    log_info "Setting up zram with ${zram_size} using zstd compression for ${memory_gb}GB system"
 
-    # Setup optimized zram
+    # Setup optimized zram with zstd (2025 best practice)
     modprobe zram num_devices=1
-    echo lz4 > /sys/block/zram0/comp_algorithm
+    echo zstd > /sys/block/zram0/comp_algorithm
     echo "$zram_size" > /sys/block/zram0/disksize
     mkswap /dev/zram0
     swapon -p 10 /dev/zram0
 
-    log_info "zram optimization completed"
-}
-
-# Main execution
+    log_info "zram optimization completed with zstd compression"
+}# Main execution
 main() {
     log_info "Starting xanadOS hardware optimization..."
 

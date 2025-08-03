@@ -1,13 +1,75 @@
 [Unit]
-Description=xanadOS System Optimizations
-After=multi-user.target
-Before=graphical.target
+Description=xanadOS System Optimizations - 2025 Security Enhanced
+Documentation=file:///usr/share/doc/xanados/system-optimizations.md
+After=multi-user.target systemd-sysctl.service
+Before=graphical.target display-manager.service
+Conflicts=shutdown.target
+ConditionKernelCommandLine=!single
 
 [Service]
 Type=oneshot
 RemainAfterExit=yes
 ExecStart=/usr/local/bin/xanados-system-optimize start
 ExecStop=/usr/local/bin/xanados-system-optimize stop
+ExecReload=/usr/local/bin/xanados-system-optimize reload
+TimeoutStartSec=120
+TimeoutStopSec=60
+
+# User security (2025 standards)
+User=xanados-system
+Group=xanados-system
+SupplementaryGroups=adm systemd-journal
+
+# Security hardening
+NoNewPrivileges=true
+PrivateTmp=true
+PrivateDevices=false
+PrivateNetwork=true
+ProtectHome=true
+ProtectSystem=false
+ProtectKernelTunables=false
+ProtectKernelModules=true
+ProtectKernelLogs=true
+ProtectClock=false
+ProtectControlGroups=false
+ProtectHostname=true
+RestrictSUIDSGID=true
+RestrictRealtime=false
+RestrictNamespaces=true
+LockPersonality=true
+RemoveIPC=true
+
+# System call filtering for optimization service
+SystemCallFilter=@system-service @privileged @resources
+SystemCallFilter=~@debug @mount @raw-io @reboot @swap
+SystemCallErrorNumber=EPERM
+
+# Resource limits
+LimitNOFILE=4096
+LimitNPROC=256
+MemoryHigh=128M
+MemoryMax=256M
+
+# Required capabilities for system optimization
+CapabilityBoundingSet=CAP_SYS_NICE CAP_SYS_RESOURCE CAP_SYS_ADMIN CAP_SETUID CAP_SETGID CAP_DAC_OVERRIDE
+AmbientCapabilities=CAP_SYS_NICE CAP_SYS_RESOURCE
+
+# File system access (controlled)
+ReadWritePaths=/var/log/xanados /proc/sys /sys/kernel /sys/devices/system
+ReadOnlyPaths=/usr /etc /proc/cpuinfo /proc/meminfo
+InaccessiblePaths=/home /root /media /mnt
+
+# Environment security
+Environment="PATH=/usr/local/bin:/usr/bin:/bin:/sbin"
+Environment="HOME=/var/lib/xanados-system"
+UnsetEnvironment=HISTFILE LESSHST
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=xanados-system
+LogLevelMax=info
 
 [Install]
 WantedBy=multi-user.target
+RequiredBy=xanados-gaming-monitor.service

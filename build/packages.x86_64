@@ -84,9 +84,15 @@ gst-libav
 vlc
 
 # === SECURITY ===
-firejail
+bubblewrap
 apparmor
+apparmor-utils
+apparmor-profiles
 ufw
+audit
+lynis
+rkhunter
+aide
 
 # === UTILITIES ===
 p7zip
@@ -110,7 +116,6 @@ ddrescue
 testdisk
 livecd-sounds
 terminus-font
-htop
 linux-firmware
 bluez
 bluez-utils

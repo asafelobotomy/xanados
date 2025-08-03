@@ -1,15 +1,80 @@
-# xanadOS Gaming CPU Governor Configuration
-# Automatically switches between performance and powersave modes
+# xanadOS Gaming CPU Governor Configuration - 2025 Security Enhanced
+# Automatically switches between performance and powersave modes with secure execution
 
 [Unit]
-Description=xanadOS Gaming CPU Governor
-After=multi-user.target
+Description=xanadOS Gaming CPU Governor Manager
+Documentation=file:///usr/share/doc/xanados/cpu-governor.md
+After=multi-user.target systemd-sysctl.service
+Before=graphical.target
+Conflicts=shutdown.target
+ConditionPathExists=/sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+ConditionVirtualization=!container
 
 [Service]
 Type=oneshot
 RemainAfterExit=yes
 ExecStart=/usr/local/bin/xanados-cpu-governor performance
 ExecStop=/usr/local/bin/xanados-cpu-governor powersave
+ExecReload=/usr/local/bin/xanados-cpu-governor auto
+TimeoutStartSec=30
+TimeoutStopSec=15
+
+# User security (2025 standards)
+User=xanados-cpu
+Group=xanados-cpu
+SupplementaryGroups=systemd-journal
+
+# Security hardening
+NoNewPrivileges=true
+PrivateTmp=true
+PrivateDevices=false
+PrivateNetwork=true
+ProtectHome=true
+ProtectSystem=strict
+ProtectKernelTunables=false
+ProtectKernelModules=true
+ProtectKernelLogs=true
+ProtectClock=true
+ProtectControlGroups=true
+ProtectHostname=true
+RestrictSUIDSGID=true
+RestrictRealtime=true
+RestrictNamespaces=true
+LockPersonality=true
+MemoryDenyWriteExecute=true
+RemoveIPC=true
+
+# System call filtering
+SystemCallFilter=@system-service @file-system
+SystemCallFilter=~@debug @mount @raw-io @reboot @swap @privileged
+SystemCallErrorNumber=EPERM
+
+# Resource limits
+LimitNOFILE=1024
+LimitNPROC=32
+MemoryHigh=32M
+MemoryMax=64M
+
+# Required capabilities for CPU frequency management
+CapabilityBoundingSet=CAP_SYS_ADMIN CAP_DAC_OVERRIDE
+AmbientCapabilities=
+
+# File system access (minimal required)
+ReadWritePaths=/sys/devices/system/cpu /var/log/xanados
+ReadOnlyPaths=/usr /etc /proc/cpuinfo
+InaccessiblePaths=/home /root /boot /media /mnt /var/tmp
+
+# Environment security
+Environment="PATH=/usr/local/bin:/usr/bin:/bin"
+Environment="HOME=/var/lib/xanados-cpu"
+UnsetEnvironment=HISTFILE LESSHST
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=xanados-cpu-governor
+LogLevelMax=info
 
 [Install]
 WantedBy=multi-user.target
+RequiredBy=xanados-optimizations.service

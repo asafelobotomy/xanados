@@ -7,6 +7,7 @@ The xanadOS Hardware Optimization System automatically detects your hardware con
 ## Features
 
 ### 🎯 **Automatic Hardware Detection**
+
 - **CPU Detection**: Intel vs AMD with specific optimization profiles
 - **GPU Detection**: NVIDIA, AMD, or Intel graphics with tailored settings
 - **Memory Analysis**: Automatic zram sizing based on available RAM
@@ -15,26 +16,28 @@ The xanadOS Hardware Optimization System automatically detects your hardware con
 ### ⚡ **Performance Optimizations**
 
 #### CPU-Specific
+
 - **Intel**: `intel_pstate=passive`, turbo boost management, energy performance preferences
 - **AMD**: `amd_pstate=passive`, boost control, high core count optimizations
 - **Generic**: Performance governor, C-state management, RT scheduling
 
 #### GPU-Specific
+
 - **NVIDIA**: Driver parameters, GameMode integration, power management
 - **AMD**: DPM settings, power profiles, gaming-specific flags
 - **Intel**: GuC/HuC firmware, framebuffer compression, performance tweaks
 
 #### Memory Optimization
+
 - **32GB+**: Aggressive caching, minimal swap usage
 - **16-31GB**: Standard gaming profile
 - **<16GB**: Conservative settings to prevent OOM
 
 ### 🔒 **Security Balance**
+
 - **Balanced mitigations**: `mitigations=auto,nosmt` (vs unsafe `mitigations=off`)
 - **Selective hardening**: Maintains essential protections while optimizing performance
-- **Hardware-aware security**: Different profiles for different threat models
-
-## Installation
+- **Hardware-aware security**: Different profiles for different threat models## Installation
 
 ```bash
 # Install the hardware optimization system

@@ -1,0 +1,38 @@
+# xanadOS Security Framework 2025
+# Modern security configuration using bubblewrap instead of firejail
+# Based on current security research and best practices
+
+# Application Sandboxing (2025 Best Practice)
+bubblewrap
+xdg-desktop-portal
+
+# AppArmor Security Profiles
+apparmor
+apparmor-utils
+apparmor-profiles
+apparmor-notify
+
+# System Security & Auditing
+audit
+lynis
+rkhunter
+aide
+chkrootkit
+
+# Network Security
+ufw
+iptables-nft
+nftables
+
+# Secure Boot Support
+sbctl
+efitools
+
+# Cryptographic Tools
+gnupg
+openssh
+openssl
+
+# System Hardening
+hardened-malloc
+pax-utils

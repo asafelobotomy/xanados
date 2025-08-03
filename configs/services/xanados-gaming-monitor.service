@@ -1,22 +1,76 @@
 [Unit]
-Description=xanadOS Gaming Monitor Daemon
-After=multi-user.target graphical-session.target
-Wants=graphical-session.target
+Description=xanadOS Gaming Performance Monitor - 2025 Security Enhanced
+Documentation=file:///usr/share/doc/xanados/gaming-monitor.md
+After=multi-user.target graphical-session.target network-online.target
+Wants=graphical-session.target network-online.target
+Conflicts=shutdown.target
 
 [Service]
-Type=simple
+Type=notify
 ExecStart=/usr/local/bin/xanados-gaming-optimizer daemon
+ExecReload=/bin/kill -HUP $MAINPID
+ExecStop=/bin/kill -TERM $MAINPID
 Restart=always
 RestartSec=10
-User=root
-Environment=HOME=/root
+TimeoutStopSec=30
+KillMode=mixed
+KillSignal=SIGTERM
 
-# Security settings
+# User and group security
+User=xanados-gaming
+Group=xanados-gaming
+SupplementaryGroups=audio video input
+
+# Security hardening (2025 standards)
 NoNewPrivileges=true
 PrivateTmp=true
-ProtectHome=read-only
-ProtectSystem=false
+PrivateDevices=false
+PrivateNetwork=false
+ProtectHome=true
+ProtectSystem=strict
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectKernelLogs=true
+ProtectClock=true
+ProtectControlGroups=true
+ProtectHostname=true
 RestrictSUIDSGID=true
+RestrictRealtime=true
+RestrictNamespaces=true
+LockPersonality=true
+MemoryDenyWriteExecute=true
+RemoveIPC=true
+SystemCallFilter=@system-service
+SystemCallErrorNumber=EPERM
+
+# Resource limits
+LimitNOFILE=8192
+LimitNPROC=512
+MemoryHigh=256M
+MemoryMax=512M
+CPUQuota=50%
+
+# Capabilities (minimal required for gaming optimization)
+CapabilityBoundingSet=CAP_SYS_NICE CAP_SYS_RESOURCE CAP_SETUID CAP_SETGID
+AmbientCapabilities=CAP_SYS_NICE CAP_SYS_RESOURCE
+
+# File system access (minimal required)
+ReadWritePaths=/var/log/xanados /tmp /var/tmp
+ReadOnlyPaths=/usr /etc /sys/devices/system/cpu /proc/cpuinfo /proc/meminfo
+InaccessiblePaths=/home /root /boot /media /mnt
+
+# Environment security
+Environment="PATH=/usr/local/bin:/usr/bin:/bin"
+Environment="HOME=/var/lib/xanados-gaming"
+Environment="XDG_RUNTIME_DIR=/run/xanados-gaming"
+UnsetEnvironment=HISTFILE
+
+# Logging and monitoring
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=xanados-gaming
+LogLevelMax=info
 
 [Install]
 WantedBy=multi-user.target
+Also=xanados-optimizations.service
