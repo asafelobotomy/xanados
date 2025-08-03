@@ -1,4 +1,0 @@
-timestamp,test_type,duration_ms,memory_mb,cpu_percent,result
-2025-08-01T19:31:00Z,functionality_test,250,45.2,15.7,PASS
-2025-08-01T19:31:01Z,directory_test,120,42.1,12.3,PASS
-2025-08-01T19:31:02Z,cleanup_test,180,43.8,14.1,PASS

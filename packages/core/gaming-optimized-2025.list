@@ -1,0 +1,58 @@
+# xanadOS Gaming Packages - 2025 Optimized
+# Based on CachyOS and Bazzite research for maximum gaming performance
+
+# Core gaming platforms
+steam
+lutris
+heroic-games-launcher-bin
+bottles
+
+# Gaming optimization tools
+gamemode
+lib32-gamemode
+mangohud
+lib32-mangohud
+goverlay
+corectrl
+gamescope
+
+# Wine and compatibility layer
+wine-staging
+wine-gecko
+wine-mono
+winetricks
+dxvk-bin
+vkd3d
+
+# Audio optimization (Pipewire-based)
+pipewire
+pipewire-alsa
+pipewire-pulse
+pipewire-jack
+lib32-pipewire
+lib32-pipewire-jack
+wireplumber
+
+# Graphics and performance
+mesa
+lib32-mesa
+vulkan-icd-loader
+lib32-vulkan-icd-loader
+vulkan-tools
+mesa-utils
+
+# Gaming controllers and input
+xpadneo-dkms
+antimicrox
+jstest-gtk
+
+# Streaming and recording
+obs-studio
+ffmpeg
+x264
+x265
+
+# Performance monitoring
+btop
+nvtop
+radeontop
