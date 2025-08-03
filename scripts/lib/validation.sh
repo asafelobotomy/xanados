@@ -23,19 +23,20 @@ cache_commands() {
     local start_time
     local end_time
     local duration
-    
+
     start_time=$(date +%s%N)
-    
+
     print_status "Caching command availability for ${#commands[@]} commands..."
-    
+
     for cmd in "${commands[@]}"; do
-        command_exists_cached "$cmd" "force" >/dev/null
+        # Use || true to prevent set -e from exiting on command not found
+        command_exists_cached "$cmd" "force" >/dev/null || true
     done
-    
+
     end_time=$(date +%s%N)
     duration=$((($end_time - $start_time) / 1000000))  # Convert to milliseconds
-    
-    log_success "Command cache populated in ${duration}ms"
+
+    log_message "SUCCESS" "Command cache populated in ${duration}ms"
 }
 
 # Cache all gaming tools
@@ -44,16 +45,16 @@ cache_gaming_tools() {
     # This avoids circular dependency at library load time
     # shellcheck disable=SC1090
     source "$(dirname "${BASH_SOURCE[0]}")/gaming-env.sh"
-    
+
     # Combine all gaming tools from both arrays
     local all_gaming_tools=()
     all_gaming_tools+=("${!GAMING_PLATFORMS[@]}")
     all_gaming_tools+=("${!GAMING_UTILITIES[@]}")
-    
+
     cache_commands "${all_gaming_tools[@]}"
 }
 
-# Cache all development tools  
+# Cache all development tools
 cache_dev_tools() {
     local tools=("${!DEV_TOOLS[@]}")
     cache_commands "${tools[@]}"
@@ -71,18 +72,18 @@ cache_all_tools() {
     all_tools+=("${!GAMING_TOOLS[@]}")
     all_tools+=("${!DEV_TOOLS[@]}")
     all_tools+=("${!SYSTEM_TOOLS[@]}")
-    
+
     cache_commands "${all_tools[@]}"
 }
 
 # Get cached command result (fast lookup)
 get_cached_command() {
     local cmd="$1"
-    
+
     if [[ -z "$cmd" ]]; then
         return 1
     fi
-    
+
     # Check if command is cached
     if [[ -n "${COMMAND_CACHE[$cmd]:-}" ]]; then
         ((CACHE_HITS++))
@@ -108,17 +109,17 @@ clear_command_cache() {
 show_cache_stats() {
     local total=$((CACHE_HITS + CACHE_MISSES))
     local hit_rate=0
-    
+
     if [[ $total -gt 0 ]]; then
         hit_rate=$((CACHE_HITS * 100 / total))
     fi
-    
+
     echo "Command Cache Statistics:"
     echo "  Cached Commands: ${#COMMAND_CACHE[@]}"
     echo "  Cache Hits: $CACHE_HITS"
     echo "  Cache Misses: $CACHE_MISSES"
     echo "  Hit Rate: ${hit_rate}%"
-    
+
     if [[ ${#COMMAND_CACHE[@]} -gt 0 ]]; then
         echo ""
         echo "Cached Commands:"
@@ -165,41 +166,27 @@ SYSTEM_TOOLS=(
 command_exists_cached() {
     local cmd="$1"
     local force_check="${2:-false}"
-    
+
     if [[ -z "$cmd" ]]; then
         return 1
     fi
-    
+
     # Check cache first (unless forced)
     if [[ "$force_check" == "false" ]] && [[ -n "${COMMAND_CACHE[$cmd]:-}" ]]; then
         ((CACHE_HITS++))
         [[ "${COMMAND_CACHE[$cmd]}" == "true" ]]
         return $?
     fi
-    
-    # Perform actual check using original command_exists from common.sh if available
-    if declare -f command_exists >/dev/null 2>&1 && [[ "$(type -t command_exists)" == "function" ]]; then
-        # Use the original command_exists from common.sh
-        if command -v "$cmd" >/dev/null 2>&1; then
-            COMMAND_CACHE["$cmd"]="true"
-            ((CACHE_MISSES++))
-            return 0
-        else
-            COMMAND_CACHE["$cmd"]="false"
-            ((CACHE_MISSES++))
-            return 1
-        fi
+
+    # Perform actual check - handle exit codes safely for set -e
+    if command -v "$cmd" >/dev/null 2>&1; then
+        COMMAND_CACHE["$cmd"]="true"
+        ((CACHE_MISSES++))
+        return 0
     else
-        # Fallback if common.sh not loaded
-        if command -v "$cmd" >/dev/null 2>&1; then
-            COMMAND_CACHE["$cmd"]="true"
-            ((CACHE_MISSES++))
-            return 0
-        else
-            COMMAND_CACHE["$cmd"]="false"
-            ((CACHE_MISSES++))
-            return 1
-        fi
+        COMMAND_CACHE["$cmd"]="false"
+        ((CACHE_MISSES++))
+        return 1
     fi
 }
 
@@ -207,7 +194,7 @@ command_exists_cached() {
 check_commands() {
     local commands=("$@")
     local results=()
-    
+
     for cmd in "${commands[@]}"; do
         if command_exists "$cmd"; then
             results+=("$cmd:available")
@@ -215,7 +202,7 @@ check_commands() {
             results+=("$cmd:missing")
         fi
     done
-    
+
     printf '%s\n' "${results[@]}"
 }
 
@@ -224,7 +211,7 @@ check_gaming_environment() {
     local output_format="${1:-summary}"  # summary, detailed, json
     local available=()
     local missing=()
-    
+
     for tool in "${!GAMING_TOOLS[@]}"; do
         if command_exists "$tool"; then
             available+=("$tool")
@@ -232,7 +219,7 @@ check_gaming_environment() {
             missing+=("$tool")
         fi
     done
-    
+
     case "$output_format" in
         "json")
             echo "{"
@@ -271,7 +258,7 @@ check_development_environment() {
     local output_format="${1:-summary}"
     local available=()
     local missing=()
-    
+
     for tool in "${!DEV_TOOLS[@]}"; do
         if command_exists "$tool"; then
             available+=("$tool")
@@ -279,7 +266,7 @@ check_development_environment() {
             missing+=("$tool")
         fi
     done
-    
+
     case "$output_format" in
         "detailed")
             echo "Development Environment Status:"
@@ -309,18 +296,18 @@ validate_input() {
     local input="$1"
     local type="$2"
     local required="${3:-true}"
-    
+
     # Check if input is required but empty
     if [[ "$required" == "true" ]] && [[ -z "$input" ]]; then
         log_error "Required parameter is empty"
         return 1
     fi
-    
+
     # Skip validation if input is empty and not required
     if [[ -z "$input" ]]; then
         return 0
     fi
-    
+
     case "$type" in
         "file")
             if [[ ! -f "$input" ]]; then
@@ -374,7 +361,7 @@ validate_input() {
             log_warning "Unknown validation type: $type"
             ;;
     esac
-    
+
     return 0
 }
 
@@ -382,28 +369,28 @@ validate_input() {
 validate_safe_path() {
     local path="$1"
     local base_dir="$2"
-    
+
     # Resolve absolute paths
     local abs_path
     abs_path="$(realpath "$path" 2>/dev/null)" || abs_path="$path"
-    
+
     if [[ -n "$base_dir" ]]; then
         local abs_base
         abs_base="$(realpath "$base_dir" 2>/dev/null)" || abs_base="$base_dir"
-        
+
         # Check if path is within base directory
         if [[ "$abs_path" != "$abs_base"* ]]; then
             log_error "Path traversal detected: $path is outside $base_dir"
             return 1
         fi
     fi
-    
+
     # Check for dangerous patterns
     if [[ "$abs_path" =~ \.\./|/\.\./|/\.\.$ ]]; then
         log_error "Unsafe path pattern detected: $path"
         return 1
     fi
-    
+
     return 0
 }
 
@@ -411,7 +398,7 @@ validate_safe_path() {
 check_system_requirements() {
     local requirements=("$@")
     local failed=()
-    
+
     for req in "${requirements[@]}"; do
         case "$req" in
             "arch")
@@ -446,7 +433,7 @@ check_system_requirements() {
                 ;;
         esac
     done
-    
+
     if [[ ${#failed[@]} -gt 0 ]]; then
         log_error "System requirements not met:"
         for fail in "${failed[@]}"; do
@@ -454,7 +441,7 @@ check_system_requirements() {
         done
         return 1
     fi
-    
+
     return 0
 }
 
@@ -462,16 +449,16 @@ check_system_requirements() {
 check_disk_space() {
     local path="$1"
     local required_mb="$2"
-    
+
     local available_kb
     available_kb=$(df "$path" | awk 'NR==2 {print $4}')
     local available_mb=$((available_kb / 1024))
-    
+
     if [[ $available_mb -lt $required_mb ]]; then
         log_error "Insufficient disk space: ${available_mb}MB available, ${required_mb}MB required"
         return 1
     fi
-    
+
     log_debug "Disk space check passed: ${available_mb}MB available (${required_mb}MB required)"
     return 0
 }
@@ -479,16 +466,16 @@ check_disk_space() {
 # Check memory requirements
 check_memory_requirements() {
     local required_mb="$1"
-    
+
     local available_kb
     available_kb=$(grep MemAvailable /proc/meminfo | awk '{print $2}')
     local available_mb=$((available_kb / 1024))
-    
+
     if [[ $available_mb -lt $required_mb ]]; then
         log_error "Insufficient memory: ${available_mb}MB available, ${required_mb}MB required"
         return 1
     fi
-    
+
     log_debug "Memory check passed: ${available_mb}MB available (${required_mb}MB required)"
     return 0
 }
@@ -504,25 +491,25 @@ print_command_cache() {
 # Validate script environment
 validate_script_environment() {
     local script_name="${1:-${0##*/}}"
-    
+
     log_debug "Validating environment for: $script_name"
-    
+
     # Basic checks
     if ! check_system_requirements "user"; then
         return 1
     fi
-    
+
     # Check if we're in a reasonable location
     if [[ ! -w "$(pwd)" ]]; then
         log_warning "Current directory is not writable: $(pwd)"
     fi
-    
+
     # Check for common tools
     local essential_tools=("bash" "mkdir" "chmod" "grep" "awk" "sed")
     if ! check_system_requirements "${essential_tools[@]}"; then
         return 1
     fi
-    
+
     log_debug "Script environment validation passed"
     return 0
 }
