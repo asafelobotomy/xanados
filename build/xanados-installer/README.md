@@ -1,156 +1,98 @@
-# 🎮 xanadOS Gaming Distribution
+# xanadOS
 
-> The ultimate Arch Linux-based gaming distribution with complete performance optimization, gaming desktop mode, and professional user experience.
+> A specialized Arch Linux-based gaming distribution optimized for performance and security.
 
-[![Project Status](https://img.shields.io/badge/Status-Production%20Ready-brightgreen.svg)](https://github.com/asafelobotomy/xanadOS)
-[![Development Phase](https://img.shields.io/badge/All%20Phases-Complete-success.svg)](#project-status)
-[![Version](https://img.shields.io/badge/Version-1.0.0-blue.svg)](#installation)
+[![Project Status](https://img.shields.io/badge/Status-In%20Development-yellow.svg)](https://github.com/asafelobotomy/xanadOS)
+[![Development Phase](https://img.shields.io/badge/Phase-1%20Complete-brightgreen.svg)](#project-status)
 [![License](https://img.shields.io/badge/License-Personal%20Use-blue.svg)](#license)
 
 ## Table of Contents
 
 - [About](#about)
-- [🚀 Quick Start](#quick-start)
-- [✨ Features](#features)
-- [📦 Installation](#installation)
-- [🎮 Usage](#usage)
-- [📊 Project Status](#project-status)
-- [🏗️ Project Structure](#project-structure)
-- [📖 Documentation](#documentation)
-- [🔧 Development](#development)
-- [🤝 Contributing](#contributing)
-- [🆘 Support](#support)
-- [🗺️ Roadmap](#roadmap)
-- [🙏 Acknowledgments](#acknowledgments)
-- [📜 License](#license)
+- [Project Status](#project-status)
+- [Features](#features)
+- [Quick Start](#quick-start)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Project Structure](#project-structure)
+- [Documentation](#documentation)
+- [Development](#development)
+- [Contributing](#contributing)
+- [Support](#support)
+- [Roadmap](#roadmap)
+- [Acknowledgments](#acknowledgments)
+- [License](#license)
 
 ## About
 
-**xanadOS** is a comprehensive gaming distribution built on Arch Linux that transforms your system into the ultimate gaming workstation. With complete automation, professional desktop integration, and gaming-specific optimizations, xanadOS delivers unparalleled gaming performance on Linux.
+xanadOS is a personal Linux gaming distribution project built on Arch Linux with AI assistance. It focuses on delivering exceptional gaming performance while maintaining system security for personal use.
 
-### 🎯 What xanadOS Does
+### What xanadOS Does
 
-- **🎮 Complete Gaming Environment**: One-click setup for Steam, Lutris, GameMode, and all gaming platforms
-- **⚡ Performance Optimization**: Automatic hardware detection with GPU, CPU, and memory optimization
-- **🖥️ Gaming Desktop Mode**: Specialized gaming environment with performance monitoring and quick access tools
-- **🎨 Professional Integration**: Gaming-optimized KDE themes, shortcuts, and desktop workflows
-- **📊 Comprehensive Monitoring**: Real-time performance stats, hardware monitoring, and gaming analytics
-- **🔧 Automated Configuration**: Intelligent system tuning based on your specific hardware configuration
+- **Gaming Performance Optimization**: Automatically configures Steam, Lutris, GameMode, and other gaming platforms for optimal performance
+- **Hardware-Specific Tuning**: Detects and optimizes graphics drivers, audio latency, and gaming peripherals
+- **Comprehensive Monitoring**: Provides detailed performance reports and system analysis tools
+- **Automated Setup**: Streamlines the complex process of setting up a gaming-focused Linux environment
 
-### 🌟 Why Choose xanadOS
+### Why xanadOS is Useful
 
-- **🚀 Zero Configuration**: Complete gaming setup in under 10 minutes
-- **🎯 Gaming-First Design**: Every component optimized specifically for gaming performance
-- **💎 Professional Quality**: Production-ready with comprehensive testing and validation
-- **🔄 Seamless Experience**: Toggle between desktop and gaming modes instantly
-- **📈 Performance Focus**: Measurable gaming performance improvements
-- **🛡️ Reliable & Tested**: Extensively validated with comprehensive test suites
+- Eliminates the complexity of manually configuring a Linux gaming setup
+- Provides gaming-specific optimizations often missed in general Linux distributions
+- Offers comprehensive testing and validation tools for gaming performance
+- Maintains detailed documentation and reports for troubleshooting
 
-### 👥 Perfect For
+### Who This Project is For
 
-- **🎮 Linux Gaming Enthusiasts** seeking maximum performance
-- **🔄 Windows Gamers** transitioning to Linux
-- **🏢 Gaming Cafés & Labs** needing reliable gaming setups
-- **💻 Content Creators** requiring professional gaming workstations
-- **🔧 Developers** interested in gaming environment automation
-- **🎯 Anyone** wanting the ultimate Linux gaming experience
+- Linux gaming enthusiasts seeking optimal performance
+- Users wanting to transition from Windows gaming to Linux
+- Developers interested in gaming environment automation
+- Anyone looking for a well-documented, modular gaming setup system
 
-## 🚀 Quick Start
+## Project Status
 
-### � One-Command Installation
+🚧 **In Development** - Phase 1: Foundation & Tooling Complete
 
-```bash
-# Download and extract xanadOS
-wget https://github.com/asafelobotomy/xanadOS/releases/latest/download/xanados-gaming-distribution-v1.0.0.tar.gz
-tar -xzf xanados-gaming-distribution-v1.0.0.tar.gz
-cd xanados-installer
+Current development focuses on gaming environment setup, hardware optimization, and development tooling.
 
-# Run automated installer
-./install-xanados.sh
-```
+## Quick Start
 
-### 🎮 Instant Gaming Setup
+### Prerequisites
+
+- Arch Linux or Arch-based distribution
+- Bash 4.0 or later
+- `sudo` privileges for system modifications
+- Internet connection for package installation
+
+### Basic Setup
 
 ```bash
-# Complete gaming environment setup
-xanados-gaming-setup.sh
+# Clone the repository
+git clone https://github.com/asafelobotomy/xanadOS.git
+cd xanadOS
 
-# Toggle gaming desktop mode
-gaming-desktop-mode.sh toggle
+# Set up development environment
+./scripts/setup/dev-environment.sh
 
-# View performance statistics
-gaming-desktop-mode.sh stats
+# Install gaming platforms
+./scripts/setup/install-steam.sh
+./scripts/setup/install-lutris.sh
+./scripts/setup/install-gamemode.sh
+
+# Run gaming setup wizard
+./scripts/setup/gaming-setup-wizard.sh
 ```
 
-### ⚡ Quick Commands
+### Generate Reports
 
 ```bash
-# Gaming shortcuts (when gaming mode active)
-Meta+F1    # Toggle gaming mode
-Meta+F2    # Performance stats
-Meta+F3    # Launch Steam
-Meta+F4    # Launch Lutris
-Meta+F5    # System monitor
-```
+# Generate comprehensive system reports
+./testing/automated/testing-suite.sh
 
-## ✨ Features
-
-### 🎮 Complete Gaming Suite
-
-- **🚀 One-Click Setup**: Complete gaming environment in under 10 minutes
-- **🎯 Steam Integration**: Optimized Steam installation with performance tweaks
-- **🎲 Lutris Platform**: Complete Lutris setup with wine optimization
-- **⚡ GameMode**: Automatic gaming performance optimization
-- **🎮 Controller Support**: Xbox, PlayStation, and generic controller configuration
-
-### 🖥️ Gaming Desktop Mode
-
-- **🎨 Gaming Themes**: Professional gaming-optimized KDE themes
-- **⚡ Performance Mode**: CPU governor and graphics optimization
-- **🎯 Quick Access**: Gaming shortcuts and performance monitoring
-- **📊 Real-time Stats**: CPU, GPU, memory, and temperature monitoring
-- **🔄 Instant Toggle**: Seamless switch between desktop and gaming modes
-
-### 🔧 Hardware Optimization
-
-- **🎯 Auto-Detection**: Comprehensive hardware analysis and optimization
-- **🖥️ GPU Optimization**: NVIDIA and AMD graphics driver optimization
-- **🔊 Audio Tuning**: Low-latency audio configuration for gaming
-- **⚡ CPU Performance**: Gaming-specific CPU governor and frequency scaling
-- **💾 Memory Management**: Gaming memory optimization and swap configuration
-
-### 📊 Professional Tools
-
-- **📈 Performance Analytics**: Detailed gaming performance reports
-- **🔍 System Validation**: Comprehensive system testing and validation
-- **📋 Gaming Profiles**: Multiple gaming profile creation and management
-- **🎯 Workflow Optimization**: Gaming-specific desktop workflows and shortcuts
-- **📄 Documentation**: Complete user guides and troubleshooting resources
-
-## 📊 Project Status
-
-🎉 **Production Ready** - All Development Phases Complete
-
-| Phase | Status | Description |
-|-------|--------|-------------|
-| **Phase 1** | ✅ Complete | Foundation & Tooling |
-| **Phase 2** | ✅ Complete | Gaming Optimization |
-| **Phase 3** | ✅ Complete | Gaming Detection & Compatibility |
-| **Phase 4** | ✅ Complete | User Experience & Desktop Integration |
-
-### 📈 Completion Metrics
-
-- **📊 Total Components**: 59 scripts, 183 files
-- **🧪 Test Coverage**: Comprehensive system validation
-- **📖 Documentation**: Complete user and developer guides
-- **🎮 Gaming Integration**: Steam, Lutris, GameMode, Controllers
-- **🖥️ Desktop Integration**: KDE themes, shortcuts, widgets
-- **⚡ Performance**: Measurable gaming performance improvements
+# Run performance benchmarks
+./testing/automated/performance-benchmark.sh
 
 # Validate gaming environment
-
 ./testing/automated/gaming-validator.sh
-
 ```
 
 ## Installation

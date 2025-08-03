@@ -1,0 +1,17 @@
+{
+  "report": {
+    "type": "performance",
+    "timestamp": "2025-08-01T19:34:25+01:00",
+    "generated_by": "xanadOS Report System",
+    "version": "1.0",
+    "data": {
+      "source_file": "docs/reports/data/functionality-test-20250801-193134.csv",
+      "content": [
+        "timestamp,test_type,duration_ms,memory_mb,cpu_percent,result",
+        "2025-08-01T19:31:00Z,functionality_test,250,45.2,15.7,PASS",
+        "2025-08-01T19:31:01Z,directory_test,120,42.1,12.3,PASS",
+        "2025-08-01T19:31:02Z,cleanup_test,180,43.8,14.1,PASS"
+      ]
+    }
+  }
+}
