@@ -16,6 +16,7 @@ set -euo pipefail
 source "$(dirname "${BASH_SOURCE[0]}")/../lib/common.sh"
 source "$(dirname "${BASH_SOURCE[0]}")/../lib/validation.sh"
 source "$(dirname "${BASH_SOURCE[0]}")/../lib/gaming-env.sh"
+source "$(dirname "${BASH_SOURCE[0]}")/../lib/gaming-profiles.sh"
 source "$(dirname "${BASH_SOURCE[0]}")/../lib/hardware-detection.sh"
 
 # Script directory and paths
@@ -416,6 +417,12 @@ generate_recommendations() {
     RECOMMENDATIONS=()
     PRIORITY_RECOMMENDATIONS=()
 
+    # Get audio system from gaming environment cache
+    AUDIO_SYSTEM="${GAMING_ENV_CACHE[audio_system]:-unknown}"
+
+    # Set controller count (this would be detected by hardware detection)
+    CONTROLLER_COUNT=0
+
     # Hardware-based recommendations
     if [[ "${GPU_VENDOR:-}" == "nvidia" ]]; then
         RECOMMENDATIONS+=("Install NVIDIA proprietary drivers for optimal gaming performance")
@@ -494,6 +501,14 @@ show_setup_options() {
     echo -e "📊 Detected Hardware: ${BOLD}$gpu_vendor GPU${NC}, ${BOLD}${memory_gb}GB RAM${NC}, Score: ${BOLD}$hardware_score/100${NC}"
     echo
 
+    # Show current gaming profile if any
+    local current_profile
+    current_profile=$(get_current_profile 2>/dev/null) || current_profile=""
+    if [[ -n "$current_profile" ]]; then
+        echo -e "🎮 Current Gaming Profile: ${BOLD}$current_profile${NC}"
+        echo
+    fi
+
     echo -e "Choose your gaming setup preference:\n"
     echo -e "  ${BOLD}1.${NC} ${GREEN}Complete Gaming Setup${NC} - Hardware-optimized full installation"
     echo -e "     ${ARROW} Steam + Proton-GE, Lutris, Heroic, GameMode, MangoHud"
@@ -517,6 +532,11 @@ show_setup_options() {
     echo -e "  ${BOLD}5.${NC} ${CYAN}Hardware Analysis Only${NC} - Show detailed system analysis"
     echo -e "     ${ARROW} Comprehensive hardware assessment and gaming readiness"
     echo -e "     ${ARROW} Optimization recommendations without making changes"
+    echo
+    echo -e "  ${BOLD}6.${NC} ${WHITE}Gaming Profile Management${NC} - Create and manage gaming profiles"
+    echo -e "     ${ARROW} Create personalized gaming profiles based on your preferences"
+    echo -e "     ${ARROW} Switch between different gaming configurations"
+    echo -e "     ${ARROW} Hardware-aware profile recommendations and optimization"
     echo
     echo -e "  ${BOLD}0.${NC} Exit wizard"
     echo
@@ -545,6 +565,10 @@ handle_setup_choice() {
         5)
             log_message "INFO" "Hardware analysis completed"
             echo -e "\n${GREEN}Hardware analysis completed. Check the recommendations above.${NC}"
+            ;;
+        6)
+            log_message "INFO" "Starting gaming profile management"
+            run_gaming_profile_management
             ;;
         0)
             log_message "INFO" "User exited wizard"
@@ -1564,6 +1588,102 @@ show_post_setup_instructions() {
 }
 
 # ==============================================================================
+# Gaming Profile Management
+# ==============================================================================
+
+run_gaming_profile_management() {
+    print_section "Gaming Profile Management"
+
+    echo -e "Choose an action:"
+    echo -e "  ${BOLD}1.${NC} Create New Gaming Profile"
+    echo -e "  ${BOLD}2.${NC} List Existing Profiles"
+    echo -e "  ${BOLD}3.${NC} Apply Gaming Profile"
+    echo -e "  ${BOLD}4.${NC} Delete Gaming Profile"
+    echo -e "  ${BOLD}5.${NC} Export Profile"
+    echo -e "  ${BOLD}6.${NC} Import Profile"
+    echo -e "  ${BOLD}0.${NC} Return to Main Menu"
+    echo
+
+    while true; do
+        read -p "Please enter your choice [1-6, 0 to return]: " -n 1 -r
+        echo
+
+        case "$REPLY" in
+            1)
+                log_message "INFO" "Starting gaming profile creation"
+                create_gaming_profile
+                break
+                ;;
+            2)
+                log_message "INFO" "Listing gaming profiles"
+                list_gaming_profiles
+                echo -e "\nPress any key to continue..."
+                read -n 1 -s -r
+                break
+                ;;
+            3)
+                log_message "INFO" "Applying gaming profile"
+                echo "Available profiles:"
+                list_gaming_profiles
+                echo
+                read -p "Enter profile name to apply: " profile_name
+                if [[ -n "$profile_name" ]]; then
+                    apply_gaming_profile "$profile_name"
+                else
+                    echo -e "${RED}No profile name provided.${NC}"
+                fi
+                break
+                ;;
+            4)
+                log_message "INFO" "Deleting gaming profile"
+                echo "Available profiles:"
+                list_gaming_profiles
+                echo
+                read -p "Enter profile name to delete: " profile_name
+                if [[ -n "$profile_name" ]]; then
+                    delete_gaming_profile "$profile_name"
+                else
+                    echo -e "${RED}No profile name provided.${NC}"
+                fi
+                break
+                ;;
+            5)
+                log_message "INFO" "Exporting gaming profile"
+                echo "Available profiles:"
+                list_gaming_profiles
+                echo
+                read -p "Enter profile name to export: " profile_name
+                if [[ -n "$profile_name" ]]; then
+                    read -p "Enter export path [/tmp/${profile_name}.json]: " export_path
+                    export_path="${export_path:-/tmp/${profile_name}.json}"
+                    export_gaming_profile "$profile_name" "$export_path"
+                else
+                    echo -e "${RED}No profile name provided.${NC}"
+                fi
+                break
+                ;;
+            6)
+                log_message "INFO" "Importing gaming profile"
+                read -p "Enter path to profile JSON file: " import_path
+                if [[ -n "$import_path" ]] && [[ -f "$import_path" ]]; then
+                    import_gaming_profile "$import_path"
+                else
+                    echo -e "${RED}Invalid file path.${NC}"
+                fi
+                break
+                ;;
+            0)
+                log_message "INFO" "Returning to main menu"
+                break
+                ;;
+            *)
+                echo -e "\n${RED}Invalid choice. Please try again.${NC}"
+                ;;
+        esac
+    done
+}
+
+# ==============================================================================
 # Main Function
 # ==============================================================================
 
@@ -1618,7 +1738,7 @@ main() {
     print_section "Gaming Profile Compatibility"
     echo "Checking compatibility with standard gaming profile..."
     echo
-    generate_compatibility_report "standard" "table"
+    check_gaming_compatibility "standard"
     echo
 
     # Show recommendations if compatibility is low
@@ -1633,7 +1753,7 @@ main() {
     # Show setup options and get user choice
     while true; do
         show_setup_options
-        read -p "Please enter your choice [1-5, 0 to exit]: " -n 1 -r
+        read -p "Please enter your choice [1-6, 0 to exit]: " -n 1 -r
         echo
 
         if handle_setup_choice "$REPLY"; then

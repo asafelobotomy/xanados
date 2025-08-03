@@ -9,7 +9,7 @@ readonly XANADOS_COMMON_LOADED="true"
 
 # Simple logging functions (embedded to avoid dependency issues)
 log_debug() {
-    [[ "${XANADOS_DEBUG:-false}" == "true" ]] && echo "[DEBUG] $*" >&2
+    [[ "${XANADOS_DEBUG:-false}" == "true" ]] && echo "[DEBUG] $*" >&2 || true
 }
 
 log_message() {

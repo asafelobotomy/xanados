@@ -108,38 +108,45 @@ cd xanadOS
 ### Detailed Installation
 
 1. **Clone the Repository**
+
    ```bash
    git clone https://github.com/asafelobotomy/xanadOS.git
    cd xanadOS
    ```
 
 2. **Run Initial Setup**
+
    ```bash
    # This will set up the base development environment
    ./scripts/setup/dev-environment.sh
    ```
 
 3. **Install Gaming Components**
+
    ```bash
    # Use the wizard for guided setup
    ./scripts/setup/gaming-setup-wizard.sh
-   
+
    # Or install components individually
    ./scripts/setup/install-steam.sh
    ./scripts/setup/install-lutris.sh
    ./scripts/setup/unified-gaming-setup.sh
+
    ```
 
 4. **Optimize Hardware**
+
    ```bash
    # Hardware-specific optimizations
    ./scripts/setup/priority3-hardware-optimization.sh
-   
+
    # Audio optimization for gaming
+
    ./scripts/setup/audio-latency-optimizer.sh
    ```
 
 5. **Validate Installation**
+
    ```bash
    # Comprehensive system validation
    ./testing/automated/testing-suite.sh
@@ -158,7 +165,7 @@ cd xanadOS
 
 Most configuration is automated, but you can customize:
 
-- **Gaming profiles**: Edit files in `configs/` directory
+- **Gaming profiles**: See the [Gaming Profiles Guide](docs/user/gaming-profiles-guide.md) for detailed profile management and optimization strategies
 - **Hardware settings**: Modify scripts in `scripts/setup/`
 - **Testing parameters**: Adjust settings in `testing/` directory
 
@@ -174,8 +181,9 @@ Reports are saved to `docs/reports/generated/` with timestamps.
 
 ## Features
 
+- **Gaming Profiles**: 7 specialized optimization profiles (competitive, casual, cinematic, retro, VR, streaming, development) with hardware-aware recommendations
 - **Gaming Optimization**: Steam, Lutris, GameMode integration
-- **Performance Monitoring**: Comprehensive system and gaming performance reports  
+- **Performance Monitoring**: Comprehensive system and gaming performance reports
 - **Hardware Optimization**: Graphics drivers, audio latency, device optimization
 - **Development Tools**: Automated testing, validation, and reporting frameworks
 - **Modular Architecture**: Library-based script system with proper dependency management
@@ -224,7 +232,7 @@ xanadOS/
 ### Key Directories
 
 - **`scripts/lib/`**: Core library functions used across all scripts
-- **`scripts/setup/`**: Primary installation and configuration scripts  
+- **`scripts/setup/`**: Primary installation and configuration scripts
 - **`testing/automated/`**: Main testing suite and validation tools
 - **`docs/user/`**: User-facing documentation and guides
 - **`configs/`**: Configuration templates and system settings
@@ -234,13 +242,18 @@ See [Project Structure](docs/development/project_structure.md) for detailed dire
 ## Documentation
 
 ### User Guides
+
+- [Gaming Profiles Guide](docs/user/gaming-profiles-guide.md) - Comprehensive guide to gaming profiles and optimization strategies
+
 - [Gaming Quick Reference](docs/user/gaming-quick-reference.md) - Essential gaming commands and tips
 - [Gaming Stack](docs/user/gaming-stack.md) - Gaming environment documentation
 - [Hardware Optimization Guide](docs/user/priority3-hardware-optimization-guide.md) - Hardware tuning guide
 - [User Experience Guide](docs/user/priority4-user-experience-guide.md) - Complete user setup guide
 
 ### Development Documentation
+
 - [Development Overview](docs/development/README.md) - Complete development documentation index
+
 - [Project Plan](docs/development/planning/xanadOS_plan.md) - Overall project roadmap and goals
 - [Project Structure](docs/development/architecture/project_structure.md) - Detailed directory organization
 - [Performance Testing Suite](docs/development/architecture/performance-testing-suite.md) - Testing framework guide
@@ -248,6 +261,7 @@ See [Project Structure](docs/development/project_structure.md) for detailed dire
 - [Latest Reports](docs/development/reports/) - Development progress and phase completion
 
 ### API Documentation
+
 - [Library Functions](scripts/lib/) - Core library documentation
 - [Setup Scripts](scripts/setup/) - Installation script documentation
 
@@ -258,7 +272,7 @@ See [Project Structure](docs/development/project_structure.md) for detailed dire
 This project is developed with AI assistance using modern development practices:
 
 - **Modular Design**: Library-based architecture with clean dependencies
-- **Comprehensive Testing**: Automated validation and performance testing  
+- **Comprehensive Testing**: Automated validation and performance testing
 - **Detailed Reporting**: Multi-format reports (HTML, JSON, Markdown)
 - **Documentation-Driven**: Comprehensive guides and technical documentation
 - **AI-Assisted Development**: Leveraging AI for code optimization and testing
@@ -342,6 +356,7 @@ When reporting issues, include:
 # Check library functionality
 ./testing/unit/test-library-functionality.sh
 
+
 # Validate gaming environment
 ./testing/automated/gaming-validator.sh
 ```
@@ -349,25 +364,30 @@ When reporting issues, include:
 ## Roadmap
 
 ### Phase 1: Foundation & Tooling ✅ Complete
+
 - [x] Core library system
 - [x] Setup and installation scripts
 - [x] Testing and validation framework
 - [x] Documentation system
 
 ### Phase 2: Gaming Optimization 🚧 In Progress
+
 - [x] Steam and Lutris integration
 - [x] Hardware detection and optimization
 - [x] Audio latency optimization
+
 - [ ] Advanced graphics driver management
 - [ ] Controller and peripheral optimization
 
 ### Phase 3: Distribution Building 📋 Planned
+
 - [ ] ISO building system
 - [ ] Package management integration
 - [ ] Automated installation process
 - [ ] Live environment configuration
 
 ### Phase 4: Advanced Features 📋 Future
+
 - [ ] Web-based configuration interface
 - [ ] Remote monitoring and management
 - [ ] Cloud sync for configurations
@@ -378,6 +398,7 @@ When reporting issues, include:
 ### Technologies Used
 
 - **Arch Linux**: Base distribution
+
 - **Bash**: Primary scripting language
 - **GitHub Copilot**: AI development assistance
 - **Steam Proton**: Windows gaming compatibility
@@ -390,6 +411,7 @@ This project was inspired by the need for a comprehensive, automated gaming setu
 ### AI Development
 
 This project extensively uses AI assistance for:
+
 - Code optimization and review
 - Testing automation
 - Documentation generation

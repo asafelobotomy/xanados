@@ -75,18 +75,18 @@ PERFORMANCE_TOOLS=(
 # Detect gaming environment with caching
 detect_gaming_environment() {
     local force_refresh="${1:-false}"
-    
+
     if [[ "$force_refresh" == "false" ]] && [[ -n "${GAMING_ENV_CACHE[detected]:-}" ]]; then
         return 0
     fi
-    
+
     log_debug "Detecting gaming environment..."
-    
+
     # Clear cache if forcing refresh
     if [[ "$force_refresh" == "true" ]]; then
         GAMING_ENV_CACHE=()
     fi
-    
+
     # Detect platforms
     for platform in "${!GAMING_PLATFORMS[@]}"; do
         if command_exists "$platform"; then
@@ -95,7 +95,7 @@ detect_gaming_environment() {
             GAMING_ENV_CACHE["platform_$platform"]="missing"
         fi
     done
-    
+
     # Detect utilities
     for utility in "${!GAMING_UTILITIES[@]}"; do
         if command_exists "$utility"; then
@@ -104,7 +104,7 @@ detect_gaming_environment() {
             GAMING_ENV_CACHE["utility_$utility"]="missing"
         fi
     done
-    
+
     # Detect graphics tools
     for tool in "${!GRAPHICS_TOOLS[@]}"; do
         if command_exists "$tool"; then
@@ -113,7 +113,7 @@ detect_gaming_environment() {
             GAMING_ENV_CACHE["graphics_$tool"]="missing"
         fi
     done
-    
+
     # Detect audio tools
     for tool in "${!AUDIO_TOOLS[@]}"; do
         if command_exists "$tool"; then
@@ -122,7 +122,7 @@ detect_gaming_environment() {
             GAMING_ENV_CACHE["audio_$tool"]="missing"
         fi
     done
-    
+
     # Detect performance tools
     for tool in "${!PERFORMANCE_TOOLS[@]}"; do
         if command_exists "$tool"; then
@@ -131,17 +131,17 @@ detect_gaming_environment() {
             GAMING_ENV_CACHE["perf_$tool"]="missing"
         fi
     done
-    
+
     # Detect GPU type
     detect_gpu_type
-    
+
     # Detect audio system
     detect_gaming_audio_system
-    
+
     # Mark detection as complete
     GAMING_ENV_CACHE["detected"]="true"
     GAMING_ENV_CACHE["detection_time"]="$(date +%s)"
-    
+
     log_debug "Gaming environment detection completed"
 }
 
@@ -149,22 +149,22 @@ detect_gaming_environment() {
 detect_gpu_type() {
     local gpu_type="unknown"
     local driver="unknown"
-    
+
     if command_exists "nvidia-smi"; then
         gpu_type="nvidia"
         driver="nvidia"
     elif command_exists "radeontop" || [[ -d "/sys/class/drm/card0" ]]; then
         gpu_type="amd"
-        if lsmod | grep -q "amdgpu"; then
+        if lsmod 2>/dev/null | grep -q "amdgpu" || false; then
             driver="amdgpu"
-        elif lsmod | grep -q "radeon"; then
+        elif lsmod 2>/dev/null | grep -q "radeon" || false; then
             driver="radeon"
         fi
-    elif lspci | grep -qi intel; then
+    elif lspci 2>/dev/null | grep -qi intel || false; then
         gpu_type="intel"
         driver="intel"
     fi
-    
+
     GAMING_ENV_CACHE["gpu_type"]="$gpu_type"
     GAMING_ENV_CACHE["gpu_driver"]="$driver"
 }
@@ -172,7 +172,7 @@ detect_gpu_type() {
 # Detect audio system and cache result
 detect_gaming_audio_system() {
     local audio_system="unknown"
-    
+
     if systemctl --user is-active pipewire >/dev/null 2>&1; then
         audio_system="pipewire"
     elif systemctl --user is-active pulseaudio >/dev/null 2>&1; then
@@ -180,14 +180,14 @@ detect_gaming_audio_system() {
     elif command_exists "pulseaudio"; then
         audio_system="pulseaudio"
     fi
-    
+
     GAMING_ENV_CACHE["audio_system"]="$audio_system"
 }
 
 # Check if specific gaming platform is available
 is_platform_available() {
     local platform="$1"
-    
+
     detect_gaming_environment
     [[ "${GAMING_ENV_CACHE[platform_$platform]:-}" == "available" ]]
 }
@@ -195,7 +195,7 @@ is_platform_available() {
 # Check if specific gaming utility is available
 is_utility_available() {
     local utility="$1"
-    
+
     detect_gaming_environment
     [[ "${GAMING_ENV_CACHE[utility_$utility]:-}" == "available" ]]
 }
@@ -203,9 +203,9 @@ is_utility_available() {
 # Get gaming environment report
 get_gaming_environment_report() {
     local format="${1:-summary}"  # summary, detailed, json
-    
+
     detect_gaming_environment
-    
+
     case "$format" in
         "json")
             generate_json_report
@@ -223,7 +223,7 @@ get_gaming_environment_report() {
 generate_summary_report() {
     echo "Gaming Environment Summary:"
     echo ""
-    
+
     # Count available platforms
     local platform_count=0
     local available_platforms=()
@@ -233,7 +233,7 @@ generate_summary_report() {
             available_platforms+=("$platform")
         fi
     done
-    
+
     # Count available utilities
     local utility_count=0
     local available_utilities=()
@@ -243,19 +243,19 @@ generate_summary_report() {
             available_utilities+=("$utility")
         fi
     done
-    
+
     echo "Platforms: $platform_count/${#GAMING_PLATFORMS[@]} available"
     if [[ ${#available_platforms[@]} -gt 0 ]]; then
         echo "  Available: ${available_platforms[*]}"
     fi
     echo ""
-    
+
     echo "Utilities: $utility_count/${#GAMING_UTILITIES[@]} available"
     if [[ ${#available_utilities[@]} -gt 0 ]]; then
         echo "  Available: ${available_utilities[*]}"
     fi
     echo ""
-    
+
     echo "Graphics: ${GAMING_ENV_CACHE[gpu_type]:-unknown} (${GAMING_ENV_CACHE[gpu_driver]:-unknown})"
     echo "Audio: ${GAMING_ENV_CACHE[audio_system]:-unknown}"
 }
@@ -264,7 +264,7 @@ generate_summary_report() {
 generate_detailed_report() {
     echo "Gaming Environment Detailed Report:"
     echo ""
-    
+
     # Gaming Platforms
     echo "Gaming Platforms:"
     for platform in "${!GAMING_PLATFORMS[@]}"; do
@@ -274,7 +274,7 @@ generate_detailed_report() {
         echo "  $symbol $platform - ${GAMING_PLATFORMS[$platform]}"
     done
     echo ""
-    
+
     # Gaming Utilities
     echo "Gaming Utilities:"
     for utility in "${!GAMING_UTILITIES[@]}"; do
@@ -284,7 +284,7 @@ generate_detailed_report() {
         echo "  $symbol $utility - ${GAMING_UTILITIES[$utility]}"
     done
     echo ""
-    
+
     # Graphics Tools
     echo "Graphics Tools:"
     for tool in "${!GRAPHICS_TOOLS[@]}"; do
@@ -294,7 +294,7 @@ generate_detailed_report() {
         echo "  $symbol $tool - ${GRAPHICS_TOOLS[$tool]}"
     done
     echo ""
-    
+
     # Audio Tools
     echo "Audio Tools:"
     for tool in "${!AUDIO_TOOLS[@]}"; do
@@ -304,7 +304,7 @@ generate_detailed_report() {
         echo "  $symbol $tool - ${AUDIO_TOOLS[$tool]}"
     done
     echo ""
-    
+
     # Performance Tools
     echo "Performance Tools:"
     for tool in "${!PERFORMANCE_TOOLS[@]}"; do
@@ -314,7 +314,7 @@ generate_detailed_report() {
         echo "  $symbol $tool - ${PERFORMANCE_TOOLS[$tool]}"
     done
     echo ""
-    
+
     # System Information
     echo "System Information:"
     echo "  GPU Type: ${GAMING_ENV_CACHE[gpu_type]:-unknown}"
@@ -330,7 +330,7 @@ generate_json_report() {
     echo '  "gaming_environment": {'
     echo '    "detection_time": "'${GAMING_ENV_CACHE[detection_time]:-}'",'
     echo '    "platforms": {'
-    
+
     local first=true
     for platform in "${!GAMING_PLATFORMS[@]}"; do
         [[ "$first" == "false" ]] && echo ","
@@ -340,7 +340,7 @@ generate_json_report() {
     done
     echo ""
     echo '    },'
-    
+
     echo '    "utilities": {'
     first=true
     for utility in "${!GAMING_UTILITIES[@]}"; do
@@ -351,7 +351,7 @@ generate_json_report() {
     done
     echo ""
     echo '    },'
-    
+
     echo '    "system": {'
     echo "      \"gpu_type\": \"${GAMING_ENV_CACHE[gpu_type]:-unknown}\","
     echo "      \"gpu_driver\": \"${GAMING_ENV_CACHE[gpu_driver]:-unknown}\","
@@ -364,10 +364,10 @@ generate_json_report() {
 # Get gaming readiness score (0-100)
 get_gaming_readiness_score() {
     detect_gaming_environment
-    
+
     local total_score=0
     local max_score=0
-    
+
     # Score platforms (40% weight)
     local platform_score=0
     for platform in "${!GAMING_PLATFORMS[@]}"; do
@@ -377,7 +377,7 @@ get_gaming_readiness_score() {
         fi
     done
     total_score=$((total_score + platform_score))
-    
+
     # Score utilities (30% weight)
     local utility_score=0
     for utility in "${!GAMING_UTILITIES[@]}"; do
@@ -387,7 +387,7 @@ get_gaming_readiness_score() {
         fi
     done
     total_score=$((total_score + utility_score))
-    
+
     # Score graphics tools (20% weight)
     local graphics_score=0
     for tool in "${!GRAPHICS_TOOLS[@]}"; do
@@ -397,7 +397,7 @@ get_gaming_readiness_score() {
         fi
     done
     total_score=$((total_score + graphics_score))
-    
+
     # Score audio tools (10% weight)
     local audio_score=0
     for tool in "${!AUDIO_TOOLS[@]}"; do
@@ -407,7 +407,7 @@ get_gaming_readiness_score() {
         fi
     done
     total_score=$((total_score + audio_score))
-    
+
     # Calculate percentage
     local percentage=$((total_score * 100 / max_score))
     echo "$percentage"
@@ -422,11 +422,11 @@ clear_gaming_cache() {
 # Get missing gaming tools
 get_missing_gaming_tools() {
     local category="${1:-all}"  # all, platforms, utilities, graphics, audio
-    
+
     detect_gaming_environment
-    
+
     local missing=()
-    
+
     case "$category" in
         "platforms")
             for platform in "${!GAMING_PLATFORMS[@]}"; do
@@ -463,7 +463,7 @@ get_missing_gaming_tools() {
             missing+=("$(get_missing_gaming_tools "audio")")
             ;;
     esac
-    
+
     printf '%s\n' "${missing[@]}"
 }
 
@@ -475,10 +475,10 @@ get_missing_gaming_tools() {
 generate_gaming_matrix() {
     local output_format="${1:-table}"  # table, json, detailed
     local show_versions="${2:-false}"
-    
+
     # Ensure gaming environment is detected
     detect_gaming_environment
-    
+
     case "$output_format" in
         "json")
             generate_gaming_matrix_json "$show_versions"
@@ -496,15 +496,15 @@ generate_gaming_matrix() {
 generate_gaming_matrix_table() {
     local show_versions="${1:-false}"
     local readiness_score
-    
+
     readiness_score=$(get_gaming_readiness_score)
-    
+
     echo ""
     print_header "🎮 Gaming Environment Matrix"
     echo ""
     echo "Overall Gaming Readiness: ${readiness_score}%"
     echo ""
-    
+
     # Table header
     if [[ "$show_versions" == "true" ]]; then
         printf "%-25s %-10s %-15s %-15s\n" "Tool" "Status" "Version" "Readiness"
@@ -513,7 +513,7 @@ generate_gaming_matrix_table() {
         printf "%-25s %-10s %-15s\n" "Tool" "Status" "Readiness"
         printf "%-25s %-10s %-15s\n" "-------------------------" "----------" "---------------"
     fi
-    
+
     # Gaming Platforms
     echo ""
     echo "Gaming Platforms:"
@@ -521,7 +521,7 @@ generate_gaming_matrix_table() {
         local status="❌"
         local readiness="0%"
         local version="N/A"
-        
+
         if get_cached_command "$platform"; then
             status="✅"
             readiness="95%"
@@ -529,14 +529,14 @@ generate_gaming_matrix_table() {
                 version=$(get_tool_version "$platform")
             fi
         fi
-        
+
         if [[ "$show_versions" == "true" ]]; then
             printf "  %-23s %-10s %-15s %-15s\n" "$platform" "$status" "$version" "$readiness"
         else
             printf "  %-23s %-10s %-15s\n" "$platform" "$status" "$readiness"
         fi
     done
-    
+
     # Gaming Utilities
     echo ""
     echo "Gaming Utilities:"
@@ -544,7 +544,7 @@ generate_gaming_matrix_table() {
         local status="❌"
         local readiness="0%"
         local version="N/A"
-        
+
         if get_cached_command "$utility"; then
             status="✅"
             readiness="90%"
@@ -552,14 +552,14 @@ generate_gaming_matrix_table() {
                 version=$(get_tool_version "$utility")
             fi
         fi
-        
+
         if [[ "$show_versions" == "true" ]]; then
             printf "  %-23s %-10s %-15s %-15s\n" "$utility" "$status" "$version" "$readiness"
         else
             printf "  %-23s %-10s %-15s\n" "$utility" "$status" "$readiness"
         fi
     done
-    
+
     # Graphics Tools
     echo ""
     echo "Graphics Tools:"
@@ -567,7 +567,7 @@ generate_gaming_matrix_table() {
         local status="❌"
         local readiness="0%"
         local version="N/A"
-        
+
         if get_cached_command "$tool"; then
             status="✅"
             readiness="85%"
@@ -575,14 +575,14 @@ generate_gaming_matrix_table() {
                 version=$(get_tool_version "$tool")
             fi
         fi
-        
+
         if [[ "$show_versions" == "true" ]]; then
             printf "  %-23s %-10s %-15s %-15s\n" "$tool" "$status" "$version" "$readiness"
         else
             printf "  %-23s %-10s %-15s\n" "$tool" "$status" "$readiness"
         fi
     done
-    
+
     echo ""
 }
 
@@ -590,32 +590,32 @@ generate_gaming_matrix_table() {
 generate_gaming_matrix_json() {
     local show_versions="${1:-false}"
     local readiness_score
-    
+
     readiness_score=$(get_gaming_readiness_score)
-    
+
     echo "{"
     echo "  \"timestamp\": \"$(date -Iseconds)\","
     echo "  \"gaming_readiness_score\": $readiness_score,"
     echo "  \"show_versions\": $show_versions,"
     echo "  \"categories\": {"
-    
+
     # Gaming Platforms
     echo "    \"gaming_platforms\": {"
     local platform_count=0
     local total_platforms=${#GAMING_PLATFORMS[@]}
-    
+
     for platform in "${!GAMING_PLATFORMS[@]}"; do
         ((platform_count++))
         local is_available=false
         local version="null"
-        
+
         if get_cached_command "$platform"; then
             is_available=true
             if [[ "$show_versions" == "true" ]]; then
                 version="\"$(get_tool_version "$platform")\""
             fi
         fi
-        
+
         echo "      \"$platform\": {"
         echo "        \"description\": \"${GAMING_PLATFORMS[$platform]}\","
         echo "        \"available\": $is_available,"
@@ -630,24 +630,24 @@ generate_gaming_matrix_json() {
         fi
     done
     echo "    },"
-    
+
     # Gaming Utilities
     echo "    \"gaming_utilities\": {"
     local utility_count=0
     local total_utilities=${#GAMING_UTILITIES[@]}
-    
+
     for utility in "${!GAMING_UTILITIES[@]}"; do
         ((utility_count++))
         local is_available=false
         local version="null"
-        
+
         if get_cached_command "$utility"; then
             is_available=true
             if [[ "$show_versions" == "true" ]]; then
                 version="\"$(get_tool_version "$utility")\""
             fi
         fi
-        
+
         echo "      \"$utility\": {"
         echo "        \"description\": \"${GAMING_UTILITIES[$utility]}\","
         echo "        \"available\": $is_available,"
@@ -662,24 +662,24 @@ generate_gaming_matrix_json() {
         fi
     done
     echo "    },"
-    
+
     # Graphics Tools
     echo "    \"graphics_tools\": {"
     local graphics_count=0
     local total_graphics=${#GRAPHICS_TOOLS[@]}
-    
+
     for tool in "${!GRAPHICS_TOOLS[@]}"; do
         ((graphics_count++))
         local is_available=false
         local version="null"
-        
+
         if get_cached_command "$tool"; then
             is_available=true
             if [[ "$show_versions" == "true" ]]; then
                 version="\"$(get_tool_version "$tool")\""
             fi
         fi
-        
+
         echo "      \"$tool\": {"
         echo "        \"description\": \"${GRAPHICS_TOOLS[$tool]}\","
         echo "        \"available\": $is_available,"
@@ -694,7 +694,7 @@ generate_gaming_matrix_json() {
         fi
     done
     echo "    }"
-    
+
     echo "  }"
     echo "}"
 }
@@ -703,14 +703,14 @@ generate_gaming_matrix_json() {
 generate_gaming_matrix_detailed() {
     local show_versions="${1:-false}"
     local readiness_score
-    
+
     readiness_score=$(get_gaming_readiness_score)
-    
+
     print_header "🎮 Detailed Gaming Environment Analysis"
     echo ""
     echo "Overall Gaming Readiness Score: ${readiness_score}%"
     echo ""
-    
+
     # Assessment
     if [[ $readiness_score -ge 90 ]]; then
         log_success "Excellent! Your system is ready for high-performance gaming."
@@ -721,14 +721,14 @@ generate_gaming_matrix_detailed() {
     else
         log_error "Limited gaming capability. Significant setup required."
     fi
-    
+
     echo ""
-    
+
     # Detailed breakdown by category
     analyze_gaming_category "Gaming Platforms" GAMING_PLATFORMS 95
-    analyze_gaming_category "Gaming Utilities" GAMING_UTILITIES 90  
+    analyze_gaming_category "Gaming Utilities" GAMING_UTILITIES 90
     analyze_gaming_category "Graphics Tools" GRAPHICS_TOOLS 85
-    
+
     # Recommendations
     echo ""
     print_section "🚀 Recommendations"
@@ -740,13 +740,13 @@ analyze_gaming_category() {
     local category_name="$1"
     local -n tools_array=$2
     local weight="$3"
-    
+
     local available_count=0
     local total_count=0
     local missing_tools=()
-    
+
     echo "📊 $category_name Analysis:"
-    
+
     for tool in "${!tools_array[@]}"; do
         ((total_count++))
         if get_cached_command "$tool"; then
@@ -757,49 +757,49 @@ analyze_gaming_category() {
             echo "  ❌ $tool - ${tools_array[$tool]} (MISSING)"
         fi
     done
-    
+
     local category_percentage=$((available_count * 100 / total_count))
     echo ""
     echo "  Category Score: $available_count/$total_count tools ($category_percentage%)"
-    
+
     if [[ ${#missing_tools[@]} -gt 0 ]]; then
         echo "  Missing: ${missing_tools[*]}"
     fi
-    
+
     echo ""
 }
 
 # Provide gaming-specific recommendations
 provide_gaming_recommendations() {
     local recommendations=()
-    
+
     # Check for essential gaming platforms
     if ! get_cached_command "steam"; then
         recommendations+=("Install Steam for the largest gaming library")
     fi
-    
+
     if ! get_cached_command "lutris"; then
         recommendations+=("Install Lutris for non-Steam games and emulators")
     fi
-    
+
     # Check for gaming utilities
     if ! get_cached_command "gamemoderun"; then
         recommendations+=("Install GameMode for CPU/GPU performance optimization")
     fi
-    
+
     if ! get_cached_command "mangohud"; then
         recommendations+=("Install MangoHud for in-game performance monitoring")
     fi
-    
+
     if ! get_cached_command "wine"; then
         recommendations+=("Install Wine for Windows game compatibility")
     fi
-    
+
     # Check for graphics tools
     if ! get_cached_command "vulkaninfo"; then
         recommendations+=("Install Vulkan tools for modern graphics API support")
     fi
-    
+
     # GPU-specific recommendations
     if get_cached_command "nvidia-smi"; then
         if ! get_cached_command "nvidia-settings"; then
@@ -810,7 +810,7 @@ provide_gaming_recommendations() {
             recommendations+=("Install radeontop for AMD GPU monitoring")
         fi
     fi
-    
+
     # Display recommendations
     if [[ ${#recommendations[@]} -gt 0 ]]; then
         echo "Priority Recommendations:"
@@ -820,7 +820,7 @@ provide_gaming_recommendations() {
     else
         echo "🎉 No recommendations needed! Your gaming environment is well-configured."
     fi
-    
+
     echo ""
     echo "💡 Tip: Run 'generate_gaming_matrix json true' for machine-readable output with versions."
 }
@@ -829,7 +829,7 @@ provide_gaming_recommendations() {
 get_tool_version() {
     local tool="$1"
     local version="Unknown"
-    
+
     case "$tool" in
         "steam")
             version=$(steam --version 2>/dev/null | head -1 | awk '{print $2}' || echo "Unknown")
@@ -848,7 +848,7 @@ get_tool_version() {
             version=$($tool --version 2>/dev/null | head -1 | awk '{print $NF}' || echo "Unknown")
             ;;
     esac
-    
+
     echo "$version"
 }
 
@@ -863,19 +863,19 @@ declare -A GAMING_PROFILES
 init_gaming_profiles() {
     # Essential Gaming Profile - Minimum for basic gaming
     GAMING_PROFILES[essential]="steam gamemode mangohud"
-    
+
     # Standard Gaming Profile - Good general gaming setup
     GAMING_PROFILES[standard]="steam lutris gamemode mangohud wine winetricks"
-    
+
     # Advanced Gaming Profile - Comprehensive gaming environment
     GAMING_PROFILES[advanced]="steam lutris gamemode mangohud wine winetricks protontricks bottles heroic goverlay"
-    
+
     # Professional Gaming Profile - Full gaming development/streaming setup
     GAMING_PROFILES[professional]="steam lutris gamemode mangohud wine winetricks protontricks bottles heroic goverlay obs-studio discord"
-    
+
     # Emulation Profile - Retro gaming focused
     GAMING_PROFILES[emulation]="retroarch pcsx2 dolphin-emu ppsspp duckstation"
-    
+
     # VR Gaming Profile - Virtual reality gaming
     GAMING_PROFILES[vr]="steam steamvr wine gamemode mangohud"
 }
@@ -884,28 +884,28 @@ init_gaming_profiles() {
 check_gaming_compatibility() {
     local profile="${1:-standard}"  # essential, standard, advanced, professional, emulation, vr
     local verbose="${2:-false}"
-    
+
     init_gaming_profiles
-    
+
     if [[ -z "${GAMING_PROFILES[$profile]:-}" ]]; then
         echo "Error: Unknown gaming profile '$profile'"
         echo "Available profiles: ${!GAMING_PROFILES[*]}"
         return 1
     fi
-    
+
     if [[ "$verbose" == "true" ]]; then
         echo "Checking compatibility with '$profile' gaming profile..."
         echo
     fi
-    
+
     local profile_tools
     read -ra profile_tools <<< "${GAMING_PROFILES[$profile]}"
-    
+
     local missing_tools=()
     local available_tools=()
     local compatibility_score=0
     local total_tools=${#profile_tools[@]}
-    
+
     # Check each required tool
     for tool in "${profile_tools[@]}"; do
         if get_cached_command "$tool"; then
@@ -915,10 +915,10 @@ check_gaming_compatibility() {
             missing_tools+=("$tool")
         fi
     done
-    
+
     # Calculate compatibility percentage
     local compatibility_percentage=$((compatibility_score * 100 / total_tools))
-    
+
     if [[ "$verbose" == "true" ]]; then
         echo "Profile: $profile"
         echo "Required tools: ${#profile_tools[@]}"
@@ -926,7 +926,7 @@ check_gaming_compatibility() {
         echo "Missing tools: ${#missing_tools[@]}"
         echo "Compatibility: $compatibility_percentage%"
         echo
-        
+
         if [[ ${#available_tools[@]} -gt 0 ]]; then
             echo "✅ Available tools:"
             for tool in "${available_tools[@]}"; do
@@ -934,7 +934,7 @@ check_gaming_compatibility() {
             done
             echo
         fi
-        
+
         if [[ ${#missing_tools[@]} -gt 0 ]]; then
             echo "❌ Missing tools:"
             for tool in "${missing_tools[@]}"; do
@@ -943,40 +943,40 @@ check_gaming_compatibility() {
             echo
         fi
     fi
-    
+
     # Store results for other functions to use
     COMPATIBILITY_PROFILE="$profile"
     COMPATIBILITY_SCORE="$compatibility_percentage"
     MISSING_TOOLS=("${missing_tools[@]}")
     AVAILABLE_TOOLS=("${available_tools[@]}")
-    
+
     return 0
 }
 
 # Get compatibility recommendations based on missing tools
 get_compatibility_recommendations() {
     local profile="${1:-standard}"
-    
+
     # Run compatibility check if not already done
     if [[ -z "${COMPATIBILITY_PROFILE:-}" ]] || [[ "$COMPATIBILITY_PROFILE" != "$profile" ]]; then
         check_gaming_compatibility "$profile" false
     fi
-    
+
     if [[ ${#MISSING_TOOLS[@]} -eq 0 ]]; then
         echo "🎉 Your system is fully compatible with the '$profile' gaming profile!"
         return 0
     fi
-    
+
     echo "📋 Recommendations for '$profile' gaming profile compatibility:"
     echo
-    
+
     # Categorize missing tools and provide specific recommendations
     local platforms=()
     local utilities=()
     local graphics=()
     local emulators=()
     local other=()
-    
+
     for tool in "${MISSING_TOOLS[@]}"; do
         case "$tool" in
             steam|lutris|heroic|bottles|itch|gog)
@@ -996,7 +996,7 @@ get_compatibility_recommendations() {
                 ;;
         esac
     done
-    
+
     # Provide category-specific recommendations
     if [[ ${#platforms[@]} -gt 0 ]]; then
         echo "🎮 Gaming Platforms:"
@@ -1021,7 +1021,7 @@ get_compatibility_recommendations() {
         done
         echo
     fi
-    
+
     if [[ ${#utilities[@]} -gt 0 ]]; then
         echo "🔧 Gaming Utilities:"
         for utility in "${utilities[@]}"; do
@@ -1051,7 +1051,7 @@ get_compatibility_recommendations() {
         done
         echo
     fi
-    
+
     if [[ ${#graphics[@]} -gt 0 ]]; then
         echo "🖥️ Graphics Tools:"
         for tool in "${graphics[@]}"; do
@@ -1075,7 +1075,7 @@ get_compatibility_recommendations() {
         done
         echo
     fi
-    
+
     if [[ ${#emulators[@]} -gt 0 ]]; then
         echo "🕹️ Emulators:"
         for emulator in "${emulators[@]}"; do
@@ -1099,7 +1099,7 @@ get_compatibility_recommendations() {
         done
         echo
     fi
-    
+
     if [[ ${#other[@]} -gt 0 ]]; then
         echo "📦 Other Tools:"
         for tool in "${other[@]}"; do
@@ -1107,7 +1107,7 @@ get_compatibility_recommendations() {
         done
         echo
     fi
-    
+
     # Provide priority recommendations
     echo "🎯 Priority Installation Order:"
     case "$profile" in
@@ -1151,9 +1151,9 @@ get_compatibility_recommendations() {
 generate_compatibility_report() {
     local profile="${1:-standard}"
     local format="${2:-table}"  # table, json, detailed
-    
+
     check_gaming_compatibility "$profile" false
-    
+
     case "$format" in
         json)
             cat << EOF
@@ -1183,13 +1183,13 @@ EOF
             echo "Gaming Profile Compatibility: $profile"
             echo "Score: $COMPATIBILITY_SCORE%"
             echo
-            
+
             local profile_tools
             read -ra profile_tools <<< "${GAMING_PROFILES[$profile]}"
-            
+
             printf "%-20s %-10s\n" "Tool" "Status"
             printf "%-20s %-10s\n" "----" "------"
-            
+
             for tool in "${profile_tools[@]}"; do
                 if get_cached_command "$tool"; then
                     printf "%-20s %-10s\n" "$tool" "✅"
@@ -1204,10 +1204,10 @@ EOF
 # List available gaming profiles
 list_gaming_profiles() {
     init_gaming_profiles
-    
+
     echo "Available Gaming Profiles:"
     echo
-    
+
     for profile in "${!GAMING_PROFILES[@]}"; do
         local tools
         read -ra tools <<< "${GAMING_PROFILES[$profile]}"
