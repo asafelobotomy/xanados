@@ -129,6 +129,21 @@ generate_package_list() {
     print_section "Generating Package List"
     
     local package_file="$ARCHISO_DIR/packages.x86_64"
+    local optimized_packages="$PROJECT_ROOT/build/packages.x86_64"
+    
+    # Use our optimized packages.x86_64 if it exists
+    if [[ -f "$optimized_packages" ]]; then
+        print_info "Using optimized xanadOS package list"
+        cp "$optimized_packages" "$package_file"
+        
+        local package_count
+        package_count=$(grep -v '^#' "$package_file" | grep -v '^$' | wc -l)
+        print_success "Using optimized package list with $package_count packages"
+        return
+    fi
+    
+    # Fallback: Generate from individual lists (legacy method)
+    print_warning "Optimized package list not found, generating from individual lists"
     local temp_packages="/tmp/xanados-packages.tmp"
     
     # Combine all package lists
