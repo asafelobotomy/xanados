@@ -3,21 +3,21 @@
 > The ultimate Arch Linux-based gaming distribution with complete performance optimization, gaming desktop mode, and professional user experience.
 
 [![Project Status](https://img.shields.io/badge/Status-Production%20Ready-brightgreen.svg)](https://github.com/asafelobotomy/xanadOS)
-[![Development Phase](https://img.shields.io/badge/All%20Phases-Complete-success.svg)](#project-status)
+[![Development Phase](https://img.shields.io/badge/All%20Phases-Complete-success.svg)](#-project-status)
 [![Version](https://img.shields.io/badge/Version-1.0.0-blue.svg)](#installation)
 [![License](https://img.shields.io/badge/License-Personal%20Use-blue.svg)](#license)
 
 ## Table of Contents
 
 - [About](#about)
-- [🚀 Quick Start](#quick-start)
-- [✨ Features](#features)
-- [📦 Installation](#installation)
-- [🎮 Usage](#usage)
-- [📊 Project Status](#project-status)
-- [🏗️ Project Structure](#project-structure)
-- [📖 Documentation](#documentation)
-- [🔧 Development](#development)
+- [🚀 Quick Start](#-quick-start)
+- [✨ Features](#-features)
+- [� Project Status](#-project-status)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Project Structure](#project-structure)
+- [Documentation](#documentation)
+- [Development](#development)
 - [🤝 Contributing](#contributing)
 - [🆘 Support](#support)
 - [🗺️ Roadmap](#roadmap)
@@ -147,10 +147,10 @@ Meta+F5    # System monitor
 - **🖥️ Desktop Integration**: KDE themes, shortcuts, widgets
 - **⚡ Performance**: Measurable gaming performance improvements
 
-# Validate gaming environment
+### Validate Gaming Environment
 
+```bash
 ./testing/automated/gaming-validator.sh
-
 ```
 
 ## Installation
@@ -172,14 +172,14 @@ Meta+F5    # System monitor
    cd xanadOS
    ```
 
-2. **Run Initial Setup**
+1. **Run Initial Setup**
 
    ```bash
    # This will set up the base development environment
    ./scripts/setup/dev-environment.sh
    ```
 
-3. **Install Gaming Components**
+1. **Install Gaming Components**
 
    ```bash
    # Use the wizard for guided setup
@@ -189,21 +189,19 @@ Meta+F5    # System monitor
    ./scripts/setup/install-steam.sh
    ./scripts/setup/install-lutris.sh
    ./scripts/setup/unified-gaming-setup.sh
-
    ```
 
-4. **Optimize Hardware**
+1. **Optimize Hardware**
 
    ```bash
    # Hardware-specific optimizations
    ./scripts/setup/priority3-hardware-optimization.sh
 
    # Audio optimization for gaming
-
    ./scripts/setup/audio-latency-optimizer.sh
    ```
 
-5. **Validate Installation**
+1. **Validate Installation**
 
    ```bash
    # Comprehensive system validation
@@ -491,4 +489,4 @@ For questions about usage rights, please open an issue or contact the maintainer
 
 ---
 
-**Built with ❤️ and AI assistance for the Linux gaming community**
+## Built with ❤️ and AI assistance for the Linux gaming community

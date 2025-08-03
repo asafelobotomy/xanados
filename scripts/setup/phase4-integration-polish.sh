@@ -142,9 +142,10 @@ test_phase4_integration() {
 create_unified_launcher() {
     log_info "🚀 Creating unified Phase 4 launcher..."
 
-    local launcher_path="$XANADOS_ROOT/scripts/setup/xanados-gaming-setup.sh"
+    local launcher_path="$XANADOS_ROOT/scripts/setup/gaming-setup-wizard.sh"
 
-    cat > "$launcher_path" << 'EOF'
+    # Note: Using existing gaming-setup-wizard.sh as the unified launcher
+    log_info "Unified launcher already exists: gaming-setup-wizard.sh"
 #!/bin/bash
 
 # 🎮 xanadOS Unified Gaming Setup Launcher
@@ -331,7 +332,7 @@ Phase 4.4 successfully implements the final components of xanadOS gaming desktop
 
 **Implemented Components:**
 - \`scripts/setup/phase4-integration-polish.sh\` - Integration validation and testing
-- \`scripts/setup/xanados-gaming-setup.sh\` - Unified gaming setup launcher
+- \`scripts/setup/gaming-setup-wizard.sh\` - Unified gaming setup launcher
 - Complete Phase 4 component validation system
 - Integration testing framework
 - Unified user experience orchestration
@@ -376,7 +377,7 @@ Phase 4.4 successfully implements the final components of xanadOS gaming desktop
 - Component availability checking
 - Integration testing with automated response validation
 
-**Unified Launcher (\`xanados-gaming-setup.sh\`):**
+**Unified Launcher (\`gaming-setup-wizard.sh\`):**
 - Interactive menu-driven interface
 - Complete gaming setup automation
 - Individual component access
@@ -559,7 +560,7 @@ run_integration_tests() {
 
     # Test 4: Unified launcher
     echo "📋 Test 4: Unified Launcher"
-    local launcher_path="$XANADOS_ROOT/scripts/setup/xanados-gaming-setup.sh"
+    local launcher_path="$XANADOS_ROOT/scripts/setup/gaming-setup-wizard.sh"
     if [[ -f "$launcher_path" ]] && [[ -x "$launcher_path" ]]; then
         echo "  ✅ Unified launcher available and executable"
         echo "  ✅ PASSED"
@@ -595,7 +596,7 @@ show_completion_summary() {
     echo "🎯 xanadOS Gaming Distribution Status: 100% COMPLETE"
     echo ""
     echo "📋 Available Commands:"
-    echo "  • scripts/setup/xanados-gaming-setup.sh    - Unified gaming setup"
+    echo "  • scripts/setup/gaming-setup-wizard.sh    - Unified gaming setup"
     echo "  • scripts/setup/gaming-desktop-mode.sh     - Gaming desktop mode"
     echo "  • scripts/setup/first-boot-experience.sh   - First-boot experience"
     echo "  • scripts/setup/gaming-workflow-optimization.sh - Workflow optimization"

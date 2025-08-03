@@ -7,7 +7,7 @@
 #              Implements Phase 4.3.1 (Welcome System) and 4.3.2 (Automated Setup)
 # Author: xanadOS Development Team
 # Version: 2.0.0 (Phase 4.3)
-# License: MIT
+# License: Personal Use License
 # ==============================================================================
 
 set -euo pipefail

@@ -66,8 +66,8 @@ echo ""
 echo "✅ xanadOS installation completed!"
 echo ""
 echo "Quick start commands:"
-echo "  xanados-gaming-setup.sh     - Complete gaming setup"
-echo "  gaming-desktop-mode.sh      - Gaming desktop mode"
+echo "  gaming-setup-wizard.sh       - Complete gaming setup"
+echo "  gaming-desktop-mode.sh       - Gaming desktop mode"
 echo ""
 echo "🎮 Enjoy gaming with xanadOS!"
 EOF
@@ -96,7 +96,7 @@ chmod +x install-xanados.sh
 ## Post-Installation
 \`\`\`bash
 # Complete gaming setup
-xanados-gaming-setup.sh
+gaming-setup-wizard.sh
 
 # Toggle gaming mode
 gaming-desktop-mode.sh toggle

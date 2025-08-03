@@ -7,7 +7,7 @@
 #              experience with gaming-focused themes, layouts, and widgets
 # Author: xanadOS Development Team
 # Version: 1.0.0
-# License: MIT
+# License: Personal Use License
 # ==============================================================================
 
 set -euo pipefail

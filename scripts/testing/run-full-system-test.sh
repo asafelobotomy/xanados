@@ -226,7 +226,7 @@ test_phase4_user_experience() {
         "scripts/setup/first-boot-experience.sh:First-Boot Experience"
         "scripts/setup/gaming-desktop-mode.sh:Gaming Desktop Mode"
         "scripts/setup/phase4-integration-polish.sh:Integration Polish"
-        "scripts/setup/xanados-gaming-setup.sh:Unified Launcher"
+        "scripts/setup/gaming-setup-wizard.sh:Gaming Setup Wizard"
     )
 
     for component in "${phase4_components[@]}"; do
@@ -292,11 +292,11 @@ test_integration_functionality() {
     fi
 
     # Test unified launcher
-    echo "🔸 Testing Unified Launcher functionality..."
-    if [[ -f "$XANADOS_ROOT/scripts/setup/xanados-gaming-setup.sh" ]] && [[ -x "$XANADOS_ROOT/scripts/setup/xanados-gaming-setup.sh" ]]; then
-        pass_test "Unified Launcher: Available and executable"
+    echo "🔸 Testing Gaming Setup Wizard functionality..."
+    if [[ -f "$XANADOS_ROOT/scripts/setup/gaming-setup-wizard.sh" ]] && [[ -x "$XANADOS_ROOT/scripts/setup/gaming-setup-wizard.sh" ]]; then
+        pass_test "Gaming Setup Wizard: Available and executable"
     else
-        fail_test "Unified Launcher: Missing or not executable"
+        fail_test "Gaming Setup Wizard: Missing or not executable"
     fi
 
     echo ""

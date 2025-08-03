@@ -109,7 +109,7 @@ create_gaming_profile() {
     if [[ -z "$profile_name" ]]; then
         echo -e "${BLUE}Profile Creation:${NC} Let's create your personalized gaming profile!"
         echo
-        read -p "Enter a name for your gaming profile: " profile_name
+        read -r -p "Enter a name for your gaming profile: " profile_name
 
         # Validate profile name
         if [[ -z "$profile_name" ]]; then
@@ -266,7 +266,7 @@ collect_gaming_preferences() {
     done
 
     echo
-    read -p "Select gaming type [1-${#gaming_types_array[@]}]: " gaming_choice
+    read -r -p "Select gaming type [1-${#gaming_types_array[@]}]: " gaming_choice
 
     local selected_gaming_type
     if [[ "$gaming_choice" =~ ^[0-9]+$ ]] && [[ "$gaming_choice" -ge 1 ]] && [[ "$gaming_choice" -le ${#gaming_types_array[@]} ]]; then
@@ -292,7 +292,7 @@ collect_gaming_preferences() {
     done
 
     echo
-    read -p "Select resolution [1-${#resolution_array[@]}]: " resolution_choice
+    read -r -p "Select resolution [1-${#resolution_array[@]}]: " resolution_choice
 
     local selected_resolution
     if [[ "$resolution_choice" =~ ^[0-9]+$ ]] && [[ "$resolution_choice" -ge 1 ]] && [[ "$resolution_choice" -le ${#resolution_array[@]} ]]; then
@@ -315,7 +315,7 @@ collect_gaming_preferences() {
     echo "  6. Unlimited - Maximum possible"
     echo
 
-    read -p "Select target FPS [1-6]: " fps_choice
+    read -r -p "Select target FPS [1-6]: " fps_choice
 
     local target_fps
     case "$fps_choice" in
@@ -362,7 +362,7 @@ collect_performance_preferences() {
     done
 
     echo
-    read -p "Select performance priority [1-${#priority_array[@]}]: " priority_choice
+    read -r -p "Select performance priority [1-${#priority_array[@]}]: " priority_choice
 
     local selected_priority
     if [[ "$priority_choice" =~ ^[0-9]+$ ]] && [[ "$priority_choice" -ge 1 ]] && [[ "$priority_choice" -le ${#priority_array[@]} ]]; then

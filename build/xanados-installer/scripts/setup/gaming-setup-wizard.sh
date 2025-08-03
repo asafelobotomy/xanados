@@ -7,7 +7,7 @@
 #              software installation, and optimization recommendations
 # Author: xanadOS Development Team
 # Version: 1.0.0
-# License: MIT
+# License: Personal Use License
 # ==============================================================================
 
 set -euo pipefail

@@ -7,7 +7,7 @@
 #              software installation, and optimization recommendations
 # Author: xanadOS Development Team
 # Version: 1.0.0
-# License: MIT
+# License: Personal Use License
 # ==============================================================================
 
 set -euo pipefail
@@ -1626,7 +1626,7 @@ run_gaming_profile_management() {
                 echo "Available profiles:"
                 list_gaming_profiles
                 echo
-                read -p "Enter profile name to apply: " profile_name
+                read -r -p "Enter profile name to apply: " profile_name
                 if [[ -n "$profile_name" ]]; then
                     apply_gaming_profile "$profile_name"
                 else
@@ -1639,7 +1639,7 @@ run_gaming_profile_management() {
                 echo "Available profiles:"
                 list_gaming_profiles
                 echo
-                read -p "Enter profile name to delete: " profile_name
+                read -r -p "Enter profile name to delete: " profile_name
                 if [[ -n "$profile_name" ]]; then
                     delete_gaming_profile "$profile_name"
                 else
@@ -1652,9 +1652,9 @@ run_gaming_profile_management() {
                 echo "Available profiles:"
                 list_gaming_profiles
                 echo
-                read -p "Enter profile name to export: " profile_name
+                read -r -p "Enter profile name to export: " profile_name
                 if [[ -n "$profile_name" ]]; then
-                    read -p "Enter export path [/tmp/${profile_name}.json]: " export_path
+                    read -r -p "Enter export path [/tmp/${profile_name}.json]: " export_path
                     export_path="${export_path:-/tmp/${profile_name}.json}"
                     export_gaming_profile "$profile_name" "$export_path"
                 else
@@ -1664,7 +1664,7 @@ run_gaming_profile_management() {
                 ;;
             6)
                 log_message "INFO" "Importing gaming profile"
-                read -p "Enter path to profile JSON file: " import_path
+                read -r -p "Enter path to profile JSON file: " import_path
                 if [[ -n "$import_path" ]] && [[ -f "$import_path" ]]; then
                     import_gaming_profile "$import_path"
                 else
