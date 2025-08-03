@@ -50,9 +50,21 @@ vulkan-tools
 vulkan-validation-layers
 
 # === GAMING CORE ===
+steam
+lutris
 gamemode
 wine
+wine-gecko
+wine-mono
+winetricks
 vkd3d
+dxvk
+lib32-mesa
+lib32-vulkan-intel
+lib32-vulkan-radeon
+lib32-nvidia-utils
+mangohud
+goverlay
 
 # === DESKTOP ENVIRONMENT ===
 plasma-meta
@@ -71,6 +83,11 @@ gst-plugins-bad
 gst-libav
 vlc
 
+# === SECURITY ===
+firejail
+apparmor
+ufw
+
 # === UTILITIES ===
 p7zip
 unrar
@@ -78,6 +95,13 @@ unzip
 zip
 gparted
 parted
+htop
+iotop
+zram-generator
+irqbalance
+lscpu
+lspci
+dmidecode
 dosfstools
 ntfs-3g
 exfatprogs

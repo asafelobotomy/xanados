@@ -1,0 +1,24 @@
+# xanadOS Security Package Additions
+# These packages provide balanced security for gaming systems
+
+# Application Sandboxing
+firejail
+firetools
+
+# AppArmor Security Profiles
+apparmor
+apparmor-utils
+apparmor-profiles
+
+# System Security
+rkhunter
+chkrootkit
+clamav
+fail2ban
+
+# Network Security
+ufw
+iptables-nft
+
+# Secure Boot Support
+sbctl

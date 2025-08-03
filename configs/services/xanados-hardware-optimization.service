@@ -1,0 +1,14 @@
+[Unit]
+Description=xanadOS Hardware Optimization Service
+After=multi-user.target
+Before=display-manager.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/xanados-hardware-optimization.sh
+RemainAfterExit=yes
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
