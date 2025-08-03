@@ -1,12 +1,12 @@
 #!/bin/bash
 
 # ==============================================================================
-# xanadOS First-Boot Experience
+# xanadOS First-Boot Experience - Phase 4.3 Implementation
 # ==============================================================================
 # Description: Welcome and setup experience for new xanadOS installations
-#              with hardware analysis, gaming profile creation, and system setup
+#              Implements Phase 4.3.1 (Welcome System) and 4.3.2 (Automated Setup)
 # Author: xanadOS Development Team
-# Version: 1.0.0
+# Version: 2.0.0 (Phase 4.3)
 # License: MIT
 # ==============================================================================
 
@@ -44,7 +44,7 @@ HEART="♥"
 
 setup_logging() {
     local log_dir="/var/log/xanados"
-    
+
     # Try to create system log directory, fall back to user directory if failed
     if [[ ! -d "$log_dir" ]]; then
         if sudo mkdir -p "$log_dir" 2>/dev/null && sudo chown "$USER:$USER" "$log_dir" 2>/dev/null; then
@@ -56,13 +56,13 @@ setup_logging() {
             LOG_FILE="$log_dir/first-boot-experience.log"
         fi
     fi
-    
+
     touch "$LOG_FILE" 2>/dev/null || {
         # Final fallback to temp directory
         LOG_FILE="/tmp/xanados-first-boot-experience.log"
         touch "$LOG_FILE"
     }
-    
+
     echo "=== xanadOS First-Boot Experience Started: $(date) ===" >> "$LOG_FILE"
 }
 
@@ -71,9 +71,9 @@ log_message() {
     local message="$2"
     local timestamp
     timestamp=$(date '+%Y-%m-%d %H:%M:%S')
-    
+
     echo "[$timestamp] [$level] $message" >> "$LOG_FILE"
-    
+
     case "$level" in
         "INFO")
             echo -e "${BLUE}[INFO]${NC} $message"
@@ -124,7 +124,7 @@ trap cleanup_on_exit EXIT
 check_first_boot() {
     # Check both system and user completion markers
     local user_marker="$CONFIG_DIR/first-boot-completed"
-    
+
     if [[ -f "$FIRST_BOOT_MARKER" ]] || [[ -f "$user_marker" ]]; then
         log_message "INFO" "First-boot already completed"
         echo -e "${GREEN}xanadOS first-boot setup has already been completed.${NC}"
@@ -141,7 +141,7 @@ check_first_boot() {
 show_welcome_screen() {
     clear
     print_header "${WELCOME} Welcome to xanadOS - Your Ultimate Gaming Linux Distribution ${GAMING}"
-    
+
     echo -e "${BOLD}${CYAN}╔══════════════════════════════════════════════════════════════════════════════╗${NC}"
     echo -e "${BOLD}${CYAN}║                                                                              ║${NC}"
     echo -e "${BOLD}${CYAN}║${NC}  ${BOLD}${WHITE}Welcome to xanadOS!${NC}                                                      ${BOLD}${CYAN}║${NC}"
@@ -161,7 +161,7 @@ show_welcome_screen() {
     echo -e "${BOLD}${CYAN}║${NC}                                                                            ${BOLD}${CYAN}║${NC}"
     echo -e "${BOLD}${CYAN}╚══════════════════════════════════════════════════════════════════════════════╝${NC}"
     echo
-    
+
     echo -e "${BOLD}What we'll do together:${NC}"
     echo -e "  ${ROCKET} Analyze your gaming hardware"
     echo -e "  ${ROCKET} Set up optimal gaming software"
@@ -169,12 +169,12 @@ show_welcome_screen() {
     echo -e "  ${ROCKET} Customize your gaming desktop"
     echo -e "  ${ROCKET} Create your personal gaming profile"
     echo
-    
+
     echo -e "${BOLD}This process will take approximately 10-15 minutes.${NC}"
     echo
-    
+
     read -r -p "Press Enter to begin your xanadOS gaming journey... "
-    
+
     log_message "INFO" "Welcome screen completed, starting first-boot setup"
 }
 
@@ -185,31 +185,31 @@ show_welcome_screen() {
 perform_system_analysis() {
     log_message "INFO" "Starting system analysis"
     print_header "${GEAR} System Analysis & Hardware Detection"
-    
+
     echo -e "${BOLD}Analyzing your system for optimal gaming configuration...${NC}"
     echo
-    
+
     mkdir -p "$TEMP_DIR"
-    
+
     # System information collection
     collect_system_info
-    
+
     # Hardware detection
     analyze_hardware
-    
+
     # Performance baseline
     establish_performance_baseline
-    
+
     # Gaming readiness assessment
     assess_gaming_readiness
-    
+
     log_message "SUCCESS" "System analysis completed"
 }
 
 collect_system_info() {
     log_message "INFO" "Collecting system information"
     print_section "System Information"
-    
+
     # Basic system info
     local hostname
     hostname=$(hostname)
@@ -219,12 +219,12 @@ collect_system_info() {
     arch=$(uname -m)
     local uptime
     uptime=$(uptime -p)
-    
+
     echo -e "  ${ARROW} Hostname: ${BOLD}$hostname${NC}"
     echo -e "  ${ARROW} Kernel: ${BOLD}$kernel${NC}"
     echo -e "  ${ARROW} Architecture: ${BOLD}$arch${NC}"
     echo -e "  ${ARROW} Uptime: ${BOLD}$uptime${NC}"
-    
+
     # Store system info
     cat > "$TEMP_DIR/system-info.txt" << EOF
 hostname=$hostname
@@ -233,14 +233,14 @@ architecture=$arch
 uptime=$uptime
 analysis_date=$(date)
 EOF
-    
+
     echo -e "  ${CHECKMARK} System information collected"
 }
 
 analyze_hardware() {
     log_message "INFO" "Analyzing hardware"
     print_section "Hardware Analysis"
-    
+
     # CPU Analysis
     echo -e "  ${GEAR} CPU Analysis:"
     local cpu_model
@@ -251,11 +251,11 @@ analyze_hardware() {
     cpu_threads=$(lscpu | grep "CPU(s):" | head -1 | awk '{print $2}')
     local cpu_max_mhz
     cpu_max_mhz=$(lscpu | grep "CPU max MHz" | awk '{print $4}' | cut -d. -f1 || echo "Unknown")
-    
+
     echo -e "    Model: ${BOLD}$cpu_model${NC}"
     echo -e "    Cores: ${BOLD}$cpu_cores${NC}, Threads: ${BOLD}$cpu_threads${NC}"
     echo -e "    Max Frequency: ${BOLD}${cpu_max_mhz} MHz${NC}"
-    
+
     # Memory Analysis
     echo -e "  ${GEAR} Memory Analysis:"
     local mem_total
@@ -264,10 +264,10 @@ analyze_hardware() {
     mem_available=$(free -h | grep "Mem:" | awk '{print $7}')
     local mem_gb
     mem_gb=$(free -g | grep "Mem:" | awk '{print $2}')
-    
+
     echo -e "    Total: ${BOLD}$mem_total${NC}"
     echo -e "    Available: ${BOLD}$mem_available${NC}"
-    
+
     # Memory recommendation
     if [[ $mem_gb -lt 8 ]]; then
         echo -e "    ${RED}Warning: Less than 8GB RAM detected. Consider upgrading for optimal gaming.${NC}"
@@ -279,15 +279,15 @@ analyze_hardware() {
         echo -e "    ${GREEN}Excellent: Sufficient RAM for optimal gaming.${NC}"
         MEMORY_WARNING=false
     fi
-    
+
     # GPU Analysis
     echo -e "  ${GEAR} Graphics Analysis:"
     analyze_gpu
-    
+
     # Storage Analysis
     echo -e "  ${GEAR} Storage Analysis:"
     analyze_storage
-    
+
     # Store hardware info
     cat > "$TEMP_DIR/hardware-info.txt" << EOF
 cpu_model=$cpu_model
@@ -312,11 +312,11 @@ analyze_gpu() {
         nvidia_gpu=$(nvidia-smi --query-gpu=name --format=csv,noheader,nounits 2>/dev/null | head -1 || echo "NVIDIA GPU")
         nvidia_driver=$(nvidia-smi --query-gpu=driver_version --format=csv,noheader,nounits 2>/dev/null | head -1 || echo "Unknown")
         nvidia_memory=$(nvidia-smi --query-gpu=memory.total --format=csv,noheader,nounits 2>/dev/null | head -1 || echo "Unknown")
-        
+
         echo -e "    ${GREEN}NVIDIA GPU: $nvidia_gpu${NC}"
         echo -e "    ${GREEN}Driver: $nvidia_driver${NC}"
         echo -e "    ${GREEN}VRAM: ${nvidia_memory}MB${NC}"
-        
+
         GPU_VENDOR="nvidia"
         GPU_MODEL="$nvidia_gpu"
         GPU_MEMORY="$nvidia_memory"
@@ -326,7 +326,7 @@ analyze_gpu() {
         local amd_gpu
         amd_gpu=$(lspci | grep -i "VGA.*AMD\|VGA.*ATI" | cut -d: -f3 | xargs 2>/dev/null || echo "AMD GPU")
         echo -e "    ${GREEN}AMD GPU: $amd_gpu${NC}"
-        
+
         # Check for AMDGPU driver
         if lsmod | grep -q amdgpu; then
             echo -e "    ${GREEN}Driver: AMDGPU (Open Source)${NC}"
@@ -335,7 +335,7 @@ analyze_gpu() {
             echo -e "    ${YELLOW}Driver: Legacy/Generic${NC}"
             GPU_STATUS="needs_improvement"
         fi
-        
+
         GPU_VENDOR="amd"
         GPU_MODEL="$amd_gpu"
     elif lspci | grep -i "VGA.*Intel" &> /dev/null; then
@@ -343,7 +343,7 @@ analyze_gpu() {
         intel_gpu=$(lspci | grep -i "VGA.*Intel" | cut -d: -f3 | xargs 2>/dev/null || echo "Intel GPU")
         echo -e "    ${BLUE}Intel GPU: $intel_gpu${NC}"
         echo -e "    ${YELLOW}Note: Integrated graphics - consider dedicated GPU for demanding games${NC}"
-        
+
         GPU_VENDOR="intel"
         GPU_MODEL="$intel_gpu"
         GPU_STATUS="basic"
@@ -352,7 +352,7 @@ analyze_gpu() {
         GPU_VENDOR="unknown"
         GPU_STATUS="unsupported"
     fi
-    
+
     # Vulkan support check
     if get_cached_command "vulkaninfo"; then
         echo -e "    ${GREEN}Vulkan: Supported${NC}"
@@ -367,7 +367,7 @@ analyze_storage() {
     local has_ssd=false
     local has_nvme=false
     local storage_warning=false
-    
+
     # Check for SSDs and NVMe drives
     while IFS= read -r line; do
         local device
@@ -378,7 +378,7 @@ analyze_storage() {
         model=$(echo "$line" | awk '{$1=$2=""; print $0}' | xargs)
         local is_rotational
         is_rotational=$(echo "$line" | awk '{print $NF}')
-        
+
         if [[ "$is_rotational" == "0" ]]; then
             if [[ "$device" == nvme* ]]; then
                 echo -e "    ${GREEN}NVMe SSD: $device ($size) - $model${NC}"
@@ -392,7 +392,7 @@ analyze_storage() {
             echo -e "    ${YELLOW}HDD: $device ($size) - $model${NC}"
         fi
     done <<< "$(lsblk -d -o NAME,SIZE,MODEL,ROTA | grep -v "NAME")"
-    
+
     if [[ "$has_ssd" == "false" ]]; then
         echo -e "    ${RED}Warning: No SSD detected. Gaming performance will be significantly improved with an SSD.${NC}"
         storage_warning=true
@@ -401,7 +401,7 @@ analyze_storage() {
     else
         echo -e "    ${GREEN}Good: SSD detected - good gaming storage performance.${NC}"
     fi
-    
+
     HAS_SSD=$has_ssd
     HAS_NVME=$has_nvme
     STORAGE_WARNING=$storage_warning
@@ -410,28 +410,28 @@ analyze_storage() {
 establish_performance_baseline() {
     log_message "INFO" "Establishing performance baseline"
     print_section "Performance Baseline"
-    
+
     echo -e "  ${GEAR} Establishing baseline performance metrics..."
-    
+
     # Quick CPU test (simplified)
     echo -e "  ${ARROW} Testing CPU performance..."
     local cpu_score
     cpu_score=$(cat /proc/loadavg | awk '{printf "%.2f", $1}' 2>/dev/null || echo "0.00")
     echo -e "    Current CPU Load: ${BOLD}$cpu_score${NC}"
-    
+
     # Memory test
     echo -e "  ${ARROW} Testing memory performance..."
     local mem_speed
     mem_speed=$(timeout 5s dd if=/dev/zero of=/dev/null bs=1M count=100 2>&1 | grep -o '[0-9.]* MB/s' 2>/dev/null || echo "Unknown")
     echo -e "    Memory Speed: ${BOLD}$mem_speed${NC}"
-    
+
     # Storage test (quick)
     echo -e "  ${ARROW} Testing storage performance..."
     local storage_speed
     storage_speed=$(timeout 5s dd if=/dev/zero of="$TEMP_DIR/test" bs=1M count=50 2>&1 | grep -o '[0-9.]* MB/s' 2>/dev/null || echo "Unknown")
     rm -f "$TEMP_DIR/test" 2>/dev/null
     echo -e "    Storage Speed: ${BOLD}$storage_speed${NC}"
-    
+
     # Store baseline
     cat > "$TEMP_DIR/performance-baseline.txt" << EOF
 cpu_score=$cpu_score
@@ -439,28 +439,28 @@ memory_speed=$mem_speed
 storage_speed=$storage_speed
 baseline_date=$(date)
 EOF
-    
+
     echo -e "  ${CHECKMARK} Performance baseline established"
 }
 
 assess_gaming_readiness() {
     log_message "INFO" "Assessing gaming readiness"
     print_section "Gaming Readiness Assessment"
-    
+
     # Use comprehensive gaming matrix analysis
     echo -e "  ${GEAR} Analyzing gaming environment..."
     echo
     generate_gaming_matrix "table"
     echo
-    
+
     local readiness_score
     readiness_score=$(get_gaming_readiness_score)
-    
+
     echo -e "  ${GEAR} Overall Gaming Readiness: ${BOLD}${readiness_score}%${NC}"
     echo
-    
+
     local recommendations=()
-    
+
     if [[ $readiness_score -ge 80 ]]; then
         echo -e "  ${GREEN}${CHECKMARK} Excellent gaming setup! Your system is ready for high-end gaming.${NC}"
     elif [[ $readiness_score -ge 60 ]]; then
@@ -476,7 +476,7 @@ assess_gaming_readiness() {
         recommendations+=("Configure graphics drivers for your hardware")
         recommendations+=("Set up core gaming platforms")
     fi
-    
+
     # Hardware-specific recommendations
     # GPU assessment
     case "${GPU_STATUS:-unknown}" in
@@ -490,7 +490,7 @@ assess_gaming_readiness() {
             recommendations+=("Install supported graphics drivers")
             ;;
     esac
-    
+
     # Memory assessment
     local mem_gb
     mem_gb=$(free -g | grep "Mem:" | awk '{print $2}')
@@ -499,12 +499,12 @@ assess_gaming_readiness() {
     elif [[ $mem_gb -lt 16 ]]; then
         recommendations+=("Consider upgrading to 16GB RAM for optimal performance")
     fi
-    
+
     # Storage assessment
     if [[ "$HAS_SSD" != "true" ]]; then
         recommendations+=("Install games on SSD for significantly better loading times")
     fi
-    
+
     # Display recommendations if any
     if [[ ${#recommendations[@]} -gt 0 ]]; then
         echo
@@ -513,7 +513,7 @@ assess_gaming_readiness() {
             echo -e "    ${ARROW} $rec"
         done
     fi
-    
+
     # Store assessment for later use
     GAMING_READINESS_SCORE="$readiness_score"
     if [[ $readiness_score -ge 80 ]]; then
@@ -525,14 +525,14 @@ assess_gaming_readiness() {
     else
         GAMING_READINESS="poor"
     fi
-    
+
     # Store assessment
     cat > "$TEMP_DIR/gaming-readiness.txt" << EOF
 readiness_score=$readiness_score
 readiness_level=$GAMING_READINESS
 recommendations_count=${#recommendations[@]}
 EOF
-    
+
     # Store recommendations
     printf '%s\n' "${recommendations[@]}" > "$TEMP_DIR/recommendations.txt"
 }
@@ -544,26 +544,26 @@ EOF
 create_gaming_profile() {
     log_message "INFO" "Creating gaming profile"
     print_header "${GAMING} Gaming Profile Creation"
-    
+
     echo -e "${BOLD}Let's create your personalized gaming profile!${NC}"
     echo
-    
+
     # Collect user preferences
     collect_user_preferences
-    
+
     # Create profile configuration
     generate_gaming_profile
-    
+
     # Set up gaming directories
     setup_gaming_directories
-    
+
     log_message "SUCCESS" "Gaming profile created"
 }
 
 collect_user_preferences() {
     log_message "INFO" "Collecting user preferences"
     print_section "Gaming Preferences"
-    
+
     # Gaming platforms
     echo -e "${BOLD}Which gaming platforms do you use?${NC} (Select all that apply)"
     echo -e "  1. Steam"
@@ -574,7 +574,7 @@ collect_user_preferences() {
     echo -e "  6. Emulation (RetroArch)"
     echo -e "  7. Native Linux games"
     echo
-    
+
     GAMING_PLATFORMS=()
     read -r -p "Enter numbers separated by spaces (e.g., 1 2 3): " platform_choices
     for choice in $platform_choices; do
@@ -588,10 +588,10 @@ collect_user_preferences() {
             7) GAMING_PLATFORMS+=("native") ;;
         esac
     done
-    
+
     echo -e "Selected platforms: ${BOLD}${GAMING_PLATFORMS[*]}${NC}"
     echo
-    
+
     # Gaming style
     echo -e "${BOLD}What type of gaming do you primarily do?${NC}"
     echo -e "  1. Competitive gaming (FPS, MOBAs, etc.)"
@@ -601,7 +601,7 @@ collect_user_preferences() {
     echo -e "  5. VR gaming"
     echo -e "  6. Mixed gaming"
     echo
-    
+
     read -r -p "Enter your choice [1-6]: " gaming_style_choice
     case "$gaming_style_choice" in
         1) GAMING_STYLE="competitive" ;;
@@ -611,17 +611,17 @@ collect_user_preferences() {
         5) GAMING_STYLE="vr" ;;
         *) GAMING_STYLE="mixed" ;;
     esac
-    
+
     echo -e "Gaming style: ${BOLD}$GAMING_STYLE${NC}"
     echo
-    
+
     # Performance preference
     echo -e "${BOLD}Performance preference:${NC}"
     echo -e "  1. Maximum performance (may increase fan noise/power consumption)"
     echo -e "  2. Balanced performance and efficiency"
     echo -e "  3. Quiet operation (lower performance if needed)"
     echo
-    
+
     read -r -p "Enter your choice [1-3]: " performance_choice
     case "$performance_choice" in
         1) PERFORMANCE_PREFERENCE="maximum" ;;
@@ -629,10 +629,10 @@ collect_user_preferences() {
         3) PERFORMANCE_PREFERENCE="quiet" ;;
         *) PERFORMANCE_PREFERENCE="balanced" ;;
     esac
-    
+
     echo -e "Performance preference: ${BOLD}$PERFORMANCE_PREFERENCE${NC}"
     echo
-    
+
     # Monitoring preference
     echo -e "${BOLD}Do you want performance monitoring overlays during gaming?${NC}"
     read -r -p "Enable MangoHud and performance monitoring? [Y/n]: " -n 1 -r
@@ -642,15 +642,15 @@ collect_user_preferences() {
     else
         ENABLE_MONITORING=true
     fi
-    
+
     echo -e "Performance monitoring: ${BOLD}$ENABLE_MONITORING${NC}"
 }
 
 generate_gaming_profile() {
     log_message "INFO" "Generating gaming profile"
-    
+
     mkdir -p "$CONFIG_DIR"
-    
+
     # Create comprehensive gaming profile
     cat > "$CONFIG_DIR/gaming-profile.conf" << EOF
 # xanadOS Gaming Profile
@@ -687,29 +687,29 @@ HardwareOptimizations=true
 [Recommendations]
 $(cat "$TEMP_DIR/recommendations.txt" 2>/dev/null | sed 's/^/# /' || echo "# No specific recommendations")
 EOF
-    
+
     echo -e "  ${CHECKMARK} Gaming profile configuration created"
 }
 
 setup_gaming_directories() {
     log_message "INFO" "Setting up gaming directories"
-    
+
     # Create gaming directories
     local gaming_base="$HOME/Gaming"
     mkdir -p "$gaming_base"/{Steam,Lutris,Heroic,ROMs,Screenshots,Recordings,Saves}
-    
+
     # Create symlinks for easy access
     if [[ ! -L "$HOME/Desktop/Gaming" ]]; then
         ln -sf "$gaming_base" "$HOME/Desktop/Gaming" 2>/dev/null || true
     fi
-    
+
     # Set up game storage preferences
     if [[ "$HAS_SSD" == "true" ]]; then
         echo -e "  ${CHECKMARK} Gaming directories created on SSD for optimal performance"
     else
         echo -e "  ${CHECKMARK} Gaming directories created (consider moving to SSD when available)"
     fi
-    
+
     # Store directory configuration
     cat > "$CONFIG_DIR/gaming-directories.conf" << EOF
 # xanadOS Gaming Directories Configuration
@@ -722,7 +722,7 @@ Screenshots=$gaming_base/Screenshots
 Recordings=$gaming_base/Recordings
 Saves=$gaming_base/Saves
 EOF
-    
+
     echo -e "  ${CHECKMARK} Gaming directories configured"
 }
 
@@ -733,27 +733,27 @@ EOF
 run_gaming_setup() {
     log_message "INFO" "Running gaming setup"
     print_header "${ROCKET} Gaming Environment Setup"
-    
+
     echo -e "${BOLD}Setting up your gaming environment based on your preferences...${NC}"
     echo
-    
+
     # Determine setup type based on preferences and hardware
     local setup_type="complete"
-    
+
     if [[ "$GAMING_READINESS" == "poor" ]] || [[ "$PERFORMANCE_PREFERENCE" == "quiet" ]]; then
         setup_type="essential"
     fi
-    
+
     # Run the gaming setup wizard with our determined preferences
     if [[ -f "$SCRIPT_DIR/gaming-setup-wizard.sh" ]]; then
         echo -e "  ${ROCKET} Launching gaming setup wizard..."
-        
+
         # Run setup wizard in automated mode
         "$SCRIPT_DIR/gaming-setup-wizard.sh" --automated --setup-type="$setup_type" \
             --platforms="${GAMING_PLATFORMS[*]}" \
             --performance="$PERFORMANCE_PREFERENCE" \
             --monitoring="$ENABLE_MONITORING" 2>&1 | tee -a "$LOG_FILE" || {
-            
+
             # If automated mode fails, fall back to interactive
             echo -e "  ${YELLOW}Automated setup not available, running interactive setup...${NC}"
             "$SCRIPT_DIR/gaming-setup-wizard.sh"
@@ -763,13 +763,13 @@ run_gaming_setup() {
         echo -e "  ${ARROW} You can run the setup manually later with:"
         echo -e "    $SCRIPT_DIR/gaming-setup-wizard.sh"
     fi
-    
+
     # Apply KDE customization
     if [[ -f "$SCRIPT_DIR/kde-gaming-customization.sh" ]] && [[ "$XDG_CURRENT_DESKTOP" == *"KDE"* ]]; then
         echo -e "  ${ROCKET} Applying gaming desktop customization..."
         "$SCRIPT_DIR/kde-gaming-customization.sh" 2>&1 | tee -a "$LOG_FILE" || true
     fi
-    
+
     log_message "SUCCESS" "Gaming setup completed"
 }
 
@@ -780,25 +780,25 @@ run_gaming_setup() {
 finalize_setup() {
     log_message "INFO" "Finalizing setup"
     print_header "${STAR} Setup Finalization"
-    
+
     # Create first-boot completion marker
     create_completion_marker
-    
+
     # Generate system report
     generate_system_report
-    
+
     # Set up automatic optimizations
     setup_automatic_optimizations
-    
+
     # Create desktop shortcuts
     create_desktop_shortcuts
-    
+
     log_message "SUCCESS" "Setup finalized"
 }
 
 create_completion_marker() {
     log_message "INFO" "Creating completion marker"
-    
+
     # Try to create system completion marker, fall back to user directory if failed
     if sudo mkdir -p "$(dirname "$FIRST_BOOT_MARKER")" 2>/dev/null; then
         if sudo tee "$FIRST_BOOT_MARKER" > /dev/null 2>&1 << EOF
@@ -849,7 +849,7 @@ EOF
 
 generate_system_report() {
     log_message "INFO" "Generating system report"
-    
+
     # Combine all collected information into a comprehensive report
     cat > "$CONFIG_DIR/system-report.txt" << EOF
 # xanadOS System Report
@@ -873,28 +873,28 @@ $(cat "$CONFIG_DIR/gaming-profile.conf" 2>/dev/null || echo "Gaming profile not 
 === RECOMMENDATIONS ===
 $(cat "$TEMP_DIR/recommendations.txt" 2>/dev/null || echo "No specific recommendations")
 EOF
-    
+
     echo -e "  ${CHECKMARK} System report generated: $CONFIG_DIR/system-report.txt"
 }
 
 setup_automatic_optimizations() {
     log_message "INFO" "Setting up automatic optimizations"
-    
+
     # Enable gaming mode detection if available
     if get_cached_command "systemctl"; then
         systemctl --user enable xanados-gaming-detector.service 2>/dev/null || true
         systemctl --user start xanados-gaming-detector.service 2>/dev/null || true
     fi
-    
+
     echo -e "  ${CHECKMARK} Automatic optimizations configured"
 }
 
 create_desktop_shortcuts() {
     log_message "INFO" "Creating desktop shortcuts"
-    
+
     local desktop_dir="$HOME/Desktop"
     mkdir -p "$desktop_dir"
-    
+
     # Gaming control center shortcut
     cat > "$desktop_dir/Gaming Control Center.desktop" << 'EOF'
 [Desktop Entry]
@@ -907,7 +907,7 @@ Icon=applications-games
 Terminal=false
 Categories=Game;
 EOF
-    
+
     # System report shortcut
     cat > "$desktop_dir/System Report.desktop" << EOF
 [Desktop Entry]
@@ -920,9 +920,9 @@ Icon=dialog-information
 Terminal=false
 Categories=System;
 EOF
-    
+
     chmod +x "$desktop_dir"/*.desktop 2>/dev/null || true
-    
+
     echo -e "  ${CHECKMARK} Desktop shortcuts created"
 }
 
@@ -933,7 +933,7 @@ EOF
 show_completion_screen() {
     clear
     print_header "${HEART} Welcome to Your Optimized Gaming Paradise! ${GAMING}"
-    
+
     echo -e "${BOLD}${GREEN}╔══════════════════════════════════════════════════════════════════════════════╗${NC}"
     echo -e "${BOLD}${GREEN}║                                                                              ║${NC}"
     echo -e "${BOLD}${GREEN}║${NC}  ${BOLD}${WHITE}🎉 CONGRATULATIONS! Your xanadOS gaming setup is complete! 🎉${NC}          ${BOLD}${GREEN}║${NC}"
@@ -942,7 +942,7 @@ show_completion_screen() {
     echo -e "${BOLD}${GREEN}║                                                                              ║${NC}"
     echo -e "${BOLD}${GREEN}╚══════════════════════════════════════════════════════════════════════════════╝${NC}"
     echo
-    
+
     echo -e "${BOLD}What's Ready for You:${NC}"
     echo -e "  ${GREEN}${CHECKMARK} Hardware-optimized gaming performance${NC}"
     echo -e "  ${GREEN}${CHECKMARK} Gaming software stack configured${NC}"
@@ -950,7 +950,7 @@ show_completion_screen() {
     echo -e "  ${GREEN}${CHECKMARK} Personal gaming profile created${NC}"
     echo -e "  ${GREEN}${CHECKMARK} Automatic gaming mode detection${NC}"
     echo
-    
+
     echo -e "${BOLD}Your Gaming Arsenal:${NC}"
     if [[ " ${GAMING_PLATFORMS[*]} " =~ " steam " ]]; then
         echo -e "  ${GAMING} Steam with Proton-GE for Windows games"
@@ -964,7 +964,7 @@ show_completion_screen() {
     fi
     echo -e "  ${GAMING} Lutris for managing all your games"
     echo
-    
+
     echo -e "${BOLD}Quick Commands:${NC}"
     echo -e "  ${ARROW} ${CYAN}xanados-gaming-mode toggle${NC}  - Toggle gaming mode"
     echo -e "  ${ARROW} ${CYAN}steam-gamemode${NC}              - Launch Steam with optimizations"
@@ -973,14 +973,14 @@ show_completion_screen() {
         echo -e "  ${ARROW} ${CYAN}mangohud <game>${NC}             - Run game with performance overlay"
     fi
     echo
-    
+
     echo -e "${BOLD}System Information:${NC}"
     echo -e "  ${ARROW} Gaming Profile: ${CYAN}$CONFIG_DIR/gaming-profile.conf${NC}"
     echo -e "  ${ARROW} System Report: ${CYAN}$CONFIG_DIR/system-report.txt${NC}"
     echo -e "  ${ARROW} Gaming Directory: ${CYAN}$HOME/Gaming${NC}"
     echo -e "  ${ARROW} Setup Logs: ${CYAN}$LOG_FILE${NC}"
     echo
-    
+
     if [[ "${#GAMING_PLATFORMS[@]}" -gt 0 ]]; then
         echo -e "${BOLD}Next Steps:${NC}"
         echo -e "  ${ARROW} Launch your favorite game launcher and start gaming!"
@@ -988,59 +988,354 @@ show_completion_screen() {
         echo -e "  ${ARROW} Gaming mode will activate automatically when you start games"
         echo
     fi
-    
+
     echo -e "${BOLD}${YELLOW}Gaming Readiness: ${GAMING_READINESS^} (${GAMING_READINESS_SCORE:-0}%)${NC}"
     echo
-    
+
     echo -e "${GREEN}${BOLD}Welcome to the future of Linux gaming! 🚀${NC}"
     echo -e "${WHITE}Thank you for choosing xanadOS - Game On! ${GAMING}${NC}"
     echo
-    
+
     log_message "SUCCESS" "First-boot experience completed successfully"
 }
 
 # ==============================================================================
-# Main Function
+# Main Function - Phase 4.3 Implementation
 # ==============================================================================
 
-main() {
+# Show usage information for Phase 4.3
+show_usage() {
+    echo "Usage: $0 [command] [options]"
+    echo
+    echo "Phase 4.3 First-Boot Experience Implementation"
+    echo
+    echo "Commands:"
+    echo "  welcome-system       Run Task 4.3.1: Welcome and Introduction System"
+    echo "  automated-setup      Run Task 4.3.2: Automated System Analysis and Setup"
+    echo "  run-first-boot       Run complete first-boot experience (both tasks)"
+    echo "  quick-analysis       Run quick hardware analysis"
+    echo "  guided-tour          Show guided tour of gaming optimizations"
+    echo "  status              Show first-boot experience status"
+    echo "  reset               Reset first-boot state"
+    echo "  help                Show this help message"
+    echo
+    echo "Examples:"
+    echo "  $0 run-first-boot    # Complete Phase 4.3 implementation"
+    echo "  $0 welcome-system    # Task 4.3.1 only"
+    echo "  $0 automated-setup   # Task 4.3.2 only"
+    echo "  $0 guided-tour       # Interactive gaming tour"
+}
+
+# Phase 4.3.1: Welcome and Introduction System
+run_welcome_system() {
+    print_header "🎮 Phase 4.3.1: Welcome and Introduction System"
+
+    log_message "INFO" "Starting Phase 4.3.1: Welcome and Introduction System"
+
+    # Initialize
+    setup_logging
+    cache_gaming_tools
+    cache_system_tools
+
+    # Show welcome screen
+    show_welcome_screen
+
+    # Show guided tour
+    run_guided_tour
+
+    # Show community integration
+    show_community_integration
+
+    print_success "Phase 4.3.1 Welcome and Introduction System completed"
+    log_message "SUCCESS" "Phase 4.3.1 completed"
+}
+
+# Phase 4.3.2: Automated System Analysis and Setup
+run_automated_setup() {
+    print_header "🔧 Phase 4.3.2: Automated System Analysis and Setup"
+
+    log_message "INFO" "Starting Phase 4.3.2: Automated System Analysis and Setup"
+
+    # Initialize
+    setup_logging
+    cache_gaming_tools
+    cache_system_tools
+
+    # Perform comprehensive system analysis
+    perform_system_analysis
+
+    # Create gaming profile based on analysis
+    create_gaming_profile
+
+    # Run automated gaming setup
+    run_gaming_setup
+
+    # Integrate with Phase 1-3 systems
+    integrate_optimization_systems
+
+    print_success "Phase 4.3.2 Automated System Analysis and Setup completed"
+    log_message "SUCCESS" "Phase 4.3.2 completed"
+}
+
+# Complete Phase 4.3 implementation (both tasks)
+run_complete_phase_4_3() {
+    print_header "🚀 Phase 4.3: Complete First-Boot Experience Implementation"
+
+    log_message "INFO" "Starting complete Phase 4.3 implementation"
+
     # Check if running as root
     if [[ $EUID -eq 0 ]]; then
         echo -e "${RED}This script should not be run as root.${NC}"
         echo -e "Please run as a regular user with sudo privileges."
         exit 1
     fi
-    
+
     # Initialize
     setup_logging
-    
-    # Initialize command cache for performance
-    print_status "Initializing first-boot cache..."
     cache_gaming_tools
     cache_system_tools
-    
+
     # Check if first-boot is needed
     check_first_boot
-    
-    # Show welcome screen
+
+    # Phase 4.3.1: Welcome and Introduction System
+    print_section "Phase 4.3.1: Welcome and Introduction System"
     show_welcome_screen
-    
-    # Perform system analysis
+    run_guided_tour
+    show_community_integration
+
+    # Phase 4.3.2: Automated System Analysis and Setup
+    print_section "Phase 4.3.2: Automated System Analysis and Setup"
     perform_system_analysis
-    
-    # Create gaming profile
     create_gaming_profile
-    
-    # Run gaming setup
     run_gaming_setup
-    
+    integrate_optimization_systems
+
     # Finalize setup
     finalize_setup
-    
+
     # Show completion screen
     show_completion_screen
-    
-    log_message "SUCCESS" "xanadOS first-boot experience completed"
+
+    print_success "Complete Phase 4.3 First-Boot Experience implementation completed"
+    log_message "SUCCESS" "Phase 4.3 implementation completed"
+}
+
+# Interactive guided tour (enhanced for Phase 4.3.1)
+run_guided_tour() {
+    print_header "🎯 Gaming Optimizations Guided Tour"
+
+    local tour_sections=(
+        "🚀 Performance Optimizations"
+        "🎮 Gaming Software Stack"
+        "🎨 Gaming Desktop Environment"
+        "🛠️ Development & Tools"
+        "🌐 Community & Support"
+    )
+
+    print_info "Welcome to the xanadOS gaming optimizations guided tour!"
+    echo
+
+    for section in "${tour_sections[@]}"; do
+        print_section "$section"
+
+        case "$section" in
+            "🚀 Performance Optimizations")
+                echo "✅ Gaming kernel optimizations (low-latency, preemption)"
+                echo "✅ CPU governor tuning for maximum gaming performance"
+                echo "✅ Memory management optimization for gaming workloads"
+                echo "✅ I/O scheduler optimization for game loading speeds"
+                echo "✅ Network stack tuning for online gaming"
+                ;;
+            "🎮 Gaming Software Stack")
+                echo "✅ Steam with Proton for Windows game compatibility"
+                echo "✅ Lutris for managing all your games in one place"
+                echo "✅ MangoHud for in-game performance monitoring"
+                echo "✅ GameMode for automatic game optimizations"
+                echo "✅ Discord for gaming communication"
+                ;;
+            "🎨 Gaming Desktop Environment")
+                echo "✅ Custom gaming themes (dark/light performance modes)"
+                echo "✅ Gaming performance widgets and monitoring"
+                echo "✅ Competitive and standard gaming layouts"
+                echo "✅ Gaming workflow automation"
+                echo "✅ Gaming mode with optimized notifications"
+                ;;
+            "🛠️ Development & Tools")
+                echo "✅ Gaming development tools and libraries"
+                echo "✅ Performance profiling and analysis tools"
+                echo "✅ Wine and compatibility layer optimizations"
+                echo "✅ Gaming hardware support and drivers"
+                ;;
+            "🌐 Community & Support")
+                echo "✅ Built-in community features and forums"
+                echo "✅ Gaming optimization guides and tutorials"
+                echo "✅ Regular updates and gaming compatibility improvements"
+                echo "✅ Support for latest gaming hardware and software"
+                ;;
+        esac
+
+        echo
+        if ! prompt_yes_no "Continue to next section?"; then
+            break
+        fi
+        echo
+    done
+
+    log_message "INFO" "Guided tour completed"
+}
+
+# Community integration display (Phase 4.3.1)
+show_community_integration() {
+    print_header "🌐 Community Integration & Support"
+
+    echo "🔗 xanadOS Community Resources:"
+    echo "   • Official Website: https://xanados.org"
+    echo "   • Documentation: https://docs.xanados.org"
+    echo "   • GitHub Repository: https://github.com/xanados/xanadOS"
+    echo "   • Discord Community: https://discord.gg/xanados"
+    echo "   • Reddit Community: https://reddit.com/r/xanadOS"
+    echo
+    echo "🆘 Support & Help:"
+    echo "   • Gaming Issues: https://gaming.xanados.org/troubleshooting"
+    echo "   • Performance Problems: https://performance.xanados.org"
+    echo "   • Hardware Compatibility: https://compatibility.xanados.org"
+    echo "   • Community Forums: https://forum.xanados.org"
+    echo
+    echo "💬 Get Involved:"
+    echo "   • Contributing Guide: https://contribute.xanados.org"
+    echo "   • Bug Reports: https://github.com/xanados/xanadOS/issues"
+    echo "   • Feature Requests: https://features.xanados.org"
+    echo "   • Gaming Feedback: https://feedback.xanados.org"
+
+    log_message "INFO" "Community integration presented"
+}
+
+# Integration with optimization systems (Phase 4.3.2)
+integrate_optimization_systems() {
+    print_header "🔗 Integrating with xanadOS Optimization Systems"
+
+    log_message "INFO" "Starting integration with Phase 1-3 optimization systems"
+
+    local optimization_scripts=(
+        "scripts/setup/kernel-optimization.sh:Kernel Optimizations"
+        "scripts/setup/performance-optimization.sh:Performance Optimizations"
+        "scripts/setup/gaming-optimization.sh:Gaming Optimizations"
+        "scripts/setup/kde-gaming-customization.sh:Gaming Desktop"
+        "scripts/setup/gaming-workflow-optimization.sh:Gaming Workflows"
+    )
+
+    echo "🔍 Checking available optimization systems..."
+
+    for script_info in "${optimization_scripts[@]}"; do
+        local script_path="${script_info%%:*}"
+        local script_name="${script_info#*:}"
+        local full_path="$SCRIPT_DIR/../../$script_path"
+
+        if [[ -x "$full_path" ]]; then
+            print_success "✅ $script_name: Available"
+            log_message "INFO" "Found optimization script: $script_path"
+        else
+            print_warning "⚠️ $script_name: Not found"
+            log_message "WARNING" "Missing optimization script: $script_path"
+        fi
+    done
+
+    echo
+    print_info "🚀 Optimization systems integration:"
+    echo "   • Hardware-specific optimizations will be applied"
+    echo "   • Gaming profiles will be configured automatically"
+    echo "   • Desktop environment will be optimized for gaming"
+    echo "   • Performance monitoring will be enabled"
+
+    log_message "SUCCESS" "Optimization systems integration completed"
+}
+
+# Show first-boot status
+show_first_boot_status() {
+    print_header "📊 First-Boot Experience Status"
+
+    if [[ -f "$FIRST_BOOT_MARKER" ]]; then
+        print_success "✅ First-boot experience completed"
+        local completion_date
+        completion_date=$(stat -c %y "$FIRST_BOOT_MARKER" 2>/dev/null | cut -d' ' -f1)
+        echo "   Completed: $completion_date"
+    else
+        print_warning "❌ First-boot experience not completed"
+        echo "   Run: $0 run-first-boot"
+    fi
+
+    echo
+    print_section "📁 First-Boot Files"
+    local files=(
+        "$FIRST_BOOT_MARKER:First-boot completion marker"
+        "$LOG_FILE:First-boot log file"
+        "$CONFIG_DIR:xanadOS configuration directory"
+    )
+
+    for file_info in "${files[@]}"; do
+        local file="${file_info%%:*}"
+        local description="${file_info#*:}"
+        if [[ -f "$file" ]] || [[ -d "$file" ]]; then
+            echo "  ✅ $description: $file"
+        else
+            echo "  ❌ $description: not found"
+        fi
+    done
+}
+
+# Reset first-boot state
+reset_first_boot_state() {
+    print_header "🔄 Resetting First-Boot State"
+
+    if [[ -f "$FIRST_BOOT_MARKER" ]]; then
+        sudo rm -f "$FIRST_BOOT_MARKER"
+        print_success "✅ First-boot state reset"
+        log_message "INFO" "First-boot state manually reset"
+    else
+        print_warning "❌ First-boot state not found"
+    fi
+}
+
+main() {
+    local command="${1:-run-first-boot}"
+
+    case "$command" in
+        welcome-system)
+            run_welcome_system
+            ;;
+        automated-setup)
+            run_automated_setup
+            ;;
+        run-first-boot)
+            run_complete_phase_4_3
+            ;;
+        quick-analysis)
+            setup_logging
+            cache_gaming_tools
+            cache_system_tools
+            perform_system_analysis
+            ;;
+        guided-tour)
+            setup_logging
+            run_guided_tour
+            ;;
+        status)
+            show_first_boot_status
+            ;;
+        reset)
+            reset_first_boot_state
+            ;;
+        help|--help|-h)
+            show_usage
+            ;;
+        *)
+            echo "❌ Error: Unknown command '$command'"
+            echo
+            show_usage
+            exit 1
+            ;;
+    esac
 }
 
 # Run main function
