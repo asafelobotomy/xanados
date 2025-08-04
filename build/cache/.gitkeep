@@ -1,2 +1,0 @@
-# This file ensures the build cache directory exists in git
-# Build cache is ignored by .gitignore but the directory structure is preserved

@@ -1,0 +1,5 @@
+Scripts requiring security review:
+scripts/lib/common.sh
+scripts/lib/directories.sh
+scripts/lib/setup-common.sh
+scripts/validation/simple-script-validator.sh

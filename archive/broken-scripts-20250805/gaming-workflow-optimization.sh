@@ -146,7 +146,6 @@ main() {
 
 # Run main function
 main "$@"
-EOF
 
     chmod +x "$gaming_mode_script"
     print_info "✓ Gaming mode script created: $gaming_mode_script"

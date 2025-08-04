@@ -1,10 +1,8 @@
 # Gaming AUR Packages for xanadOS
-# High-priority gaming packages from the AUR
+# High-priority gaming packages from the AUR (packages not in official repos)
 
 # Gaming Launchers & Stores
 heroic-games-launcher-bin    # Epic Games Store launcher
-lutris                       # Universal gaming launcher
-steam-native-runtime         # Steam with native runtime
 legendary                    # Epic Games Store CLI
 rare                         # Epic Games Store GUI
 gogdl                        # GOG.com downloader
@@ -15,21 +13,13 @@ minigalaxy                   # GOG.com client
 godot-bin                    # Godot game engine
 unity-editor                 # Unity game engine
 unreal-engine                # Unreal Engine
-love                         # LÖVE 2D game engine
 construct3                   # Construct 3 game engine
 
 # Gaming Performance Tools
-gamemode                    # Game performance optimization
 cpu-x                       # CPU information tool
 corectrl                    # GPU/CPU overclocking
-nvtop                       # NVIDIA GPU monitoring
-radeontop                   # AMD GPU monitoring
-intel-gpu-tools             # Intel GPU tools
-mangohud                    # Performance overlay
-goverlay                    # MangoHud configurator
 
 # Gaming Audio
-pipewire-pulse              # PipeWire PulseAudio replacement
 easyeffects                 # Audio effects for gaming
 carla                       # Audio plugin host
 jamulus                     # Online music jamming
@@ -48,7 +38,6 @@ gpu-screen-recorder         # GPU-accelerated recording
 discord-canary              # Discord Canary
 element-desktop             # Matrix client
 teamspeak3                  # TeamSpeak client
-mumble                      # Voice chat client
 slack-desktop               # Slack desktop
 signal-desktop              # Signal messenger
 
@@ -94,7 +83,6 @@ cdemu-daemon               # CD/DVD daemon
 # Performance Monitoring
 nohang                     # OOM prevention
 ananicy                    # Process priority optimization
-irqbalance                 # IRQ balancing
 zramswap                   # Compressed swap
 preload                    # Application preloading
 

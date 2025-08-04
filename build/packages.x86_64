@@ -58,7 +58,6 @@ wine-gecko
 wine-mono
 winetricks
 vkd3d
-dxvk
 lib32-mesa
 lib32-vulkan-intel
 lib32-vulkan-radeon
@@ -86,16 +85,13 @@ vlc
 # === SECURITY ===
 bubblewrap
 apparmor
-apparmor-utils
-apparmor-profiles
 ufw
 audit
 lynis
 rkhunter
-aide
 
 # === UTILITIES ===
-p7zip
+7zip
 unrar
 unzip
 zip
@@ -105,8 +101,6 @@ htop
 iotop
 zram-generator
 irqbalance
-lscpu
-lspci
 dmidecode
 dosfstools
 ntfs-3g

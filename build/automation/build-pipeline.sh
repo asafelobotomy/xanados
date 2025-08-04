@@ -28,6 +28,16 @@ declare -A BUILD_TARGETS=(
     ["compatibility"]="Maximum compatibility (2010+)"
 )
 
+# Build optimization settings
+readonly CPU_CORES="$(nproc)"
+readonly BUILD_JOBS="$((CPU_CORES > 4 ? CPU_CORES - 1 : CPU_CORES))"  # Leave 1 core free on systems with >4 cores
+readonly PARALLEL_BUILDS="$((CPU_CORES >= 8 ? 2 : 1))"  # Allow 2 parallel builds on high-core systems
+
+# Cache settings
+readonly PACKAGE_CACHE_DIR="$BUILD_ROOT/cache/packages"
+readonly SOURCE_CACHE_DIR="$BUILD_ROOT/cache/sources"
+mkdir -p "$PACKAGE_CACHE_DIR" "$SOURCE_CACHE_DIR"
+
 # Logging
 mkdir -p "$LOG_DIR"
 readonly BUILD_LOG="$LOG_DIR/build-$(date '+%Y%m%d-%H%M%S').log"
@@ -74,9 +84,13 @@ validate_environment() {
         "pacman"
         "makepkg"
         "git"
-        "docker"
         "pigz"
         "xz"
+    )
+
+    # Check for optional tools
+    local optional_tools=(
+        "docker"
     )
 
     for tool in "${required_tools[@]}"; do
@@ -85,6 +99,15 @@ validate_environment() {
         else
             print_error "$tool not found"
             ((errors++))
+        fi
+    done
+
+    # Check optional tools
+    for tool in "${optional_tools[@]}"; do
+        if command -v "$tool" &>/dev/null; then
+            print_status "$tool found"
+        else
+            print_warning "$tool not found (optional)"
         fi
     done
 
@@ -122,17 +145,17 @@ detect_build_capabilities() {
 
     local cpu_features=""
     if [[ -f /proc/cpuinfo ]]; then
-        cpu_features=$(grep '^flags' /proc/cpuinfo | head -1 | cut -d: -f2)
+        cpu_features=$(grep '^flags' /proc/cpuinfo | head -1 | cut -d: -f2 || true)
     fi
 
     echo "🔍 Analyzing CPU capabilities for optimal build target selection..."
 
     # Check x86-64-v4 support
-    if echo "$cpu_features" | grep -q "avx512f\|avx512bw\|avx512cd\|avx512dq\|avx512vl"; then
+    if [[ -n "$cpu_features" ]] && echo "$cpu_features" | grep -q "avx512f\|avx512bw\|avx512cd\|avx512dq\|avx512vl"; then
         print_status "x86-64-v4 capable CPU detected (AVX-512 support)"
         echo "   Recommended: x86-64-v4 target for maximum performance"
     # Check x86-64-v3 support
-    elif echo "$cpu_features" | grep -q "avx2\|bmi2\|f16c\|fma"; then
+    elif [[ -n "$cpu_features" ]] && echo "$cpu_features" | grep -q "avx2\|bmi2\|f16c\|fma"; then
         print_status "x86-64-v3 capable CPU detected (AVX2 support)"
         echo "   Recommended: x86-64-v3 target for modern performance"
     else

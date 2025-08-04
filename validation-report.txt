@@ -1,0 +1,10 @@
+[0;34m╔══════════════════════════════════════════════════════════════════════╗[0m
+[0;34m║               xanadOS Simple Script Validator                        ║[0m
+[0;34m║                    Validating All Repository Scripts                 ║[0m
+[0;34m║                        2025-08-05 00:07:53                        ║[0m
+[0;34m╚══════════════════════════════════════════════════════════════════════╝[0m
+
+🔍 Scanning for shell scripts...
+📋 Found 151 shell scripts to validate
+
+Validating: archive/backups/logging-migration-20250803/scripts/dev-tools/test-task-3.2.1-results-standardization.sh ... [0;31m❌ ERRORS: Potentially unsafe eval[0m

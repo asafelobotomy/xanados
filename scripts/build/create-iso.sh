@@ -10,6 +10,13 @@ if [[ -f "$SCRIPT_DIR/../lib/common.sh" ]]; then
     source "$SCRIPT_DIR/../lib/common.sh"
 else
     # Basic print functions if common.sh is not available
+    print_info() { echo "INFO: $*"; }
+    print_success() { echo "SUCCESS: $*"; }
+    print_warning() { echo "WARNING: $*"; }
+    print_error() { echo "ERROR: $*"; }
+    print_section() { echo "=== $* ==="; }
+    print_header() { echo "### $* ###"; }
+fi
 # Usage information
 show_usage() {
     echo "Usage: $0 [options]"
@@ -27,20 +34,20 @@ show_usage() {
 # Check system requirements
 check_requirements() {
     print_section "Checking Build Requirements"
-    
+
     # Check if running on Arch Linux
     if [[ ! -f /etc/arch-release ]]; then
         print_error "This script must be run on Arch Linux"
         exit 1
     fi
-    
+
     # Check for required packages
     local required_packages=(
         "archiso"
         "git"
         "base-devel"
     )
-    
+
     for pkg in "${required_packages[@]}"; do
         if pacman -Qi "$pkg" &>/dev/null; then
             print_info "✓ Found: $pkg"
@@ -50,20 +57,20 @@ check_requirements() {
             exit 1
         fi
     done
-    
+
     # Check for sudo access
     if ! sudo -n true 2>/dev/null; then
         print_error "This script requires sudo access"
         exit 1
     fi
-    
+
     print_success "All requirements satisfied"
 }
 
 # Setup build environment
 setup_build_environment() {
     print_section "Setting Up Build Environment"
-    
+
     # Create build directories
     local dirs=(
         "$BUILD_DIR"
@@ -72,7 +79,7 @@ setup_build_environment() {
         "$CACHE_DIR"
         "$ARCHISO_DIR"
     )
-    
+
     for dir in "${dirs[@]}"; do
         if mkdir -p "$dir"; then
             print_info "Created: $dir"
@@ -81,7 +88,7 @@ setup_build_environment() {
             exit 1
         fi
     done
-    
+
     # Copy archiso template
     if [[ ! -d "$ARCHISO_DIR" ]] || [[ -z "$(ls -A "$ARCHISO_DIR" 2>/dev/null)" ]]; then
         print_info "Copying archiso template..."
@@ -95,85 +102,85 @@ setup_build_environment() {
 # Generate package list
 generate_package_list() {
     print_section "Generating Package List"
-    
+
     local package_file="$ARCHISO_DIR/packages.x86_64"
     local optimized_packages="$PROJECT_ROOT/build/packages.x86_64"
-    
+
     # Use our optimized packages.x86_64 if it exists
     if [[ -f "$optimized_packages" ]]; then
         print_info "Using optimized xanadOS package list"
         cp "$optimized_packages" "$package_file"
-        
+
         local package_count
         package_count=$(grep -v '^#' "$package_file" | grep -v '^$' | wc -l)
         print_success "Using optimized package list with $package_count packages"
         return
     fi
-    
+
     # Fallback: Generate from individual lists (legacy method)
     print_warning "Optimized package list not found, generating from individual lists"
     local temp_packages="/tmp/xanados-packages.tmp"
-    
+
     # Combine all package lists
     {
         echo "# xanadOS Gaming Distribution Package List"
         echo "# Generated on $(date)"
         echo ""
-        
+
         # Add packages from our lists
         if [[ -f "$PROJECT_ROOT/packages/core/base-system.list" ]]; then
             echo "# Base system packages"
             grep -v '^#' "$PROJECT_ROOT/packages/core/base-system.list" | grep -v '^$'
             echo ""
         fi
-        
+
         if [[ -f "$PROJECT_ROOT/packages/core/graphics.list" ]]; then
-            echo "# Graphics packages"  
+            echo "# Graphics packages"
             grep -v '^#' "$PROJECT_ROOT/packages/core/graphics.list" | grep -v '^$'
             echo ""
         fi
-        
+
         if [[ -f "$PROJECT_ROOT/packages/core/audio.list" ]]; then
             echo "# Audio packages"
             grep -v '^#' "$PROJECT_ROOT/packages/core/audio.list" | grep -v '^$'
             echo ""
         fi
-        
+
         if [[ -f "$PROJECT_ROOT/packages/core/gaming.list" ]]; then
             echo "# Gaming packages"
             grep -v '^#' "$PROJECT_ROOT/packages/core/gaming.list" | grep -v '^$'
             echo ""
         fi
-        
+
         if [[ -f "$PROJECT_ROOT/packages/desktop/kde-plasma.list" ]]; then
             echo "# Desktop environment packages"
             grep -v '^#' "$PROJECT_ROOT/packages/desktop/kde-plasma.list" | grep -v '^$'
             echo ""
         fi
-        
+
         # Add essential ISO packages
         echo "# ISO building essentials"
         echo "calamares"
-        echo "gparted" 
+        echo "gparted"
         echo "firefox"
         echo "file-roller"
-        
+
     } > "$temp_packages"
-    
+
     # Remove duplicates and sort
     sort "$temp_packages" | uniq | grep -v '^#' | grep -v '^$' > "$package_file"
-    
+
     local package_count
     package_count=$(wc -l < "$package_file")
     print_success "Generated package list with $package_count packages"
-    
+
     rm -f "$temp_packages"
 }
 
 # Customize ISO
 customize_iso() {
     print_section "Customizing ISO"
-    
+
     # Update ISO info
     local iso_info="$ARCHISO_DIR/profiledef.sh"
     if [[ -f "$iso_info" ]]; then
@@ -182,22 +189,22 @@ customize_iso() {
         sed -i "s/iso_version=.*/iso_version=\"$XANADOS_VERSION\"/" "$iso_info"
         print_info "Updated ISO information"
     fi
-    
+
     # Copy xanadOS files to ISO
     local airootfs="$ARCHISO_DIR/airootfs"
     mkdir -p "$airootfs/opt/xanados"
-    
+
     # Copy essential xanadOS components
     if [[ -d "$PROJECT_ROOT/scripts" ]]; then
         cp -r "$PROJECT_ROOT/scripts" "$airootfs/opt/xanados/"
         print_info "Copied xanadOS scripts"
     fi
-    
+
     if [[ -d "$PROJECT_ROOT/configs" ]]; then
         cp -r "$PROJECT_ROOT/configs" "$airootfs/opt/xanados/"
         print_info "Copied xanadOS configurations"
     fi
-    
+
     # Create xanadOS installer desktop entry
     mkdir -p "$airootfs/etc/skel/Desktop"
     cat > "$airootfs/etc/skel/Desktop/xanadOS-Installer.desktop" << 'EOF'
@@ -210,7 +217,7 @@ Type=Application
 Categories=System;
 Keywords=install;installer;xanados;gaming;
 EOF
-    
+
     # Set up auto-login for live user
     mkdir -p "$airootfs/etc/systemd/system/getty@tty1.service.d"
     cat > "$airootfs/etc/systemd/system/getty@tty1.service.d/autologin.conf" << 'EOF'
@@ -218,36 +225,36 @@ EOF
 ExecStart=
 ExecStart=-/sbin/agetty -o '-p -f -- \\u' --noclear --autologin live %I $TERM
 EOF
-    
+
     print_success "ISO customization completed"
 }
 
 # Build the ISO
 build_iso() {
     print_section "Building xanadOS Gaming ISO"
-    
+
     cd "$ARCHISO_DIR"
-    
+
     # Run archiso build
     print_info "Starting ISO build process..."
     print_warning "This may take 30-60 minutes depending on your system..."
-    
+
     if sudo mkarchiso -v -w "$WORK_DIR" -o "$ISO_DIR" "$ARCHISO_DIR"; then
         print_success "ISO build completed successfully!"
-        
+
         # Show results
         local iso_path
         iso_path=$(find "$ISO_DIR" -name "*.iso" -type f | head -1)
         if [[ -n "$iso_path" ]]; then
             print_info "ISO Location: $iso_path"
             print_info "ISO Size: $(du -h "$iso_path" | cut -f1)"
-            
+
             # Calculate checksums
             print_info "Generating checksums..."
             cd "$ISO_DIR"
             sha256sum "$(basename "$iso_path")" > "$(basename "$iso_path").sha256"
             md5sum "$(basename "$iso_path")" > "$(basename "$iso_path").md5"
-            
+
             print_success "Checksums generated"
         fi
     else
@@ -259,32 +266,32 @@ build_iso() {
 # Clean build directories
 clean_build() {
     print_section "Cleaning Build Environment"
-    
+
     local clean_dirs=(
         "$WORK_DIR"
         "$CACHE_DIR"
     )
-    
+
     for dir in "${clean_dirs[@]}"; do
         if [[ -d "$dir" ]]; then
             print_info "Cleaning: $dir"
             sudo rm -rf "$dir"
         fi
     done
-    
+
     print_success "Build directories cleaned"
 }
 
 # Main build process
 main_build() {
     print_header "🎮 xanadOS Gaming Distribution ISO Builder"
-    
+
     check_requirements
     setup_build_environment
     generate_package_list
     customize_iso
     build_iso
-    
+
     print_header "✅ xanadOS Gaming ISO Build Complete"
     echo -e "${GREEN}Your gaming distribution is ready!${NC}"
     echo -e "${WHITE}Check the ISO at: $ISO_DIR${NC}"

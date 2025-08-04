@@ -1,51 +1,88 @@
 #!/bin/bash
 # xanadOS Repository & Gaming Optimization Status and Execution
 # Comprehensive overview and automated execution
+# Version: 2.0.0 - Enhanced with 2024/2025 best practices
 
-# Source shared libraries
-source "$(dirname "${BASH_SOURCE[0]}")/lib/common.sh" || {
-    echo "Error: Could not source common.sh" >&2
-    exit 1
+# Bash strict mode - 2024 best practice
+set -euo pipefail
+IFS=$'\n\t'
+
+# Source enhanced libraries with error handling
+readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Enhanced library loading with fallback
+load_library() {
+    local lib_name="$1"
+    local lib_path="$SCRIPT_DIR/lib/$lib_name"
+
+    if [[ -f "$lib_path" ]]; then
+        # shellcheck source=/dev/null
+        source "$lib_path" || {
+            echo "ERROR: Failed to load library: $lib_name" >&2
+            exit 1
+        }
+    else
+        echo "ERROR: Library not found: $lib_path" >&2
+        exit 1
+    fi
 }
 
-set -euo pipefail
+# Load required libraries in dependency order
+load_library "common.sh"
+load_library "logging.sh"
+load_library "config.sh"
+load_library "monitoring.sh"
 
-readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-readonly XANADOS_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+# Enable enhanced error handling
+set_error_handling true
 
-# Colors
-readonly GREEN='\033[0;32m'
-readonly YELLOW='\033[1;33m'
-readonly RED='\033[0;31m'
-readonly BLUE='\033[0;34m'
-readonly PURPLE='\033[0;35m'
-readonly CYAN='\033[0;36m'
-readonly NC='\033[0m'
+readonly XANADOS_ROOT="$(get_xanados_root)"
+
+# Script configuration
+readonly SCRIPT_VERSION="2.0.0"
+readonly SCRIPT_NAME="xanadOS Optimization Controller"
 
 print_section() {
-    echo -e "${CYAN}▓▓▓ $1 ▓▓▓${NC}"
+    print_header "$1"
 }
 
 print_highlight() {
-    echo -e "${PURPLE}🎮${NC} $1"
+    print_info "🎮 $1"
 }
 
-# Repository analysis summary
+# Enhanced repository analysis with system monitoring
 analyze_repository() {
+    start_timer "repository_analysis"
+
     print_section "Repository Analysis Summary"
 
-    local total_files=$(find "$XANADOS_ROOT" -type f | wc -l)
-    local shell_scripts=$(find "$XANADOS_ROOT" -name "*.sh" | wc -l)
-    local backup_files=$(find "$XANADOS_ROOT" -name "*.backup*" -o -name "*backup*" | wc -l)
-    local config_files=$(find "$XANADOS_ROOT/configs" -type f 2>/dev/null | wc -l || echo "0")
-    local doc_files=$(find "$XANADOS_ROOT/docs" -type f 2>/dev/null | wc -l || echo "0")
+    # Basic repository stats
+    local total_files
+    total_files=$(find "$XANADOS_ROOT" -type f | wc -l)
+    local shell_scripts
+    shell_scripts=$(find "$XANADOS_ROOT" -name "*.sh" | wc -l)
+    local backup_files
+    backup_files=$(find "$XANADOS_ROOT" -name "*.backup*" -o -name "*backup*" | wc -l)
+    local config_files
+    config_files=$(find "$XANADOS_ROOT/configs" -type f 2>/dev/null | wc -l || echo "0")
+    local doc_files
+    doc_files=$(find "$XANADOS_ROOT/docs" -type f 2>/dev/null | wc -l || echo "0")
 
-    echo "📊 Repository Statistics:"
+    print_info "📊 Repository Statistics:"
     echo "   Total Files: $total_files"
     echo "   Shell Scripts: $shell_scripts"
     echo "   Configuration Files: $config_files"
     echo "   Documentation Files: $doc_files"
     echo "   Backup Files: $backup_files"
+
+    # System health check
+    echo ""
+    print_info "🖥️ System Health Check:"
+    check_system_health false
+
+    local analysis_time
+    analysis_time=$(stop_timer "repository_analysis")
+    log_info "Repository analysis completed in ${analysis_time}s"
 
     if [[ $backup_files -gt 0 ]]; then
         print_warning "Found $backup_files backup files for cleanup"

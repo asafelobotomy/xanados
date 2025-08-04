@@ -1,0 +1,341 @@
+[0;34m╔══════════════════════════════════════════════════════════════════════╗[0m
+[0;34m║               xanadOS Simple Script Validator                        ║[0m
+[0;34m║                    Validating All Repository Scripts                 ║[0m
+[0;34m║                        2025-08-05 00:08:28                        ║[0m
+[0;34m╚══════════════════════════════════════════════════════════════════════╝[0m
+
+🔍 Scanning for shell scripts...
+📋 Found 151 shell scripts to validate
+
+Validating: archive/backups/logging-migration-20250803/scripts/dev-tools/test-task-3.2.1-results-standardization.sh ... [0;31m❌ ERRORS: Potentially unsafe eval[0m
+  [1;33m⚠️  CONFLICTS: Duplicate name found[0m
+Validating: archive/backups/logging-migration-20250803/scripts/lib/common.sh ... [0;31m❌ ERRORS: Not executable[0m
+  [1;33m⚠️  CONFLICTS: Duplicate name found[0m
+Validating: archive/backups/logging-migration-20250803/scripts/lib/directories.sh ... [0;31m❌ ERRORS: Not executable Potentially unsafe eval[0m
+  [1;33m⚠️  CONFLICTS: Duplicate name found[0m
+  [1;33m🕒 DEPRECATED: Contains deprecation markers[0m
+Validating: archive/backups/logging-migration-20250803/scripts/lib/gaming-env.sh ... [0;31m❌ ERRORS: Not executable[0m
+  [1;33m⚠️  CONFLICTS: Duplicate name found[0m
+Validating: archive/backups/logging-migration-20250803/scripts/lib/reports.sh ... [0;32m✓ OK[0m
+  [1;33m⚠️  CONFLICTS: Duplicate name found[0m
+Validating: archive/backups/logging-migration-20250803/scripts/lib/setup-common.sh ... [0;31m❌ ERRORS: Not executable Potentially unsafe eval[0m
+  [1;33m⚠️  CONFLICTS: Duplicate name found[0m
+Validating: archive/backups/logging-migration-20250803/scripts/lib/validation.sh ... [0;31m❌ ERRORS: Not executable[0m
+  [1;33m⚠️  CONFLICTS: Duplicate name found[0m
+Validating: archive/backups/logging-migration-20250803/scripts/setup/gaming-setup-wizard.sh ... [0;32m✓ OK[0m
+  [1;33m⚠️  CONFLICTS: Duplicate name found[0m
+  [0;34m🔄 CONSOLIDATION: setup category[0m
+Validating: archive/backups/logging-migration-20250803/scripts/setup/kde-gaming-customization.sh ... [0;32m✓ OK[0m
+  [1;33m⚠️  CONFLICTS: Duplicate name found[0m
+  [0;34m🔄 CONSOLIDATION: setup category[0m
+Validating: archive/backups/logging-migration-20250803/scripts/setup/unified-gaming-setup.sh ... [0;32m✓ OK[0m
+  [1;33m⚠️  CONFLICTS: Duplicate name found[0m
+  [0;34m🔄 CONSOLIDATION: setup category[0m
+Validating: archive/deprecated/2025-08-01-cleanup/test-directory-structure.sh ... [0;32m✓ OK[0m
+Validating: archive/deprecated/2025-08-02-optimization-cleanup/audio-latency-optimizer-original.sh ... [0;32m✓ OK[0m
+Validating: archive/deprecated/2025-08-02-optimization-cleanup/priority3-hardware-optimization-original.sh ... [0;32m✓ OK[0m
+Validating: archive/deprecated/2025-08-02-optimization-cleanup/priority4-user-experience-original.sh ... [0;32m✓ OK[0m
+Validating: archive/deprecated/2025-08-03-script-consolidation/gaming-setup.sh ... [0;32m✓ OK[0m
+  [1;33m⚠️  CONFLICTS: Duplicate name found[0m
+Validating: archive/deprecated/2025-08-03-script-consolidation/unified-gaming-setup.sh ... [0;32m✓ OK[0m
+  [1;33m⚠️  CONFLICTS: Duplicate name found[0m
+Validating: archive/deprecated/2025-08-03-script-consolidation/xanados-gaming-setup.sh ... [0;32m✓ OK[0m
+  [1;33m⚠️  CONFLICTS: Duplicate name found[0m
+Validating: archive/deprecated/2025-08-04-cleanup-scripts/batch-fix.sh ... [0;32m✓ OK[0m
+Validating: archive/deprecated/2025-08-04-cleanup-scripts/deprecated-script-analyzer-simple.sh ... [0;32m✓ OK[0m
+  [1;33m⚠️  CONFLICTS: Duplicate name found[0m
+  [1;33m🕒 DEPRECATED: Contains deprecation markers[0m
+Validating: archive/deprecated/2025-08-04-cleanup-scripts/manual-fix.sh ... [0;32m✓ OK[0m
+Validating: archive/deprecated/2025-08-04-cleanup-scripts/practical-script-cleanup.sh ... [0;32m✓ OK[0m
+  [1;33m⚠️  CONFLICTS: Duplicate name found[0m
+  [1;33m🕒 DEPRECATED: Contains deprecation markers Uses old sh shebang[0m
+Validating: archive/deprecated/2025-08-04-completed-dev-tasks/cleanup-unneeded-files.sh ... [0;31m❌ ERRORS: Not executable[0m
+Validating: archive/deprecated/2025-08-04-completed-dev-tasks/cleanup-validation-summary.sh ... [0;32m✓ OK[0m
+  [1;33m🕒 DEPRECATED: Contains deprecation markers[0m
+Validating: archive/deprecated/2025-08-04-completed-dev-tasks/completion-report.sh ... [0;32m✓ OK[0m
+Validating: archive/deprecated/2025-08-04-completed-dev-tasks/comprehensive-test-summary.sh ... [0;32m✓ OK[0m
+  [1;33m🕒 DEPRECATED: Contains deprecation markers[0m
+Validating: archive/deprecated/2025-08-04-completed-dev-tasks/deploy-task-3.2.3-logging.sh ... [0;32m✓ OK[0m
+  [1;33m🕒 DEPRECATED: Contains deprecation markers[0m
+Validating: archive/deprecated/2025-08-04-completed-dev-tasks/deprecated-script-analyzer.sh ... [0;31m❌ ERRORS: Not executable[0m
+  [1;33m⚠️  CONFLICTS: Duplicate name found[0m
+  [1;33m🕒 DEPRECATED: Contains deprecation markers[0m
+Validating: archive/deprecated/2025-08-04-completed-dev-tasks/deprecated-script-analyzer-simple.sh ... [0;31m❌ ERRORS: Not executable[0m
+  [1;33m⚠️  CONFLICTS: Duplicate name found[0m
+  [1;33m🕒 DEPRECATED: Contains deprecation markers[0m
+Validating: archive/deprecated/2025-08-04-completed-dev-tasks/migrate-to-shared-libs.sh ... [0;31m❌ ERRORS: Not executable[0m
+Validating: archive/deprecated/2025-08-04-completed-dev-tasks/parallel-integration-examples.sh ... [0;31m❌ ERRORS: Potentially unsafe eval[0m
+Validating: archive/deprecated/2025-08-04-completed-dev-tasks/practical-script-cleanup.sh ... [0;31m❌ ERRORS: Not executable[0m
+  [1;33m⚠️  CONFLICTS: Duplicate name found[0m
+  [1;33m🕒 DEPRECATED: Contains deprecation markers Uses old sh shebang[0m
+Validating: archive/deprecated/2025-08-04-completed-dev-tasks/progress-integration-examples.sh ... [0;32m✓ OK[0m
+Validating: archive/deprecated/2025-08-04-completed-dev-tasks/test-task-3.2.1-results-standardization.sh ... [0;31m❌ ERRORS: Potentially unsafe eval[0m
+  [1;33m⚠️  CONFLICTS: Duplicate name found[0m
+Validating: archive/deprecated/2025-08-04-completed-dev-tasks/test-task-3.2.3-advanced-logging.sh ... [0;32m✓ OK[0m
+  [1;33m🕒 DEPRECATED: Contains deprecation markers[0m
+Validating: archive/deprecated/2025-08-04-completed-dev-tasks/test-task-3.3.1-progress-indicators.sh ... [0;32m✓ OK[0m
+Validating: archive/deprecated/2025-08-04-completed-dev-tasks/test-task-3.3.2-parallel-operations.sh ... [0;32m✓ OK[0m
+Validating: archive/deprecated/2025-08-04-docs-cleanup/demo-scripts/demo-reports-integration.sh ... [0;32m✓ OK[0m
+Validating: archive/deprecated/2025-08-04-docs-cleanup/demo-scripts/gaming-compatibility-demo.sh ... [0;32m✓ OK[0m
+Validating: archive/deprecated/2025-08-04-docs-cleanup/demo-scripts/gaming-matrix-integration-demo.sh ... [0;32m✓ OK[0m
+Validating: archive/deprecated/2025-08-04-docs-cleanup/demo-scripts/gaming-matrix-integration-simple.sh ... [0;31m❌ ERRORS: Potentially unsafe eval[0m
+Validating: archive/deprecated/2025-08-04-practical-cleanup/script-consolidation-implementation.sh ... [0;31m❌ ERRORS: Syntax errors[0m
+  [1;33m🕒 DEPRECATED: Contains deprecation markers[0m
+Validating: archive/deprecated/2025-08-04-script-cleanup/deprecated-script-analyzer.sh ... [0;32m✓ OK[0m
+  [1;33m⚠️  CONFLICTS: Duplicate name found[0m
+  [1;33m🕒 DEPRECATED: Contains deprecation markers[0m
+Validating: archive/deprecated/script-consolidation-20250803/gaming-desktop-mode.sh ... [0;31m❌ ERRORS: Not executable Missing or invalid shebang[0m
+  [1;33m🕒 DEPRECATED: Very short script, might be incomplete[0m
+Validating: archive/deprecated/script-consolidation-20250803/gaming-setup.sh ... [0;31m❌ ERRORS: Not executable Missing or invalid shebang[0m
+  [1;33m⚠️  CONFLICTS: Duplicate name found[0m
+  [1;33m🕒 DEPRECATED: Very short script, might be incomplete[0m
+Validating: archive/deprecated/script-consolidation-20250803/install-gamemode.sh ... [0;31m❌ ERRORS: Not executable Missing or invalid shebang[0m
+  [1;33m🕒 DEPRECATED: Very short script, might be incomplete[0m
+Validating: archive/deprecated/script-consolidation-20250803/install-lutris.sh ... [0;31m❌ ERRORS: Not executable Missing or invalid shebang[0m
+  [1;33m🕒 DEPRECATED: Very short script, might be incomplete[0m
+Validating: archive/deprecated/script-consolidation-20250803/install-steam.sh ... [0;31m❌ ERRORS: Not executable Missing or invalid shebang[0m
+  [1;33m🕒 DEPRECATED: Very short script, might be incomplete[0m
+Validating: build/automation/build-pipeline.sh ... [0;31m❌ ERRORS: Potentially unsafe eval[0m
+Validating: build/automation/integration-test.sh ... [0;31m❌ ERRORS: Potentially unsafe eval[0m
+Validating: build/automation/release-manager.sh ... [0;32m✓ OK[0m
+Validating: build/automation/test-iso.sh ... [0;32m✓ OK[0m
+Validating: build/containers/container-manager.sh ... [0;32m✓ OK[0m
+Validating: configs/security/ufw-gaming-rules.sh ... [0;32m✓ OK[0m
+  [1;33m⚠️  CONFLICTS: Duplicate name found[0m
+  [1;33m🕒 DEPRECATED: Contains deprecation markers[0m
+Validating: configs/system/xanados-logging-init.sh ... [0;32m✓ OK[0m
+Validating: .github/workflows/validate-workflows.sh ... [0;32m✓ OK[0m
+  [1;33m🕒 DEPRECATED: Contains deprecation markers[0m
+Validating: scripts/aur-management/aur-builder.sh ... [0;32m✓ OK[0m
+Validating: scripts/aur-management/aur-integration-test.sh ... [0;32m✓ OK[0m
+Validating: scripts/aur-management/aur-manager.sh ... [0;32m✓ OK[0m
+Validating: scripts/build/create-installation-package-simple.sh ... [0;32m✓ OK[0m
+Validating: scripts/build/create-iso.sh ... [0;32m✓ OK[0m
+  [1;33m🕒 DEPRECATED: Contains deprecation markers[0m
+Validating: scripts/demo/demo-command-caching.sh ... [0;32m✓ OK[0m
+Validating: scripts/demo/demo-gaming-matrix.sh ... [0;32m✓ OK[0m
+Validating: scripts/demo/gaming-profile-creation-demo.sh ... [0;31m❌ ERRORS: Not executable[0m
+Validating: scripts/deployment/deploy-2025-security.sh ... [0;31m❌ ERRORS: Not executable[0m
+Validating: scripts/dev-tools/analyze-library-dependencies.sh ... [0;32m✓ OK[0m
+Validating: scripts/dev-tools/documentation-enhancer.sh ... [0;32m✓ OK[0m
+Validating: scripts/dev-tools/empty-files-analysis.sh ... [0;32m✓ OK[0m
+Validating: scripts/dev-tools/final-library-status.sh ... [0;32m✓ OK[0m
+Validating: scripts/dev-tools/fix-shellcheck-issues.sh ... [0;32m✓ OK[0m
+Validating: scripts/dev-tools/git-cleanup-analysis.sh ... [0;32m✓ OK[0m
+Validating: scripts/dev-tools/library-analysis.sh ... [0;32m✓ OK[0m
+Validating: scripts/dev-tools/repository-cleanup-tool.sh ... [0;31m❌ ERRORS: Not executable[0m
+  [1;33m🕒 DEPRECATED: Contains deprecation markers[0m
+Validating: scripts/dev-tools/repository-organization-tool.sh ... [0;32m✓ OK[0m
+  [1;33m🕒 DEPRECATED: Contains deprecation markers[0m
+Validating: scripts/dev-tools/script-quality-checker.sh ... [0;32m✓ OK[0m
+Validating: scripts/dev-tools/validate-reports-structure.sh ... [0;32m✓ OK[0m
+Validating: scripts/gaming/gaming-platforms-installer.sh ... [0;32m✓ OK[0m
+  [0;34m🔄 CONSOLIDATION: gaming category[0m
+Validating: scripts/lib/advanced-cpu-optimization.sh ... [0;31m❌ ERRORS: Not executable[0m
+Validating: scripts/lib/advanced-memory-optimization.sh ... [0;31m❌ ERRORS: Not executable[0m
+Validating: scripts/lib/common.sh ... [0;31m❌ ERRORS: Potentially unsafe eval[0m
+  [1;33m⚠️  CONFLICTS: Duplicate name found[0m
+Validating: scripts/lib/config.sh ... [0;31m❌ ERRORS: Not executable[0m
+Validating: scripts/lib/directories.sh ... [0;31m❌ ERRORS: Potentially unsafe eval[0m
+  [1;33m⚠️  CONFLICTS: Duplicate name found[0m
+  [1;33m🕒 DEPRECATED: Contains deprecation markers[0m
+Validating: scripts/lib/enhanced-testing.sh ... [0;31m❌ ERRORS: Not executable[0m
+Validating: scripts/lib/error-handling.sh ... [0;31m❌ ERRORS: Not executable[0m
+Validating: scripts/lib/gaming-env.sh ... [0;32m✓ OK[0m
+  [1;33m⚠️  CONFLICTS: Duplicate name found[0m
+Validating: scripts/lib/gaming-profiles.sh ... [0;32m✓ OK[0m
+Validating: scripts/lib/hardware-detection.sh ... [0;32m✓ OK[0m
+Validating: scripts/lib/input-validation.sh ... [0;31m❌ ERRORS: Not executable[0m
+Validating: scripts/lib/logging.sh ... [0;32m✓ OK[0m
+  [1;33m🕒 DEPRECATED: Contains deprecation markers[0m
+Validating: scripts/lib/monitoring.sh ... [0;31m❌ ERRORS: Not executable[0m
+Validating: scripts/lib/reports.sh ... [0;32m✓ OK[0m
+  [1;33m⚠️  CONFLICTS: Duplicate name found[0m
+Validating: scripts/lib/secure-config.sh ... [0;31m❌ ERRORS: Not executable[0m
+Validating: scripts/lib/setup-common.sh ... [0;31m❌ ERRORS: Potentially unsafe eval[0m
+  [1;33m⚠️  CONFLICTS: Duplicate name found[0m
+Validating: scripts/lib/validation.sh ... [0;32m✓ OK[0m
+  [1;33m⚠️  CONFLICTS: Duplicate name found[0m
+Validating: scripts/optimization/gaming-performance-implementation.sh ... [0;31m❌ ERRORS: Not executable[0m
+  [0;34m🔄 CONSOLIDATION: optimization category[0m
+Validating: scripts/optimization/repository-optimizer.sh ... [0;31m❌ ERRORS: Not executable[0m
+  [1;33m🕒 DEPRECATED: Contains deprecation markers[0m
+  [0;34m🔄 CONSOLIDATION: optimization category[0m
+Validating: scripts/package-management/package-compat.sh ... [0;32m✓ OK[0m
+Validating: scripts/package-management/xpkg.sh ... [0;32m✓ OK[0m
+Validating: scripts/setup/audio-latency-optimizer.sh ... [0;32m✓ OK[0m
+  [0;34m🔄 CONSOLIDATION: setup category[0m
+Validating: scripts/setup/config-templates.sh ... [0;32m✓ OK[0m
+  [0;34m🔄 CONSOLIDATION: setup category[0m
+Validating: scripts/setup/dev-environment.sh ... [0;32m✓ OK[0m
+  [0;34m🔄 CONSOLIDATION: setup category[0m
+Validating: scripts/setup/first-boot-experience.sh ... [0;31m❌ ERRORS: Not executable[0m
+  [1;33m🕒 DEPRECATED: Contains deprecation markers[0m
+  [0;34m🔄 CONSOLIDATION: setup category[0m
+Validating: scripts/setup/gaming-display-optimization.sh ... [0;32m✓ OK[0m
+  [0;34m🔄 CONSOLIDATION: setup category[0m
+Validating: scripts/setup/gaming-optimizations.sh ... [0;32m✓ OK[0m
+  [0;34m🔄 CONSOLIDATION: setup category[0m
+Validating: scripts/setup/gaming-setup-wizard.sh ... [0;31m❌ ERRORS: Not executable[0m
+  [1;33m⚠️  CONFLICTS: Duplicate name found[0m
+  [0;34m🔄 CONSOLIDATION: setup category[0m
+Validating: scripts/setup/gaming-workflow-optimization.sh ... [0;31m❌ ERRORS: Not executable Syntax errors[0m
+  [0;34m🔄 CONSOLIDATION: setup category[0m
+Validating: scripts/setup/graphics-driver-optimizer.sh ... [0;32m✓ OK[0m
+  [0;34m🔄 CONSOLIDATION: setup category[0m
+Validating: scripts/setup/hardware-device-optimizer.sh ... [0;32m✓ OK[0m
+  [0;34m🔄 CONSOLIDATION: setup category[0m
+Validating: scripts/setup/hardware-optimization.sh ... [0;31m❌ ERRORS: Syntax errors[0m
+  [0;34m🔄 CONSOLIDATION: setup category[0m
+Validating: scripts/setup/install-gaming-kernel.sh ... [0;32m✓ OK[0m
+  [0;34m🔄 CONSOLIDATION: setup category[0m
+Validating: scripts/setup/install-hardware-optimization.sh ... [0;32m✓ OK[0m
+  [0;34m🔄 CONSOLIDATION: setup category[0m
+Validating: scripts/setup/kde-gaming-customization.sh ... [0;31m❌ ERRORS: Not executable[0m
+  [1;33m⚠️  CONFLICTS: Duplicate name found[0m
+  [0;34m🔄 CONSOLIDATION: setup category[0m
+Validating: scripts/setup/optimization-summary.sh ... [0;32m✓ OK[0m
+  [1;33m🕒 DEPRECATED: Contains deprecation markers[0m
+  [0;34m🔄 CONSOLIDATION: setup category[0m
+Validating: scripts/setup/phase4-integration-polish.sh ... [0;32m✓ OK[0m
+  [0;34m🔄 CONSOLIDATION: setup category[0m
+Validating: scripts/setup/priority3-hardware-optimization.sh ... [0;32m✓ OK[0m
+  [0;34m🔄 CONSOLIDATION: setup category[0m
+Validating: scripts/setup/priority4-user-experience.sh ... [0;32m✓ OK[0m
+  [0;34m🔄 CONSOLIDATION: setup category[0m
+Validating: scripts/setup/setup-paru-integration.sh ... [0;32m✓ OK[0m
+  [1;33m🕒 DEPRECATED: Contains deprecation markers[0m
+  [0;34m🔄 CONSOLIDATION: setup category[0m
+Validating: scripts/setup/ufw-gaming-rules.sh ... [0;32m✓ OK[0m
+  [1;33m⚠️  CONFLICTS: Duplicate name found[0m
+Validating: scripts/setup/xanados-gaming-setup.sh ... [0;32m✓ OK[0m
+  [1;33m⚠️  CONFLICTS: Duplicate name found[0m
+  [0;34m🔄 CONSOLIDATION: setup category[0m
+Validating: scripts/testing/phase-4.1.3-integration-test.sh ... [0;32m✓ OK[0m
+  [0;34m🔄 CONSOLIDATION: testing category[0m
+Validating: scripts/testing/run-full-system-test.sh ... [0;32m✓ OK[0m
+  [0;34m🔄 CONSOLIDATION: testing category[0m
+Validating: scripts/testing/test-iso-build.sh ... [0;32m✓ OK[0m
+  [0;34m🔄 CONSOLIDATION: testing category[0m
+Validating: scripts/testing/test-paru-integration.sh ... [0;32m✓ OK[0m
+  [1;33m🕒 DEPRECATED: Contains deprecation markers[0m
+  [0;34m🔄 CONSOLIDATION: testing category[0m
+Validating: scripts/test-libraries.sh ... [0;32m✓ OK[0m
+Validating: scripts/utilities/archive-files.sh ... [0;32m✓ OK[0m
+  [1;33m🕒 DEPRECATED: Contains deprecation markers[0m
+Validating: scripts/utilities/gaming-desktop-manager.sh ... [0;32m✓ OK[0m
+Validating: scripts/utilities/iso-creation-helper.sh ... [0;32m✓ OK[0m
+Validating: scripts/utilities/test-iso-environment.sh ... [0;32m✓ OK[0m
+Validating: scripts/utilities/validate-packages.sh ... [0;32m✓ OK[0m
+Validating: scripts/utilities/xanados-directory-cleanup.sh ... [0;32m✓ OK[0m
+  [1;33m🕒 DEPRECATED: Contains deprecation markers[0m
+Validating: scripts/utilities/xanados-hwinfo.sh ... [0;31m❌ ERRORS: Not executable[0m
+Validating: scripts/validation/comprehensive-script-validator.sh ... [0;32m✓ OK[0m
+  [1;33m🕒 DEPRECATED: Contains deprecation markers[0m
+Validating: scripts/validation/paru-integration-status.sh ... [0;31m❌ ERRORS: Not executable[0m
+Validating: scripts/validation/simple-script-validator.sh ... [0;31m❌ ERRORS: Potentially unsafe eval[0m
+  [1;33m🕒 DEPRECATED: Contains deprecation markers Uses old sh shebang[0m
+Validating: scripts/validation/system-integrity-validator.sh ... [0;32m✓ OK[0m
+Validating: scripts/xanados-optimization-controller.sh ... [0;31m❌ ERRORS: Not executable[0m
+Validating: testing/automated/automated-benchmark-runner.sh ... [0;31m❌ ERRORS: Not executable[0m
+  [0;34m🔄 CONSOLIDATION: testing category[0m
+Validating: testing/automated/gaming-validator.sh ... [0;31m❌ ERRORS: Not executable[0m
+  [0;34m🔄 CONSOLIDATION: testing category[0m
+Validating: testing/automated/performance-benchmark.sh ... [0;31m❌ ERRORS: Not executable[0m
+  [0;34m🔄 CONSOLIDATION: testing category[0m
+Validating: testing/automated/testing-suite.sh ... [0;31m❌ ERRORS: Not executable[0m
+  [0;34m🔄 CONSOLIDATION: testing category[0m
+Validating: testing/integration/ci-integration-test.sh ... [0;32m✓ OK[0m
+  [0;34m🔄 CONSOLIDATION: testing category[0m
+Validating: testing/integration/full-integration-test.sh ... [0;32m✓ OK[0m
+  [0;34m🔄 CONSOLIDATION: testing category[0m
+Validating: testing/integration/quick-integration-test.sh ... [0;32m✓ OK[0m
+  [0;34m🔄 CONSOLIDATION: testing category[0m
+Validating: testing/integration/regression-test.sh ... [0;32m✓ OK[0m
+  [0;34m🔄 CONSOLIDATION: testing category[0m
+Validating: testing/integration/test-gaming-integration.sh ... [0;31m❌ ERRORS: Potentially unsafe eval[0m
+  [0;34m🔄 CONSOLIDATION: testing category[0m
+Validating: testing/integration/test-system-integration.sh ... [0;31m❌ ERRORS: Potentially unsafe eval[0m
+  [0;34m🔄 CONSOLIDATION: testing category[0m
+Validating: testing/unit/test-library-functionality.sh ... [0;32m✓ OK[0m
+  [0;34m🔄 CONSOLIDATION: testing category[0m
+Validating: testing/unit/test-library-references.sh ... [0;32m✓ OK[0m
+  [0;34m🔄 CONSOLIDATION: testing category[0m
+Validating: testing/unit/test-reports-system.sh ... [0;32m✓ OK[0m
+  [0;34m🔄 CONSOLIDATION: testing category[0m
+Validating: testing/unit/test-shared-libs.sh ... [0;32m✓ OK[0m
+  [0;34m🔄 CONSOLIDATION: testing category[0m
+Validating: testing/unit/test-standardized-directories.sh ... [0;32m✓ OK[0m
+  [1;33m🕒 DEPRECATED: Contains deprecation markers[0m
+  [0;34m🔄 CONSOLIDATION: testing category[0m
+Validating: testing/unit/test-updated-directory-structure.sh ... [0;32m✓ OK[0m
+  [1;33m🕒 DEPRECATED: Contains deprecation markers[0m
+  [0;34m🔄 CONSOLIDATION: testing category[0m
+
+[0;34m╔══════════════════════════════════════════════════════════════════════╗[0m
+[0;34m║                          Validation Summary                          ║[0m
+[0;34m╚══════════════════════════════════════════════════════════════════════╝[0m
+
+📊 STATISTICS:
+  Total Scripts:         151
+  Valid Scripts:         [0;32m98[0m
+  Scripts with Errors:   [0;31m53[0m
+  Scripts with Conflicts: [1;33m32[0m
+  Deprecated Scripts:    [1;33m35[0m
+  Consolidation Candidates: [0;34m46[0m
+
+🔄 CONSOLIDATION OPPORTUNITIES:
+  [0;34m• archive/backups/logging-migration-20250803/scripts/setup/gaming-setup-wizard.sh → setup[0m
+  [0;34m• archive/backups/logging-migration-20250803/scripts/setup/kde-gaming-customization.sh → setup[0m
+  [0;34m• archive/backups/logging-migration-20250803/scripts/setup/unified-gaming-setup.sh → setup[0m
+  [0;34m• scripts/gaming/gaming-platforms-installer.sh → gaming[0m
+  [0;34m• scripts/optimization/gaming-performance-implementation.sh → optimization[0m
+  [0;34m• scripts/optimization/repository-optimizer.sh → optimization[0m
+  [0;34m• scripts/setup/audio-latency-optimizer.sh → setup[0m
+  [0;34m• scripts/setup/config-templates.sh → setup[0m
+  [0;34m• scripts/setup/dev-environment.sh → setup[0m
+  [0;34m• scripts/setup/first-boot-experience.sh → setup[0m
+  [0;34m• scripts/setup/gaming-display-optimization.sh → setup[0m
+  [0;34m• scripts/setup/gaming-optimizations.sh → setup[0m
+  [0;34m• scripts/setup/gaming-setup-wizard.sh → setup[0m
+  [0;34m• scripts/setup/gaming-workflow-optimization.sh → setup[0m
+  [0;34m• scripts/setup/graphics-driver-optimizer.sh → setup[0m
+  [0;34m• scripts/setup/hardware-device-optimizer.sh → setup[0m
+  [0;34m• scripts/setup/hardware-optimization.sh → setup[0m
+  [0;34m• scripts/setup/install-gaming-kernel.sh → setup[0m
+  [0;34m• scripts/setup/install-hardware-optimization.sh → setup[0m
+  [0;34m• scripts/setup/kde-gaming-customization.sh → setup[0m
+  [0;34m• scripts/setup/optimization-summary.sh → setup[0m
+  [0;34m• scripts/setup/phase4-integration-polish.sh → setup[0m
+  [0;34m• scripts/setup/priority3-hardware-optimization.sh → setup[0m
+  [0;34m• scripts/setup/priority4-user-experience.sh → setup[0m
+  [0;34m• scripts/setup/setup-paru-integration.sh → setup[0m
+  [0;34m• scripts/setup/xanados-gaming-setup.sh → setup[0m
+  [0;34m• scripts/testing/phase-4.1.3-integration-test.sh → testing[0m
+  [0;34m• scripts/testing/run-full-system-test.sh → testing[0m
+  [0;34m• scripts/testing/test-iso-build.sh → testing[0m
+  [0;34m• scripts/testing/test-paru-integration.sh → testing[0m
+  [0;34m• testing/automated/automated-benchmark-runner.sh → testing[0m
+  [0;34m• testing/automated/gaming-validator.sh → testing[0m
+  [0;34m• testing/automated/performance-benchmark.sh → testing[0m
+  [0;34m• testing/automated/testing-suite.sh → testing[0m
+  [0;34m• testing/integration/ci-integration-test.sh → testing[0m
+  [0;34m• testing/integration/full-integration-test.sh → testing[0m
+  [0;34m• testing/integration/quick-integration-test.sh → testing[0m
+  [0;34m• testing/integration/regression-test.sh → testing[0m
+  [0;34m• testing/integration/test-gaming-integration.sh → testing[0m
+  [0;34m• testing/integration/test-system-integration.sh → testing[0m
+  [0;34m• testing/unit/test-library-functionality.sh → testing[0m
+  [0;34m• testing/unit/test-library-references.sh → testing[0m
+  [0;34m• testing/unit/test-reports-system.sh → testing[0m
+  [0;34m• testing/unit/test-shared-libs.sh → testing[0m
+  [0;34m• testing/unit/test-standardized-directories.sh → testing[0m
+  [0;34m• testing/unit/test-updated-directory-structure.sh → testing[0m
+
+💡 RECOMMENDATIONS:
+  [0;31m1. Fix scripts with errors immediately[0m
+  [1;33m2. Resolve naming conflicts[0m
+  [1;33m3. Review and update deprecated scripts[0m
+  [0;34m4. Consider consolidating similar scripts[0m
+
+[0;31m❌ Validation found 53 scripts with errors[0m

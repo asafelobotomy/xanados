@@ -6,9 +6,9 @@ set -euo pipefail
 
 # Change to script directory and source libraries
 cd "$(dirname "$0")" || exit 1
-source "../scripts/lib/common.sh"
-source "../scripts/lib/validation.sh"
-source "../scripts/lib/reports.sh"
+source "../lib/common.sh"
+source "../lib/validation.sh"
+source "../lib/reports.sh"
 
 # Configuration
 DOC_SYSTEM_VERSION="2.0"

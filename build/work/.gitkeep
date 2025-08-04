@@ -1,2 +1,0 @@
-# This file ensures the build work directory exists in git
-# Build artifacts are ignored by .gitignore but the directory structure is preserved
