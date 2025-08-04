@@ -1,2 +1,0 @@
-# This file ensures the generated reports directory exists in git
-# Generated reports are ignored by .gitignore but the directory structure is preserved
