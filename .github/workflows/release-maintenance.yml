@@ -190,9 +190,9 @@ jobs:
             sudo apt-get install -y jq curl
             ;;
           "vulnerabilities")
-            # Install trivy
-            wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-key add -
-            echo "deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main" | sudo tee -a /etc/apt/sources.list.d/trivy.list
+            # Install trivy using modern key management
+            curl -fsSL https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo gpg --dearmor -o /usr/share/keyrings/trivy.gpg
+            echo "deb [signed-by=/usr/share/keyrings/trivy.gpg] https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main" | sudo tee /etc/apt/sources.list.d/trivy.list
             sudo apt-get update
             sudo apt-get install -y trivy
             ;;
@@ -294,6 +294,10 @@ jobs:
     needs: plan-operation
     if: needs.plan-operation.outputs.should_update_deps == 'true'
 
+    outputs:
+      has_updates: ${{ steps.apply-updates.outputs.has_updates }}
+      branch_name: ${{ steps.apply-updates.outputs.branch_name }}
+
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
@@ -384,6 +388,7 @@ jobs:
         ./check-updates.sh "$UPDATE_TYPE"
 
     - name: Apply updates if needed
+      id: apply-updates
       run: |
         echo "🔄 Applying dependency updates..."
 
@@ -407,10 +412,10 @@ jobs:
         # Check for changes
         if git diff --quiet; then
           echo "ℹ️ No dependency updates required"
-          echo "HAS_UPDATES=false" >> $GITHUB_ENV
+          echo "has_updates=false" >> $GITHUB_OUTPUT
         else
           echo "✅ Dependency updates applied"
-          echo "HAS_UPDATES=true" >> $GITHUB_ENV
+          echo "has_updates=true" >> $GITHUB_OUTPUT
 
           # Commit changes
           git add .
@@ -422,14 +427,14 @@ jobs:
 
           # Push branch
           git push origin "$BRANCH_NAME"
-          echo "BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_ENV
+          echo "branch_name=$BRANCH_NAME" >> $GITHUB_OUTPUT
         fi
 
     - name: Create pull request for updates
-      if: env.HAS_UPDATES == 'true'
+      if: steps.apply-updates.outputs.has_updates == 'true'
       run: |
         echo "📋 Dependency updates ready for review"
-        echo "🌿 Branch: ${BRANCH_NAME}"
+        echo "🌿 Branch: ${{ steps.apply-updates.outputs.branch_name }}"
         echo "🔄 Type: ${{ needs.plan-operation.outputs.operation_type }}"
         # In real implementation: create PR via GitHub API
 

@@ -68,6 +68,7 @@ jobs:
     - name: Detect file changes
       id: changes
       run: |
+        set -euo pipefail
         echo "🔍 Analyzing changed files..."
 
         if [[ "${{ github.event_name }}" == "schedule" ]] || [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
@@ -104,6 +105,7 @@ jobs:
     - name: Plan pipeline execution
       id: plan
       run: |
+        set -euo pipefail
         echo "📋 Planning pipeline execution..."
 
         PIPELINE_TYPE="${{ github.event.inputs.pipeline_type }}"
@@ -412,9 +414,9 @@ jobs:
             sudo apt-get install -y apparmor-utils
             ;;
           "containers")
-            # Install trivy
-            wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-key add -
-            echo "deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main" | sudo tee -a /etc/apt/sources.list.d/trivy.list
+            # Install trivy using modern key management
+            curl -fsSL https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo gpg --dearmor -o /usr/share/keyrings/trivy.gpg
+            echo "deb [signed-by=/usr/share/keyrings/trivy.gpg] https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main" | sudo tee /etc/apt/sources.list.d/trivy.list
             sudo apt-get update
             sudo apt-get install -y trivy
             ;;
@@ -485,14 +487,29 @@ jobs:
 
     strategy:
       matrix:
-        target: ${{ fromJson(format('["{0}"]', join(fromJson(format('["{0}"]', needs.analyze-changes.outputs.build_targets)), '","'))) }}
+        target: [x86-64-v3, x86-64-v4, compatibility]
       fail-fast: false
 
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
 
+    - name: Check if target should build
+      id: check-target
+      run: |
+        TARGETS="${{ needs.analyze-changes.outputs.build_targets }}"
+        TARGET="${{ matrix.target }}"
+
+        if [[ "$TARGETS" == *"$TARGET"* ]]; then
+          echo "should_build=true" >> $GITHUB_OUTPUT
+          echo "✅ Building target: $TARGET"
+        else
+          echo "should_build=false" >> $GITHUB_OUTPUT
+          echo "⏭️ Skipping target: $TARGET (not in: $TARGETS)"
+        fi
+
     - name: Setup build environment
+      if: steps.check-target.outputs.should_build == 'true'
       run: |
         echo "🔧 Setting up build environment for ${{ matrix.target }}..."
 
@@ -524,6 +541,7 @@ jobs:
           build-${{ runner.os }}-
 
     - name: Build ISO
+      if: steps.check-target.outputs.should_build == 'true'
       run: |
         echo "🏗️ Building xanadOS ISO for ${{ matrix.target }}..."
 
@@ -545,6 +563,7 @@ jobs:
         echo "✅ Build completed for ${{ matrix.target }}"
 
     - name: Test ISO integrity
+      if: steps.check-target.outputs.should_build == 'true'
       run: |
         echo "🔍 Testing ISO integrity for ${{ matrix.target }}..."
 
@@ -578,6 +597,7 @@ jobs:
         done
 
     - name: Upload build artifacts
+      if: steps.check-target.outputs.should_build == 'true'
       uses: actions/upload-artifact@v4
       with:
         name: iso-build-${{ matrix.target }}
