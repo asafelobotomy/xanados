@@ -3,6 +3,12 @@
 # Personal Use License - see LICENSE file
 
 # Colors for output
+# Source shared libraries
+source "$(dirname "${BASH_SOURCE[0]}")/../lib/common.sh" || {
+    echo "Error: Could not source common.sh" >&2
+    exit 1
+}
+
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
@@ -10,14 +16,6 @@ BLUE='\033[0;34m'
 CYAN='\033[0;36m'
 BOLD='\033[1m'
 NC='\033[0m' # No Color
-
-print_header() {
-    echo -e "${CYAN}${BOLD}"
-    echo "╔══════════════════════════════════════════════════════════════╗"
-    echo "║                    xanadOS Hardware Info                     ║"
-    echo "╚══════════════════════════════════════════════════════════════╝"
-    echo -e "${NC}"
-}
 
 print_section() {
     echo -e "${BLUE}${BOLD}=== $1 ===${NC}"

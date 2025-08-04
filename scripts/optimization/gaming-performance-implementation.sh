@@ -2,6 +2,12 @@
 # xanadOS Advanced Gaming Performance Implementation
 # Based on 2025 research: CachyOS, Bazzite, and gaming optimization best practices
 
+# Source shared libraries
+source "$(dirname "${BASH_SOURCE[0]}")/../lib/common.sh" || {
+    echo "Error: Could not source common.sh" >&2
+    exit 1
+}
+
 set -euo pipefail
 
 # Configuration
@@ -20,18 +26,6 @@ readonly NC='\033[0m'
 # Logging
 exec > >(tee -a "$LOG_FILE") 2>&1
 echo "[$(date '+%Y-%m-%d %H:%M:%S')] Starting Advanced Gaming Performance Implementation..."
-
-print_status() {
-    echo -e "${GREEN}[INFO]${NC} $1"
-}
-
-print_warning() {
-    echo -e "${YELLOW}[WARNING]${NC} $1"
-}
-
-print_error() {
-    echo -e "${RED}[ERROR]${NC} $1"
-}
 
 print_section() {
     echo -e "${BLUE}=== $1 ===${NC}"

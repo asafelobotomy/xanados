@@ -4,6 +4,12 @@
 # Demonstrates the new Phase 4.1.3 Gaming Profile Creation system
 
 # Source required libraries
+# Source shared libraries
+source "$(dirname "${BASH_SOURCE[0]}")/../lib/common.sh" || {
+    echo "Error: Could not source common.sh" >&2
+    exit 1
+}
+
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/../lib/colors.sh"
 source "$SCRIPT_DIR/../lib/hardware-detection.sh"

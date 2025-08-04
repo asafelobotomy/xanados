@@ -2,6 +2,12 @@
 # xanadOS Paru Integration Status Check
 # Quick validation without requiring paru installation
 
+# Source shared libraries
+source "$(dirname "${BASH_SOURCE[0]}")/../lib/common.sh" || {
+    echo "Error: Could not source common.sh" >&2
+    exit 1
+}
+
 set -euo pipefail
 
 readonly PROJECT_ROOT="/home/vm/Documents/xanadOS"
@@ -14,10 +20,6 @@ readonly RED='\033[0;31m'
 readonly PURPLE='\033[0;35m'
 readonly NC='\033[0m'
 
-print_header() {
-    echo -e "\n${PURPLE}═══ $1 ═══${NC}\n"
-}
-
 print_check() {
     echo -e "${BLUE}🔍 Checking:${NC} $1"
 }
@@ -28,10 +30,6 @@ print_pass() {
 
 print_missing() {
     echo -e "${YELLOW}📝 TODO:${NC} $1"
-}
-
-print_info() {
-    echo -e "${BLUE}ℹ️  INFO:${NC} $1"
 }
 
 main() {

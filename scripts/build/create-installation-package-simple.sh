@@ -3,10 +3,13 @@
 # 📦 xanadOS Installation Package Creator (Simplified)
 # Create easy-to-deploy installation package for xanadOS Gaming Distribution
 
-set -euo pipefail
+# Source shared libraries
+source "$(dirname "${BASH_SOURCE[0]}")/../lib/logging.sh" || {
+    echo "Error: Could not source logging.sh" >&2
+    exit 1
+}
 
-log_info() { echo "[INFO] $*"; }
-log_success() { echo "[SUCCESS] $*"; }
+set -euo pipefail
 
 # Directory setup
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && pwd)"

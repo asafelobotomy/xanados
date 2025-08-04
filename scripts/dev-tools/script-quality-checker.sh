@@ -4,18 +4,16 @@
 # Based on Linux Shell Best Practices from OWF
 # https://learn.openwaterfoundation.org/owf-learn-linux-shell/best-practices/best-practices/
 
+# Source shared libraries
+source "$(dirname "${BASH_SOURCE[0]}")/../lib/logging.sh" || {
+    echo "Error: Could not source logging.sh" >&2
+    exit 1
+}
+
 set -euo pipefail
 
 readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 readonly XANADOS_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
-
-log_info() {
-    echo "[INFO] $*"
-}
-
-log_warn() {
-    echo "[WARN] $*" >&2
-}
 
 check_script_quality() {
     local script_path="$1"

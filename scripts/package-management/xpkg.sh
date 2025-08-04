@@ -2,6 +2,12 @@
 # xanadOS Unified Package Manager
 # Single interface using paru for all package operations (official repos + AUR)
 
+# Source shared libraries
+source "$(dirname "${BASH_SOURCE[0]}")/../lib/common.sh" || {
+    echo "Error: Could not source common.sh" >&2
+    exit 1
+}
+
 set -euo pipefail
 
 # Configuration
@@ -27,31 +33,6 @@ mkdir -p "$CACHE_DIR" "$CONFIG_DIR"
 # Logging functions
 log() {
     echo "$(date '+%Y-%m-%d %H:%M:%S') - $1" >> "$LOG_FILE"
-}
-
-print_status() {
-    echo -e "${GREEN}✓${NC} $1"
-    log "STATUS: $1"
-}
-
-print_error() {
-    echo -e "${RED}✗${NC} $1" >&2
-    log "ERROR: $1"
-}
-
-print_warning() {
-    echo -e "${YELLOW}⚠${NC} $1"
-    log "WARNING: $1"
-}
-
-print_info() {
-    echo -e "${BLUE}ℹ${NC} $1"
-    log "INFO: $1"
-}
-
-print_header() {
-    echo -e "\n${PURPLE}═══ $1 ═══${NC}\n"
-    log "HEADER: $1"
 }
 
 print_subheader() {

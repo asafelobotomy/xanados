@@ -2,6 +2,12 @@
 # xanadOS Repository & Gaming Optimization Status and Execution
 # Comprehensive overview and automated execution
 
+# Source shared libraries
+source "$(dirname "${BASH_SOURCE[0]}")/lib/common.sh" || {
+    echo "Error: Could not source common.sh" >&2
+    exit 1
+}
+
 set -euo pipefail
 
 readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -16,33 +22,8 @@ readonly PURPLE='\033[0;35m'
 readonly CYAN='\033[0;36m'
 readonly NC='\033[0m'
 
-print_header() {
-    echo -e "${BLUE}╔══════════════════════════════════════════════════════════════════════╗${NC}"
-    echo -e "${BLUE}║                    xanadOS Optimization Controller                   ║${NC}"
-    echo -e "${BLUE}║              Repository Analysis & Gaming Performance                ║${NC}"
-    echo -e "${BLUE}║                        $(date '+%Y-%m-%d %H:%M:%S')                        ║${NC}"
-    echo -e "${BLUE}╚══════════════════════════════════════════════════════════════════════╝${NC}"
-    echo ""
-}
-
 print_section() {
     echo -e "${CYAN}▓▓▓ $1 ▓▓▓${NC}"
-}
-
-print_status() {
-    echo -e "${GREEN}✓${NC} $1"
-}
-
-print_warning() {
-    echo -e "${YELLOW}⚠${NC} $1"
-}
-
-print_error() {
-    echo -e "${RED}✗${NC} $1"
-}
-
-print_info() {
-    echo -e "${BLUE}ℹ${NC} $1"
 }
 
 print_highlight() {

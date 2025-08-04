@@ -87,15 +87,6 @@ log_message() {
     esac
 }
 
-print_header() {
-    local title="$1"
-    echo
-    echo -e "${CYAN}═══════════════════════════════════════════════════════════════════════════════${NC}"
-    echo -e "${WHITE}${BOLD}  $title${NC}"
-    echo -e "${CYAN}═══════════════════════════════════════════════════════════════════════════════${NC}"
-    echo
-}
-
 print_section() {
     local title="$1"
     echo

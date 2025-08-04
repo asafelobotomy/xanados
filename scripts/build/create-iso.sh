@@ -10,38 +10,6 @@ if [[ -f "$SCRIPT_DIR/../lib/common.sh" ]]; then
     source "$SCRIPT_DIR/../lib/common.sh"
 else
     # Basic print functions if common.sh is not available
-    print_info() { echo "[INFO] $*"; }
-    print_success() { echo "[SUCCESS] $*"; }
-    print_error() { echo "[ERROR] $*" >&2; }
-    print_warning() { echo "[WARNING] $*"; }
-    print_status() { echo "[STATUS] $*"; }
-fi
-
-# Configuration
-PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
-BUILD_DIR="$PROJECT_ROOT/build"
-WORK_DIR="$BUILD_DIR/work"
-ISO_DIR="$BUILD_DIR/iso"
-CACHE_DIR="$BUILD_DIR/cache"
-ARCHISO_DIR="$WORK_DIR/archiso"
-
-# xanadOS Configuration
-XANADOS_VERSION="1.0.0"
-ISO_NAME="xanadOS"
-ISO_LABEL="XANADOS"
-ISO_FILENAME="${ISO_NAME}-gaming-${XANADOS_VERSION}-x86_64.iso"
-
-# Function to print colored output
-print_header() {
-    echo -e "${CYAN}================================================================${NC}"
-    echo -e "${WHITE}$1${NC}"
-    echo -e "${CYAN}================================================================${NC}"
-}
-
-print_section() {
-    echo -e "${BLUE}🔧 $1${NC}"
-}
-
 # Usage information
 show_usage() {
     echo "Usage: $0 [options]"

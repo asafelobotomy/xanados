@@ -21,17 +21,6 @@ readonly NC='\033[0m'
 exec > >(tee -a "$LOG_FILE") 2>&1
 echo "[$(date '+%Y-%m-%d %H:%M:%S')] Starting xanadOS Repository Optimization..."
 
-print_status() {
-    echo -e "${GREEN}[INFO]${NC} $1"
-}
-
-print_warning() {
-    echo -e "${YELLOW}[WARNING]${NC} $1"
-}
-
-print_error() {
-    echo -e "${RED}[ERROR]${NC} $1"
-}
 
 print_section() {
     echo -e "${BLUE}=== $1 ===${NC}"

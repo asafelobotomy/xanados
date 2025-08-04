@@ -2,6 +2,12 @@
 # xanadOS AUR Integration Test
 # Test the complete AUR package management system
 
+# Source shared libraries
+source "$(dirname "${BASH_SOURCE[0]}")/../lib/common.sh" || {
+    echo "Error: Could not source common.sh" >&2
+    exit 1
+}
+
 set -euo pipefail
 
 # Configuration
@@ -22,32 +28,6 @@ TESTS_PASSED=0
 TESTS_FAILED=0
 
 # Utility functions
-print_status() { echo -e "${GREEN}✓${NC} $1"; }
-print_error() { echo -e "${RED}✗${NC} $1" >&2; }
-print_warning() { echo -e "${YELLOW}⚠${NC} $1"; }
-print_info() { echo -e "${BLUE}ℹ${NC} $1"; }
-print_header() { echo -e "\n${PURPLE}═══ $1 ═══${NC}\n"; }
-
-# Test execution
-run_test() {
-    local test_name="$1"
-    local test_command="$2"
-
-    ((TESTS_TOTAL++))
-
-    print_info "Testing: $test_name"
-
-    if eval "$test_command" 2>/dev/null; then
-        print_status "$test_name"
-        ((TESTS_PASSED++))
-        return 0
-    else
-        print_error "$test_name"
-        ((TESTS_FAILED++))
-        return 1
-    fi
-}
-
 # Test AUR management structure
 test_aur_structure() {
     print_header "Testing AUR Management Structure"

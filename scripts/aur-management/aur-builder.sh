@@ -2,6 +2,12 @@
 # xanadOS AUR Package Builder
 # Build and manage custom AUR packages for xanadOS
 
+# Source shared libraries
+source "$(dirname "${BASH_SOURCE[0]}")/../lib/common.sh" || {
+    echo "Error: Could not source common.sh" >&2
+    exit 1
+}
+
 set -euo pipefail
 
 # Configuration
@@ -25,32 +31,6 @@ mkdir -p "$BUILD_DIR" "$PKG_DIR"
 # Logging
 log() {
     echo "$(date '+%Y-%m-%d %H:%M:%S') - $1" >> "$LOG_FILE"
-}
-
-print_status() { echo -e "${GREEN}✓${NC} $1"; log "STATUS: $1"; }
-print_error() { echo -e "${RED}✗${NC} $1" >&2; log "ERROR: $1"; }
-print_warning() { echo -e "${YELLOW}⚠${NC} $1"; log "WARNING: $1"; }
-print_info() { echo -e "${BLUE}ℹ${NC} $1"; log "INFO: $1"; }
-print_header() { echo -e "\n${PURPLE}═══ $1 ═══${NC}\n"; log "HEADER: $1"; }
-
-# Clone AUR package
-clone_aur_package() {
-    local package_name="$1"
-    local build_path="$BUILD_DIR/$package_name"
-
-    print_info "Cloning AUR package: $package_name"
-
-    # Remove existing directory
-    [[ -d "$build_path" ]] && rm -rf "$build_path"
-
-    # Clone from AUR
-    if git clone "https://aur.archlinux.org/$package_name.git" "$build_path"; then
-        print_status "Successfully cloned $package_name"
-        return 0
-    else
-        print_error "Failed to clone $package_name"
-        return 1
-    fi
 }
 
 # Build AUR package
