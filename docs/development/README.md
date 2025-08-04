@@ -34,7 +34,7 @@ Core system design and technical architecture documentation.
 
 Strategic planning documents and project roadmaps.
 
-### Primary Documents
+### Planning Documents
 
 - **[xanadOS Development Plan](planning/xanadOS_plan.md)** - Master project plan and roadmap
 
@@ -68,7 +68,7 @@ Development progress reports organized by phases and priorities.
 - **[Gaming Matrix Integration](reports/gaming-matrix-integration-summary.md)** - Gaming environment integration
 - **[Directory Structure Update](reports/directory_structure_update_complete.md)** - Directory reorganization
 
-### Planning Documents
+### Optimization Planning
 
 - **[Phase Optimization Plan](reports/phase-optimization-plan.md)** - Optimization strategy and timeline
 

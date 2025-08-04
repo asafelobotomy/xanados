@@ -65,7 +65,7 @@ GAMING_UTILITIES=(
 )
 ```
 
-#### Impact
+#### Historical Impact
 
 - `cache_gaming_tools()` only caches tools from `GAMING_TOOLS` array (8 tools)
 - Gaming matrix functions use `GAMING_PLATFORMS` + `GAMING_UTILITIES` arrays (14 tools)
@@ -168,7 +168,7 @@ cache_gaming_tools() {
 
 ## 📊 Bug Impact Assessment
 
-### Performance Impact
+### Impact
 
 - **Bug #1:** 6 uncached tools × 2-5ms = 12-30ms extra per matrix generation
 - **Bug #2:** ~2 function calls bypass cache per compatibility check

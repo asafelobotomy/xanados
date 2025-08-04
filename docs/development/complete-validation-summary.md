@@ -97,6 +97,6 @@ Your xanadOS repository now has:
 
 Your xanadOS repository is now **enterprise-ready** with proper validation, security review, and consolidation frameworks in place. The script ecosystem is clean, well-organized, and ready for continued development with confidence.
 
-**Repository Health Grade: A- (Excellent)**
+## Repository Health Grade: A- (Excellent)
 
 The remaining work is incremental improvement rather than critical fixes, and you now have the tools and processes to maintain high script quality going forward.
