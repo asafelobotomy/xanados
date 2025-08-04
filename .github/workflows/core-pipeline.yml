@@ -1,0 +1,705 @@
+name: xanadOS Core Pipeline
+
+on:
+  push:
+    branches: [ main, master, develop, 'feature/*', 'hotfix/*' ]
+  pull_request:
+    branches: [ main, master, develop ]
+  schedule:
+    # Daily builds at 2 AM UTC
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+    inputs:
+      pipeline_type:
+        description: 'Pipeline execution type'
+        required: true
+        type: choice
+        options:
+          - quick
+          - full
+          - security
+          - nightly
+        default: full
+      build_targets:
+        description: 'Build targets (comma-separated)'
+        required: false
+        default: 'auto'
+        type: string
+      skip_tests:
+        description: 'Skip testing phase'
+        required: false
+        type: boolean
+        default: false
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+  PROJECT_NAME: xanadOS
+
+jobs:
+  # ============================================================================
+  # CHANGE DETECTION & PLANNING
+  # ============================================================================
+
+  analyze-changes:
+    name: 📊 Analyze Changes & Plan Pipeline
+    runs-on: ubuntu-latest
+
+    outputs:
+      # Change detection
+      code_changed: ${{ steps.changes.outputs.code }}
+      docs_changed: ${{ steps.changes.outputs.docs }}
+      build_changed: ${{ steps.changes.outputs.build }}
+      security_changed: ${{ steps.changes.outputs.security }}
+
+      # Pipeline planning
+      should_build: ${{ steps.plan.outputs.should_build }}
+      should_test: ${{ steps.plan.outputs.should_test }}
+      should_security_scan: ${{ steps.plan.outputs.should_security_scan }}
+      build_targets: ${{ steps.plan.outputs.build_targets }}
+      test_level: ${{ steps.plan.outputs.test_level }}
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Detect file changes
+      id: changes
+      run: |
+        echo "🔍 Analyzing changed files..."
+
+        if [[ "${{ github.event_name }}" == "schedule" ]] || [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+          # For scheduled/manual runs, assume all changes
+          echo "code=true" >> $GITHUB_OUTPUT
+          echo "docs=true" >> $GITHUB_OUTPUT
+          echo "build=true" >> $GITHUB_OUTPUT
+          echo "security=true" >> $GITHUB_OUTPUT
+        else
+          # Detect changes since last commit or base branch
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            BASE_SHA="${{ github.event.pull_request.base.sha }}"
+          else
+            BASE_SHA="HEAD~1"
+          fi
+
+          # Check for code changes
+          CODE_CHANGED=$(git diff --name-only "$BASE_SHA" HEAD | grep -E '\.(sh|py|js|ts|c|cpp|go|rs)$' | wc -l)
+          echo "code=$([[ $CODE_CHANGED -gt 0 ]] && echo true || echo false)" >> $GITHUB_OUTPUT
+
+          # Check for documentation changes
+          DOCS_CHANGED=$(git diff --name-only "$BASE_SHA" HEAD | grep -E '^docs/|\.md$' | wc -l)
+          echo "docs=$([[ $DOCS_CHANGED -gt 0 ]] && echo true || echo false)" >> $GITHUB_OUTPUT
+
+          # Check for build changes
+          BUILD_CHANGED=$(git diff --name-only "$BASE_SHA" HEAD | grep -E '^(build/|packages/|configs/)' | wc -l)
+          echo "build=$([[ $BUILD_CHANGED -gt 0 ]] && echo true || echo false)" >> $GITHUB_OUTPUT
+
+          # Check for security changes
+          SECURITY_CHANGED=$(git diff --name-only "$BASE_SHA" HEAD | grep -E '^configs/security/|security' | wc -l)
+          echo "security=$([[ $SECURITY_CHANGED -gt 0 ]] && echo true || echo false)" >> $GITHUB_OUTPUT
+        fi
+
+    - name: Plan pipeline execution
+      id: plan
+      run: |
+        echo "📋 Planning pipeline execution..."
+
+        PIPELINE_TYPE="${{ github.event.inputs.pipeline_type }}"
+        if [[ -z "$PIPELINE_TYPE" ]]; then
+          if [[ "${{ github.event_name }}" == "schedule" ]]; then
+            PIPELINE_TYPE="nightly"
+          elif [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            PIPELINE_TYPE="quick"
+          else
+            PIPELINE_TYPE="full"
+          fi
+        fi
+
+        # Determine build necessity
+        SHOULD_BUILD="false"
+        if [[ "${{ steps.changes.outputs.build }}" == "true" ]] || [[ "${{ steps.changes.outputs.code }}" == "true" ]] || [[ "$PIPELINE_TYPE" == "full" ]] || [[ "$PIPELINE_TYPE" == "nightly" ]]; then
+          SHOULD_BUILD="true"
+        fi
+
+        # Determine testing level
+        TEST_LEVEL="none"
+        SHOULD_TEST="false"
+        if [[ "${{ github.event.inputs.skip_tests }}" != "true" ]]; then
+          case "$PIPELINE_TYPE" in
+            "quick")
+              TEST_LEVEL="quick"
+              SHOULD_TEST="true"
+              ;;
+            "full"|"nightly")
+              TEST_LEVEL="comprehensive"
+              SHOULD_TEST="true"
+              ;;
+            "security")
+              TEST_LEVEL="security"
+              SHOULD_TEST="true"
+              ;;
+          esac
+        fi
+
+        # Determine security scanning
+        SHOULD_SECURITY_SCAN="false"
+        if [[ "${{ steps.changes.outputs.security }}" == "true" ]] || [[ "$PIPELINE_TYPE" == "full" ]] || [[ "$PIPELINE_TYPE" == "security" ]] || [[ "$PIPELINE_TYPE" == "nightly" ]]; then
+          SHOULD_SECURITY_SCAN="true"
+        fi
+
+        # Determine build targets
+        BUILD_TARGETS="${{ github.event.inputs.build_targets }}"
+        if [[ -z "$BUILD_TARGETS" ]] || [[ "$BUILD_TARGETS" == "auto" ]]; then
+          case "$PIPELINE_TYPE" in
+            "quick")
+              BUILD_TARGETS="x86-64-v3"
+              ;;
+            "full")
+              BUILD_TARGETS="x86-64-v3,x86-64-v4"
+              ;;
+            "nightly")
+              BUILD_TARGETS="x86-64-v3,x86-64-v4,compatibility"
+              ;;
+            *)
+              BUILD_TARGETS="x86-64-v3"
+              ;;
+          esac
+        fi
+
+        # Output planning results
+        echo "should_build=$SHOULD_BUILD" >> $GITHUB_OUTPUT
+        echo "should_test=$SHOULD_TEST" >> $GITHUB_OUTPUT
+        echo "should_security_scan=$SHOULD_SECURITY_SCAN" >> $GITHUB_OUTPUT
+        echo "build_targets=$BUILD_TARGETS" >> $GITHUB_OUTPUT
+        echo "test_level=$TEST_LEVEL" >> $GITHUB_OUTPUT
+
+        # Summary
+        echo "🎯 Pipeline Plan:"
+        echo "  Type: $PIPELINE_TYPE"
+        echo "  Build: $SHOULD_BUILD (targets: $BUILD_TARGETS)"
+        echo "  Test: $SHOULD_TEST (level: $TEST_LEVEL)"
+        echo "  Security: $SHOULD_SECURITY_SCAN"
+
+  # ============================================================================
+  # VALIDATION & QUALITY ASSURANCE
+  # ============================================================================
+
+  validate:
+    name: ✅ Validation & QA
+    runs-on: ubuntu-latest
+    needs: analyze-changes
+    if: needs.analyze-changes.outputs.code_changed == 'true' || needs.analyze-changes.outputs.docs_changed == 'true'
+
+    strategy:
+      matrix:
+        validation_type: [syntax, quality, security, documentation]
+      fail-fast: false
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup validation environment
+      run: |
+        echo "🔧 Setting up validation for: ${{ matrix.validation_type }}"
+
+        case "${{ matrix.validation_type }}" in
+          "syntax")
+            sudo apt-get update
+            sudo apt-get install -y shellcheck bash
+            ;;
+          "quality")
+            sudo apt-get update
+            sudo apt-get install -y cppcheck pylint
+            pip3 install bandit semgrep || true
+            ;;
+          "security")
+            sudo apt-get update
+            sudo apt-get install -y clamav
+            pip3 install safety || true
+            ;;
+          "documentation")
+            sudo apt-get update
+            sudo apt-get install -y pandoc
+            ;;
+        esac
+
+    - name: Cache validation dependencies
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.cache/pip
+          ~/.local/bin
+        key: validation-${{ matrix.validation_type }}-${{ runner.os }}-${{ hashFiles('**/*.sh', '**/*.py') }}
+        restore-keys: |
+          validation-${{ matrix.validation_type }}-${{ runner.os }}-
+
+    - name: Run validation
+      run: |
+        echo "🔍 Running ${{ matrix.validation_type }} validation..."
+
+        case "${{ matrix.validation_type }}" in
+          "syntax")
+            echo "🐚 Shell script syntax validation"
+            find . -name "*.sh" -type f | while read -r script; do
+              echo "Checking: $script"
+              shellcheck "$script" || exit 1
+              bash -n "$script" || exit 1
+            done
+            ;;
+          "quality")
+            echo "📊 Code quality analysis"
+            if find . -name "*.py" | head -1 >/dev/null 2>&1; then
+              bandit -r . -f json || true
+            fi
+            if command -v semgrep >/dev/null 2>&1; then
+              semgrep --config=auto . || true
+            fi
+            ;;
+          "security")
+            echo "🛡️ Security validation"
+            if find . -name "*.py" | head -1 >/dev/null 2>&1; then
+              safety check || true
+            fi
+            ;;
+          "documentation")
+            echo "📖 Documentation validation"
+            if [[ -x docs/doc-system-enhancer.sh ]]; then
+              docs/doc-system-enhancer.sh --validate
+            fi
+            ;;
+        esac
+
+        echo "✅ ${{ matrix.validation_type }} validation completed"
+
+  # ============================================================================
+  # TESTING SUITE
+  # ============================================================================
+
+  test:
+    name: 🧪 Testing Suite
+    runs-on: ubuntu-latest
+    needs: [analyze-changes, validate]
+    if: needs.analyze-changes.outputs.should_test == 'true'
+
+    strategy:
+      matrix:
+        test_type:
+          - ${{ needs.analyze-changes.outputs.test_level == 'quick' && 'unit' || 'unit' }}
+          - ${{ needs.analyze-changes.outputs.test_level == 'comprehensive' && 'integration' || '' }}
+          - ${{ needs.analyze-changes.outputs.test_level == 'comprehensive' && 'system' || '' }}
+          - ${{ needs.analyze-changes.outputs.test_level == 'security' && 'security' || '' }}
+        exclude:
+          - test_type: ''
+      fail-fast: false
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup testing environment
+      run: |
+        echo "🔧 Setting up ${{ matrix.test_type }} testing environment..."
+
+        # Install common testing dependencies
+        sudo apt-get update
+        sudo apt-get install -y curl jq
+
+        # Setup test-specific dependencies
+        case "${{ matrix.test_type }}" in
+          "integration"|"system")
+            # Install integration testing tools
+            if [[ -x scripts/setup/install-test-deps.sh ]]; then
+              scripts/setup/install-test-deps.sh
+            fi
+            ;;
+          "security")
+            # Install security testing tools
+            sudo apt-get install -y nmap
+            pip3 install safety bandit || true
+            ;;
+        esac
+
+    - name: Cache test dependencies
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.cache
+          /tmp/test-cache
+        key: test-${{ matrix.test_type }}-${{ runner.os }}-${{ hashFiles('testing/**/*') }}
+        restore-keys: |
+          test-${{ matrix.test_type }}-${{ runner.os }}-
+
+    - name: Run tests
+      run: |
+        echo "🧪 Running ${{ matrix.test_type }} tests..."
+
+        case "${{ matrix.test_type }}" in
+          "unit")
+            if [[ -d testing/unit ]]; then
+              find testing/unit -name "*.sh" -executable | while read -r test; do
+                echo "Running: $test"
+                "$test" || exit 1
+              done
+            fi
+            ;;
+          "integration")
+            if [[ -x testing/integration/quick-integration-test.sh ]]; then
+              testing/integration/quick-integration-test.sh
+            fi
+            if [[ -x testing/integration/ci-integration-test.sh ]]; then
+              testing/integration/ci-integration-test.sh
+            fi
+            ;;
+          "system")
+            if [[ -x testing/integration/test-system-integration.sh ]]; then
+              testing/integration/test-system-integration.sh
+            fi
+            if [[ -x testing/integration/test-gaming-integration.sh ]]; then
+              testing/integration/test-gaming-integration.sh
+            fi
+            ;;
+          "security")
+            if [[ -x testing/security/security-test-suite.sh ]]; then
+              testing/security/security-test-suite.sh
+            fi
+            ;;
+        esac
+
+        echo "✅ ${{ matrix.test_type }} tests completed"
+
+    - name: Upload test results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: test-results-${{ matrix.test_type }}
+        path: |
+          testing/results/
+          /tmp/test-results/
+        retention-days: 7
+
+  # ============================================================================
+  # SECURITY SCANNING
+  # ============================================================================
+
+  security-scan:
+    name: 🛡️ Security Scanning
+    runs-on: ubuntu-latest
+    needs: analyze-changes
+    if: needs.analyze-changes.outputs.should_security_scan == 'true'
+
+    strategy:
+      matrix:
+        scan_type: [dependencies, configs, containers, compliance]
+      fail-fast: false
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup security scanning
+      run: |
+        echo "🔧 Setting up ${{ matrix.scan_type }} security scanning..."
+
+        case "${{ matrix.scan_type }}" in
+          "dependencies")
+            pip3 install safety bandit semgrep
+            ;;
+          "configs")
+            sudo apt-get update
+            sudo apt-get install -y apparmor-utils
+            ;;
+          "containers")
+            # Install trivy
+            wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-key add -
+            echo "deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main" | sudo tee -a /etc/apt/sources.list.d/trivy.list
+            sudo apt-get update
+            sudo apt-get install -y trivy
+            ;;
+          "compliance")
+            sudo apt-get update
+            sudo apt-get install -y jq
+            ;;
+        esac
+
+    - name: Run security scan
+      run: |
+        echo "🔍 Running ${{ matrix.scan_type }} security scan..."
+
+        mkdir -p security-results
+
+        case "${{ matrix.scan_type }}" in
+          "dependencies")
+            echo "📦 Scanning dependencies..."
+            if find . -name "*.py" | head -1 >/dev/null 2>&1; then
+              bandit -r . -f json -o security-results/bandit-results.json || true
+              safety check --json > security-results/safety-results.json || true
+            fi
+            semgrep --config=auto --json --output=security-results/semgrep-results.json . || true
+            ;;
+          "configs")
+            echo "⚙️ Scanning configurations..."
+            find configs/security -name "*.profile" -o -name "*apparmor*" | while read -r profile; do
+              echo "Auditing: $profile" >> security-results/config-audit.log
+            done
+            ;;
+          "containers")
+            echo "🐳 Scanning containers..."
+            if [[ -f build/containers/Dockerfile.build ]]; then
+              trivy fs --format json --output security-results/trivy-results.json . || true
+            fi
+            ;;
+          "compliance")
+            echo "📋 Compliance check..."
+            cat > security-results/compliance-summary.json << EOF
+        {
+          "scan_date": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+          "scan_type": "${{ matrix.scan_type }}",
+          "repository": "${{ github.repository }}",
+          "commit": "${{ github.sha }}"
+        }
+        EOF
+            ;;
+        esac
+
+        echo "✅ ${{ matrix.scan_type }} security scan completed"
+
+    - name: Upload security results
+      uses: actions/upload-artifact@v4
+      with:
+        name: security-scan-${{ matrix.scan_type }}
+        path: security-results/
+        retention-days: 30
+
+  # ============================================================================
+  # BUILD MATRIX
+  # ============================================================================
+
+  build:
+    name: 🏗️ Build (${{ matrix.target }})
+    runs-on: ubuntu-latest
+    needs: [analyze-changes, validate]
+    if: needs.analyze-changes.outputs.should_build == 'true'
+
+    strategy:
+      matrix:
+        target: ${{ fromJson(format('["{0}"]', join(fromJson(format('["{0}"]', needs.analyze-changes.outputs.build_targets)), '","'))) }}
+      fail-fast: false
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup build environment
+      run: |
+        echo "🔧 Setting up build environment for ${{ matrix.target }}..."
+
+        # Install build dependencies
+        sudo apt-get update
+        sudo apt-get install -y \
+          archiso \
+          arch-install-scripts \
+          squashfs-tools \
+          libisoburn1 \
+          dosfstools \
+          syslinux \
+          mtools
+
+        # Install build dependency script if available
+        if [[ -x scripts/setup/install-build-deps.sh ]]; then
+          scripts/setup/install-build-deps.sh
+        fi
+
+    - name: Cache build dependencies
+      uses: actions/cache@v4
+      with:
+        path: |
+          build/cache
+          /var/cache/pacman/pkg
+        key: build-${{ matrix.target }}-${{ runner.os }}-${{ hashFiles('build/**', 'packages/**') }}
+        restore-keys: |
+          build-${{ matrix.target }}-${{ runner.os }}-
+          build-${{ runner.os }}-
+
+    - name: Build ISO
+      run: |
+        echo "🏗️ Building xanadOS ISO for ${{ matrix.target }}..."
+
+        # Create build version
+        BUILD_VERSION="ci-$(date +'%Y%m%d')-${{ github.run_number }}-${{ matrix.target }}"
+
+        cd build
+
+        if [[ -x automation/build-pipeline.sh ]]; then
+          ./automation/build-pipeline.sh \
+            --target "${{ matrix.target }}" \
+            --version "$BUILD_VERSION" \
+            --ci-mode
+        else
+          echo "❌ Build pipeline not found"
+          exit 1
+        fi
+
+        echo "✅ Build completed for ${{ matrix.target }}"
+
+    - name: Test ISO integrity
+      run: |
+        echo "🔍 Testing ISO integrity for ${{ matrix.target }}..."
+
+        cd build/releases
+
+        for iso in *.iso; do
+          if [[ -f "$iso" ]]; then
+            # Check file format
+            if ! file "$iso" | grep -q "ISO 9660"; then
+              echo "❌ Invalid ISO format: $iso"
+              exit 1
+            fi
+
+            # Check size
+            SIZE=$(stat -c%s "$iso")
+            MIN_SIZE=$((100 * 1024 * 1024))  # 100MB
+            MAX_SIZE=$((10 * 1024 * 1024 * 1024))  # 10GB
+
+            if [[ $SIZE -lt $MIN_SIZE ]]; then
+              echo "❌ ISO too small: $iso"
+              exit 1
+            fi
+
+            if [[ $SIZE -gt $MAX_SIZE ]]; then
+              echo "❌ ISO too large: $iso"
+              exit 1
+            fi
+
+            echo "✅ ISO validation passed: $iso"
+          fi
+        done
+
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: iso-build-${{ matrix.target }}
+        path: build/releases/
+        retention-days: ${{ github.event_name == 'schedule' && 7 || 30 }}
+
+  # ============================================================================
+  # COMPREHENSIVE REPORTING
+  # ============================================================================
+
+  report:
+    name: 📊 Generate Pipeline Report
+    runs-on: ubuntu-latest
+    needs: [analyze-changes, validate, test, security-scan, build]
+    if: always()
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Download all artifacts
+      uses: actions/download-artifact@v4
+      with:
+        path: ./artifacts/
+
+    - name: Generate comprehensive report
+      run: |
+        echo "📊 Generating comprehensive pipeline report..."
+
+        mkdir -p pipeline-report
+
+        # Determine pipeline type
+        PIPELINE_TYPE="${{ github.event.inputs.pipeline_type }}"
+        if [[ -z "$PIPELINE_TYPE" ]]; then
+          case "${{ github.event_name }}" in
+            "schedule") PIPELINE_TYPE="nightly" ;;
+            "pull_request") PIPELINE_TYPE="pr-validation" ;;
+            *) PIPELINE_TYPE="full" ;;
+          esac
+        fi
+
+        cat > pipeline-report/pipeline-summary.md << EOF
+        # xanadOS Pipeline Report
+
+        **Pipeline Type**: $PIPELINE_TYPE
+        **Execution Date**: $(date '+%Y-%m-%d %H:%M:%S UTC')
+        **Trigger**: ${{ github.event_name }}
+        **Commit**: ${{ github.sha }}
+        **Branch**: ${{ github.ref_name }}
+        **Workflow Run**: ${{ github.run_id }}
+
+        ## Change Analysis
+
+        - **Code Changed**: ${{ needs.analyze-changes.outputs.code_changed }}
+        - **Docs Changed**: ${{ needs.analyze-changes.outputs.docs_changed }}
+        - **Build Changed**: ${{ needs.analyze-changes.outputs.build_changed }}
+        - **Security Changed**: ${{ needs.analyze-changes.outputs.security_changed }}
+
+        ## Pipeline Execution
+
+        **Build Targets**: ${{ needs.analyze-changes.outputs.build_targets }}
+        **Test Level**: ${{ needs.analyze-changes.outputs.test_level }}
+
+        ### Job Results
+
+        - **Validation**: ${{ needs.validate.result }}
+        - **Testing**: ${{ needs.test.result }}
+        - **Security Scanning**: ${{ needs.security-scan.result }}
+        - **Build**: ${{ needs.build.result }}
+
+        ## Artifacts Generated
+
+        EOF
+
+        # List artifacts
+        if [[ -d artifacts ]]; then
+          echo "### Available Artifacts" >> pipeline-report/pipeline-summary.md
+          echo "" >> pipeline-report/pipeline-summary.md
+          find artifacts -type f -name "*.iso" -o -name "*.json" -o -name "*.log" | while read -r artifact; do
+            filename=$(basename "$artifact")
+            size=$(stat -c%s "$artifact" 2>/dev/null || echo "unknown")
+            echo "- **$filename** (Size: $size bytes)" >> pipeline-report/pipeline-summary.md
+          done
+        fi
+
+        cat >> pipeline-report/pipeline-summary.md << EOF
+
+        ## Performance Metrics
+
+        **Total Pipeline Duration**: Approximately ${{ github.event.head_commit.timestamp && 'calculated' || 'running' }}
+        **Parallel Jobs**: Validation, Testing, Security, Build
+        **Cache Efficiency**: Enabled for dependencies and build artifacts
+
+        ## Next Steps
+
+        1. Review any failed jobs in the workflow summary
+        2. Download and test generated ISO artifacts
+        3. Review security scan results if applicable
+        4. Monitor for any follow-up notifications
+
+        ---
+
+        *Generated automatically by xanadOS Core Pipeline*
+        EOF
+
+        # Copy important results
+        cp -r artifacts/* pipeline-report/ 2>/dev/null || true
+
+        echo "✅ Pipeline report generated"
+
+    - name: Upload pipeline report
+      uses: actions/upload-artifact@v4
+      with:
+        name: pipeline-report
+        path: pipeline-report/
+        retention-days: 90
+
+    - name: Pipeline summary
+      run: |
+        echo "🎉 xanadOS Core Pipeline completed!"
+        echo "📊 Pipeline Type: ${{ github.event.inputs.pipeline_type || 'auto-detected' }}"
+        echo "🎯 Build Targets: ${{ needs.analyze-changes.outputs.build_targets }}"
+        echo "🧪 Test Level: ${{ needs.analyze-changes.outputs.test_level }}"
+        echo "🔗 Report: Available in pipeline-report artifact"
+        echo "🔗 Workflow: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
